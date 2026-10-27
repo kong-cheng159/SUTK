@@ -22,6 +22,7 @@ PROJ = os.path.dirname(HERE)
 STATIC = os.path.join(HERE, 'static')
 NAMES_PATH = os.path.join(HERE, 'names_zh.json')
 CITIES_PATH = os.path.join(HERE, 'cities_zh.json')
+TROOP_KINDS_PATH = os.path.join(HERE, 'troop_kinds_zh.json')
 PORT = 8731
 APP_ID = 'sutk-desktop'
 
@@ -116,6 +117,7 @@ def _public_cfg(cfg):
         'stats': {k: M.STATS.get(k) for k in M.STAT_KEYS},
         'saves_dir': M._norm_user_path(cfg.get('saves_dir')),
         'extern_path': M._norm_user_path(cfg.get('extern_path')),
+        'team_presets': M.get_team_presets(cfg),
     }
 
 
@@ -149,6 +151,7 @@ def _apply_path_fields(cfg, body):
 
 
 def api_status():
+    M.seed_team_presets_if_empty()
     cfg = _cfg()
     n = 0
     if os.path.isdir(M.SAVES_DIR):
@@ -343,6 +346,14 @@ def _load_json_map(path):
 
 _NAMES = _load_json_map(NAMES_PATH)
 _CITIES = _load_json_map(CITIES_PATH)
+_TROOP_KINDS = _load_json_map(TROOP_KINDS_PATH)
+
+
+def _troop_kind_cn(kind_id):
+    k = str(kind_id or '').strip()
+    if not k:
+        return ''
+    return _TROOP_KINDS.get(k) or _TROOP_KINDS.get(k.split('_')[0]) or ''
 
 
 def _lookup_cn(token):
@@ -547,6 +558,130 @@ def api_cities(name):
         'problems': problems,
         'lines': cap.lines,
     }
+
+
+def api_assign_prefects(body):
+    path, sav, data = _open_save(body.get('name'))
+    fid = M._player_fid(data)
+    if fid is None:
+        raise ValueError('这个存档里找不到玩家势力')
+    all_player = bool(body.get('all_player'))
+    keys = body.get('keys')
+    if keys is not None and not isinstance(keys, list):
+        keys = [keys]
+    city_keys = None
+    if all_player:
+        city_keys = None
+    else:
+        keys = [str(k) for k in (keys or []) if k]
+        if not keys:
+            raise ValueError('请先勾选城市，或使用「本国全部无太守城市」')
+        arch = data.get('architectures') or {}
+        city_keys = []
+        for k in keys:
+            a = arch.get(k)
+            if not a:
+                continue
+            inf = a.get('info') or {}
+            if str(inf.get('faction')).lower() != str(fid).lower():
+                continue
+            city_keys.append(k)
+        if not city_keys:
+            raise ValueError('所选城市里没有属于你的、且无太守可任命的城')
+    combat_threshold = body.get('combat_threshold')
+    lines = []
+    with Capture() as cap:
+        n, part, summary = M.auto_assign_prefects(
+            data, fid=fid, city_keys=city_keys, combat_threshold=combat_threshold)
+        if n:
+            M._write_save_json(path, sav, data)
+        problems = M.check_map(data)
+    lines.extend(cap.lines)
+    lines.extend(summary or [])
+    lines.append('已任命 %d 座城的太守' % n)
+    lines.extend(part)
+    if problems:
+        lines.append('一致性问题 %d 项（见记录）' % len(problems))
+        lines.extend(problems[:10])
+    else:
+        lines.append('一致性自检通过')
+    if M.game_running() and n:
+        lines.append('游戏正在运行：请回主菜单重新读档后生效。')
+    return {'lines': lines, 'assigned': n, 'problems': problems}
+
+
+def api_troop_kinds_get():
+    return {'kinds': _TROOP_KINDS}
+
+
+def api_team_presets_get():
+    return {'presets': M.seed_team_presets_if_empty()}
+
+
+def api_team_presets_save(body):
+    presets = body.get('presets')
+    if presets is None:
+        raise ValueError('缺少 presets')
+    saved = M.save_team_presets(presets)
+    return {'presets': saved, 'lines': ['已保存 %d 个三人编队预设' % len(saved)]}
+
+
+def api_teams_list(body):
+    path, sav, data = _open_save(body.get('name'))
+    fid = M._player_fid(data)
+    teams = M.list_player_teams(data, fid=fid)
+    for t in teams:
+        cn = _troop_kind_cn(t.get('troopKindId'))
+        if cn:
+            t['troopKindCn'] = cn
+    return {'teams': teams, 'name': os.path.basename(path)}
+
+
+def api_teams_deploy(body):
+    path, sav, data = _open_save(body.get('name'))
+    city_key = str(body.get('city_key') or body.get('city') or '').strip()
+    if not city_key:
+        raise ValueError('请指定 city_key（目标城市）')
+    all_presets = M.get_team_presets(_cfg())
+    by_id = {str(p.get('id')): p for p in all_presets}
+    ids = body.get('preset_ids')
+    if ids is not None and not isinstance(ids, list):
+        ids = [ids]
+    if not ids:
+        pid = str(body.get('preset_id') or body.get('preset') or '').strip()
+        ids = [pid] if pid else []
+    if not ids:
+        raise ValueError('请勾选或指定 preset_id / preset_ids')
+    chosen = []
+    for pid in ids:
+        p = by_id.get(str(pid))
+        if p is None:
+            raise ValueError('找不到预设: ' + str(pid))
+        chosen.append(p)
+    game_team_id = body.get('team_id') or body.get('game_team_id')
+    lines = []
+    with Capture() as cap:
+        if len(chosen) == 1:
+            gt, n, part = M.create_team_preset_at_city(
+                data, city_key, chosen[0], team_id=game_team_id)
+        else:
+            gt, n, part = M.deploy_team_presets_at_city(
+                data, city_key, chosen, game_team_id=game_team_id)
+        if n:
+            M._write_save_json(path, sav, data)
+        problems = M.check_map(data)
+    lines.extend(cap.lines)
+    lines.append('已在 %s 创建 %d 支三人编队（%d 个预设）'
+                 % (city_key, n, len(chosen)))
+    lines.extend(part)
+    if problems:
+        lines.append('一致性问题 %d 项' % len(problems))
+        lines.extend(problems[:8])
+    else:
+        lines.append('一致性自检通过')
+    if M.game_running() and n:
+        lines.append('游戏正在运行：请回主菜单重新读档后生效。')
+    return {'lines': lines, 'team_id': tid, 'troops': n, 'problems': problems}
 
 
 def api_transfer(body):
@@ -951,6 +1086,12 @@ ROUTES = {
     '/api/extern/edit': ('POST', api_edit_extern),
     '/api/cities': ('GET', lambda b: api_cities(b.get('name'))),
     '/api/transfer': ('POST', api_transfer),
+    '/api/cities/assign-prefects': ('POST', api_assign_prefects),
+    '/api/troop-kinds': ('GET', lambda b: api_troop_kinds_get()),
+    '/api/team-presets': ('GET', lambda b: api_team_presets_get()),
+    '/api/team-presets/save': ('POST', api_team_presets_save),
+    '/api/teams': ('GET', lambda b: api_teams_list(b)),
+    '/api/teams/deploy': ('POST', api_teams_deploy),
     '/api/health': ('GET', lambda b: api_health(b.get('name'))),
     '/api/repair': ('POST', api_repair),
     '/api/diplo': ('GET', lambda b: api_diplo(b.get('name'))),

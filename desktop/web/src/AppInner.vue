@@ -40,6 +40,9 @@ import {
 import SavesView from './views/SavesView.vue'
 import GeneralsView from './views/GeneralsView.vue'
 import CitiesView from './views/CitiesView.vue'
+import TeamPresetsView from './views/TeamPresetsView.vue'
+import TeamDeployView from './views/TeamDeployView.vue'
+import TeamTroopsView from './views/TeamTroopsView.vue'
 import DiploView from './views/DiploView.vue'
 import CheckView from './views/CheckView.vue'
 import MemoryView from './views/MemoryView.vue'
@@ -60,11 +63,27 @@ const saveOptions = computed(() =>
   })),
 )
 
-const menuOptions = MENU.map((m) => ({
-  label: m.label,
-  key: m.key,
-  icon: menuIcon(m.key),
-}))
+function buildMenuOptions(items) {
+  return items.map((m) => {
+    const opt = {
+      label: m.label,
+      key: m.key,
+      icon: menuIcon(m.key),
+    }
+    if (m.children?.length) {
+      opt.children = m.children.map((c) => ({
+        label: c.label,
+        key: c.key,
+        icon: menuIcon(c.key),
+      }))
+    }
+    return opt
+  })
+}
+
+const menuOptions = buildMenuOptions(MENU)
+/** 编队二级菜单默认展开 */
+const menuExpandedKeys = ref(['teams'])
 
 function confirm(content, fn) {
   dialog.warning({
@@ -195,11 +214,13 @@ function diploRowPayload(row) {
             </n-tag>
           </n-layout-header>
           <n-layout has-sider style="height:calc(100vh - 56px)">
-            <n-layout-sider bordered class="app-sider" :width="148" :native-scrollbar="false">
+            <n-layout-sider bordered class="app-sider" :width="168" :native-scrollbar="false">
               <n-menu
+                v-model:expanded-keys="menuExpandedKeys"
                 :value="page"
                 :options="menuOptions"
                 :icon-size="18"
+                :indent="20"
                 @update:value="onPage"
               />
             </n-layout-sider>
@@ -278,13 +299,48 @@ function diploRowPayload(row) {
 
                 <CitiesView v-else-if="page === 'cities'" ref="citiesRef">
                   <template #toolbar>
-                    <n-button @click="run(loadCities)">刷新</n-button>
-                    <n-button @click="run(() => api('/api/health?name=' + encodeURIComponent(store.current)))">健康检查</n-button>
-                    <n-button @click="appendLog(store.cityProblems.length ? store.cityProblems : '没有一致性问题')">一致性问题</n-button>
+                    <n-button size="small" quaternary @click="run(loadCities)">刷新</n-button>
+                    <n-button size="small" quaternary @click="run(() => api('/api/health?name=' + encodeURIComponent(store.current)))">健康检查</n-button>
+                    <n-button size="small" quaternary @click="appendLog(store.cityProblems.length ? store.cityProblems : '没有一致性问题')">一致性问题</n-button>
+                  </template>
+                  <template #prefect>
+                    <n-button
+                      type="primary"
+                      size="small"
+                      @click="
+                        run(() => {
+                          const keys = citiesRef?.checkedKeys?.value ?? citiesRef?.checkedKeys ?? []
+                          if (!keys.length) throw new Error('先勾选要任命的城市')
+                          confirm(`为 ${keys.length} 座选中的己方城市自动任命太守？\n仅调遣「空闲」且偏内政的武将（武统敏过高、已在部队/工作或已有岗位者不会动），优先派往其所在城。`, async () => {
+                            await api('/api/cities/assign-prefects', {
+                              name: store.current,
+                              keys,
+                            })
+                            await loadCities()
+                          })
+                        })
+                      "
+                    >任命选中城</n-button>
+                    <n-button
+                      size="small"
+                      secondary
+                      @click="
+                        run(() =>
+                          confirm('为本国所有「尚无太守」的城市自动任命？\n只用空闲内政型武将，高武统敏保留给出征；不足时会提示剩余座数。', async () => {
+                            await api('/api/cities/assign-prefects', {
+                              name: store.current,
+                              all_player: true,
+                            })
+                            await loadCities()
+                          }),
+                        )
+                      "
+                    >填补无太守城</n-button>
                   </template>
                   <template #transfer>
                     <n-button
                       type="primary"
+                      size="small"
                       @click="
                         run(() => {
                           const keys = citiesRef?.checkedKeys?.value ?? citiesRef?.checkedKeys ?? []
@@ -304,11 +360,13 @@ function diploRowPayload(row) {
                           )
                         })
                       "
-                    >转移选中的城</n-button>
+                    >转移选中城</n-button>
                   </template>
                   <template #repair>
                     <n-button
-                      type="error"
+                      size="small"
+                      secondary
+                      type="warning"
                       @click="
                         run(() =>
                           confirm('用对照档修城市归属？会先另存修复前备份。', async () => {
@@ -320,6 +378,10 @@ function diploRowPayload(row) {
                     >修复全吞并</n-button>
                   </template>
                 </CitiesView>
+
+                <TeamPresetsView v-else-if="page === 'teamPresets'" />
+                <TeamDeployView v-else-if="page === 'teamDeploy'" />
+                <TeamTroopsView v-else-if="page === 'teamTroops'" />
 
                 <DiploView
                   v-else-if="page === 'diplo'"

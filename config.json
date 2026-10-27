@@ -1,0 +1,133 @@
+{
+  "scope": "player",
+  "sections": "all",
+  "hotkey": true,
+  "ui": "bat",
+  "target": "all",
+  "auto_apply": false,
+  "snapshot_game": false,
+  "saves_dir": "",
+  "extern_path": "",
+  "team_presets": [
+    {
+      "id": "huo_piao_lei",
+      "name": "霍骠垒",
+      "troopKindId": "49_2",
+      "generals": [
+        "6CD5900E4F37C42335D7F981B59DA06D",
+        "41C0A6BC45871BAFDE21B4AE8ABC2B46",
+        "D2F74D744AF146645CD692B44A273D83"
+      ],
+      "staffing": 0,
+      "gameTeamId": 1
+    },
+    {
+      "id": "wei_xiang_cheng",
+      "name": "卫骧城",
+      "troopKindId": "38_2",
+      "generals": [
+        "CA7F1D7B4AC4A6ED7450FF9D268CD804",
+        "730821634495A78221B9A6B07262E4CE",
+        "A0B9C1E84E602BE52930CAA4AFE5F6B3"
+      ],
+      "staffing": 0,
+      "gameTeamId": 1
+    },
+    {
+      "id": "jiang_jun_yue",
+      "name": "江骏岳",
+      "troopKindId": "59_2",
+      "generals": [
+        "2DEF536E48FD36C72BFA49875A1DFCE2",
+        "358B5B6945D9DE51E43B6D8A32ECBCA7",
+        "56E2FC3C4944380267008891DC5D4B92"
+      ],
+      "staffing": 0,
+      "gameTeamId": 1
+    },
+    {
+      "id": "han_lan_jing",
+      "name": "韩澜靖",
+      "troopKindId": "66_3",
+      "generals": [
+        "9547BA294273067B4675F9A5BB02C5BF",
+        "7C30DA8C4308F11DEAD6FE8FBDC38736",
+        "16E026D74454F25DE6EE50AF1B774083"
+      ],
+      "staffing": 0,
+      "gameTeamId": 2
+    },
+    {
+      "id": "qin_ting_lie",
+      "name": "秦霆烈",
+      "troopKindId": "41_2",
+      "generals": [
+        "57DA2E7146AB0E03CE644DBA84BC5C67",
+        "E22F020243D5563E834102AA27ADB803",
+        "8DEED9344CC360B21F3046B73EAC8572"
+      ],
+      "staffing": 0,
+      "gameTeamId": 2
+    },
+    {
+      "id": "duan_jin_bi",
+      "name": "段烬壁",
+      "troopKindId": "33_2",
+      "generals": [
+        "E999FE1C42A1FE53DCE154B07352FF1A",
+        "5A4B3D96433B662301F581988C4B1E95",
+        "2D5490EC44C44DCFFD65629A646C91D7"
+      ],
+      "staffing": 0,
+      "gameTeamId": 2
+    },
+    {
+      "id": "shen_yue_chuan",
+      "name": "沈岳川",
+      "troopKindId": "55_2",
+      "generals": [
+        "CBCDA3C646BC03EB0948939F19AE4EB7",
+        "C0DC6C66474153135CA41C8018F050C4",
+        "771E8B884CC72102DA9D31ABE65018BB"
+      ],
+      "staffing": 0,
+      "gameTeamId": 2
+    },
+    {
+      "id": "zhao_shuo_chuan",
+      "name": "赵朔川",
+      "troopKindId": "41_2",
+      "generals": [
+        "CA4DF5114B33F46B7397DA980518C509",
+        "F7A0B9D94259190B605EDC82682D88A4",
+        "609EEB434715EFAC62DC66ACBACA2CD1"
+      ],
+      "staffing": 0,
+      "gameTeamId": 2
+    },
+    {
+      "id": "zhou_sheng_lei",
+      "name": "周晟垒",
+      "troopKindId": "45_3",
+      "generals": [
+        "DF87C0C540D5DB62A4C774B8C7063DA6",
+        "2EADA85B43664646618BE5AB7F4BC88A",
+        "2A285CCA47ED0B5B037BFDB4F6E4E1A6"
+      ],
+      "staffing": 0,
+      "gameTeamId": 2
+    },
+    {
+      "id": "wei_xiao_cheng",
+      "name": "卫霄城",
+      "troopKindId": "43_3",
+      "generals": [
+        "58A46E394011E4DE0DB666BE2573F157",
+        "685DCD5F4EFA05C4A00D05893C34548D",
+        "002DB39B40A41CE8E1CA4389CDE22C84"
+      ],
+      "staffing": 0,
+      "gameTeamId": 2
+    }
+  ]
+}

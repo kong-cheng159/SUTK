@@ -12,6 +12,15 @@ export const MENU = [
   { label: '存档', key: 'saves' },
   { label: '武将', key: 'generals' },
   { label: '城市', key: 'cities' },
+  {
+    label: '编队',
+    key: 'teams',
+    children: [
+      { label: '编队预设', key: 'teamPresets' },
+      { label: '创建编队', key: 'teamDeploy' },
+      { label: '存档部队', key: 'teamTroops' },
+    ],
+  },
   { label: '外交', key: 'diplo' },
   { label: '检查', key: 'check' },
   { label: '内存', key: 'memory' },

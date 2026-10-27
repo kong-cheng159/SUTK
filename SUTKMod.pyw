@@ -22,7 +22,7 @@ SUTK 存档修改器（常驻版）
     python  SUTKMod.pyw --restore  立刻还原全部存档
     python  SUTKMod.pyw --report   查看状态
 """
-import sys, os, io, json, zlib, struct, shutil, time, subprocess, ctypes, threading
+import sys, os, io, json, zlib, struct, shutil, time, subprocess, ctypes, threading, copy
 import unicodedata
 import re
 
@@ -891,12 +891,139 @@ def uninstall(quiet=False):
 
 # ----------------------------------------------------------------- 配置
 CONFIG_PATH = os.path.join(APP_DIR, 'config.json')
+
+# 内置三人编队预设（主将名 = 预设名；来自典型自建将部队配置）
+# 内置十支三人编队（来自玩家 AutoSave 编组 1/2 主将部队）
+DEFAULT_TEAM_PRESETS = [
+    {
+        'id': 'huo_piao_lei',
+        'name': '霍骠垒',
+        'troopKindId': '49_2',
+        'generals': [
+            '6CD5900E4F37C42335D7F981B59DA06D',
+            '41C0A6BC45871BAFDE21B4AE8ABC2B46',
+            'D2F74D744AF146645CD692B44A273D83',
+        ],
+        'staffing': 0,
+        'gameTeamId': 1,
+    },
+    {
+        'id': 'wei_xiang_cheng',
+        'name': '卫骧城',
+        'troopKindId': '38_2',
+        'generals': [
+            'CA7F1D7B4AC4A6ED7450FF9D268CD804',
+            '730821634495A78221B9A6B07262E4CE',
+            'A0B9C1E84E602BE52930CAA4AFE5F6B3',
+        ],
+        'staffing': 0,
+        'gameTeamId': 1,
+    },
+    {
+        'id': 'jiang_jun_yue',
+        'name': '江骏岳',
+        'troopKindId': '59_2',
+        'generals': [
+            '2DEF536E48FD36C72BFA49875A1DFCE2',
+            '358B5B6945D9DE51E43B6D8A32ECBCA7',
+            '56E2FC3C4944380267008891DC5D4B92',
+        ],
+        'staffing': 0,
+        'gameTeamId': 1,
+    },
+    {
+        'id': 'han_lan_jing',
+        'name': '韩澜靖',
+        'troopKindId': '66_3',
+        'generals': [
+            '9547BA294273067B4675F9A5BB02C5BF',
+            '7C30DA8C4308F11DEAD6FE8FBDC38736',
+            '16E026D74454F25DE6EE50AF1B774083',
+        ],
+        'staffing': 0,
+        'gameTeamId': 2,
+    },
+    {
+        'id': 'qin_ting_lie',
+        'name': '秦霆烈',
+        'troopKindId': '41_2',
+        'generals': [
+            '57DA2E7146AB0E03CE644DBA84BC5C67',
+            'E22F020243D5563E834102AA27ADB803',
+            '8DEED9344CC360B21F3046B73EAC8572',
+        ],
+        'staffing': 0,
+        'gameTeamId': 2,
+    },
+    {
+        'id': 'duan_jin_bi',
+        'name': '段烬壁',
+        'troopKindId': '33_2',
+        'generals': [
+            'E999FE1C42A1FE53DCE154B07352FF1A',
+            '5A4B3D96433B662301F581988C4B1E95',
+            '2D5490EC44C44DCFFD65629A646C91D7',
+        ],
+        'staffing': 0,
+        'gameTeamId': 2,
+    },
+    {
+        'id': 'shen_yue_chuan',
+        'name': '沈岳川',
+        'troopKindId': '55_2',
+        'generals': [
+            'CBCDA3C646BC03EB0948939F19AE4EB7',
+            'C0DC6C66474153135CA41C8018F050C4',
+            '771E8B884CC72102DA9D31ABE65018BB',
+        ],
+        'staffing': 0,
+        'gameTeamId': 2,
+    },
+    {
+        'id': 'zhao_shuo_chuan',
+        'name': '赵朔川',
+        'troopKindId': '41_2',
+        'generals': [
+            'CA4DF5114B33F46B7397DA980518C509',
+            'F7A0B9D94259190B605EDC82682D88A4',
+            '609EEB434715EFAC62DC66ACBACA2CD1',
+        ],
+        'staffing': 0,
+        'gameTeamId': 2,
+    },
+    {
+        'id': 'zhou_sheng_lei',
+        'name': '周晟垒',
+        'troopKindId': '45_3',
+        'generals': [
+            'DF87C0C540D5DB62A4C774B8C7063DA6',
+            '2EADA85B43664646618BE5AB7F4BC88A',
+            '2A285CCA47ED0B5B037BFDB4F6E4E1A6',
+        ],
+        'staffing': 0,
+        'gameTeamId': 2,
+    },
+    {
+        'id': 'wei_xiao_cheng',
+        'name': '卫霄城',
+        'troopKindId': '43_3',
+        'generals': [
+            '58A46E394011E4DE0DB666BE2573F157',
+            '685DCD5F4EFA05C4A00D05893C34548D',
+            '002DB39B40A41CE8E1CA4389CDE22C84',
+        ],
+        'staffing': 0,
+        'gameTeamId': 2,
+    },
+]
+
 DEFAULT_CFG = {'scope': 'player', 'sections': 'all', 'hotkey': True,
                'ui': 'bat', 'target': 'all',
                'auto_apply': False,     # 游戏启动时自动改档（默认关）
                'snapshot_game': False,  # 游戏自己存档时本地留底（默认关）
                'saves_dir': '',         # 空=系统默认 ProjectA\Saved\Saves
-               'extern_path': ''}      # 空=存档目录上一级的 ExternPersonage.sav
+               'extern_path': '',      # 空=存档目录上一级的 ExternPersonage.sav
+               'team_presets': []}     # 空则使用 DEFAULT_TEAM_PRESETS
 
 
 def default_saves_dir():
@@ -2636,6 +2763,811 @@ def transfer_cities(d, keys, target, move_officers=False, keep_one=True):
             if '⚠' in w:
                 flog("   " + w.strip())
     return done, lines, warns
+
+
+def _person_id_camel(pid_key):
+    """personages 键 -> 岗位 ID（juShou -> JuShou）"""
+    s = str(pid_key or '')
+    if not s:
+        return s
+    return s[0].upper() + s[1:]
+
+
+def _city_arch_name(city_key):
+    """武将 info.architecture 常见写法（luoYang -> LuoYang）"""
+    return _person_id_camel(city_key)
+
+
+def _looks_like_guid(pid):
+    s = str(pid or '')
+    return len(s) >= 32 and all(c in '0123456789abcdefABCDEF' for c in s)
+
+
+def _collect_prefect_ids(d):
+    busy = set()
+    for a in (d.get('architectures') or {}).values():
+        inf = a.get('info') or {}
+        pre = str(inf.get('prefectId') or 'None')
+        if pre != 'None':
+            busy.add(pre.lower())
+        pu = a.get('prefecturalUnit') or {}
+        sid = str(pu.get('staffId') or 'None')
+        if sid != 'None':
+            busy.add(sid.lower())
+    return busy
+
+
+def _bi_stat(bi, key, default=0):
+    try:
+        return int(bi.get(key, default))
+    except Exception:
+        return default
+
+
+COMBAT_STAT_KEYS = ('command', 'strength', 'agility')
+ADMIN_STAT_KEYS = ('politics', 'intelligence', 'charm')
+PREFECT_BUSY_STATES = frozenset(
+    ('InTroop', 'Working', 'InPrison', 'Search', 'InPrefect'))
+DEFAULT_COMBAT_EXCLUDE = 232
+
+
+def _combat_score(bi):
+    return sum(_bi_stat(bi, k) for k in COMBAT_STAT_KEYS)
+
+
+def _admin_score(bi):
+    p = _bi_stat(bi, 'politics')
+    i = _bi_stat(bi, 'intelligence')
+    c = _bi_stat(bi, 'charm')
+    return int(p * 1.35 + i + c * 0.6)
+
+
+def _prefect_suitability(bi):
+    return _admin_score(bi) - _combat_score(bi) * 0.35
+
+
+def _is_combat_general(bi, combat_threshold=DEFAULT_COMBAT_EXCLUDE):
+    """武/统/敏偏高或明显偏战斗的武将不当太守，留给出征。"""
+    combat = _combat_score(bi)
+    admin = _admin_score(bi)
+    if combat >= combat_threshold:
+        return True
+    if combat >= 200 and combat >= admin * 1.12:
+        return True
+    if _bi_stat(bi, 'strength') >= 90 and _bi_stat(bi, 'command') >= 85:
+        return True
+    if _bi_stat(bi, 'agility') >= 92 and combat >= 210:
+        return True
+    return False
+
+
+def _collect_faction_troop_generals(d, fid):
+    """已在部队编制中的武将 ID（含 GUID），不可调去任太守。"""
+    busy = set()
+    facs = d.get('factions') or {}
+    fk = None
+    for k in facs:
+        if str(k).lower() == str(fid).lower():
+            fk = k
+            break
+    if fk is None:
+        return busy
+    troops = (facs[fk].get('troops') or {})
+    items = troops.values() if isinstance(troops, dict) else troops
+    for t in items:
+        if not isinstance(t, dict):
+            continue
+        for g in ('generalId1', 'generalId2', 'generalId3'):
+            gid = str(t.get(g) or 'None')
+            if gid != 'None':
+                busy.add(gid.lower())
+    return busy
+
+
+def _player_king_person_key(d, fid):
+    facs = d.get('factions') or {}
+    fk = None
+    for k in facs:
+        if str(k).lower() == str(fid).lower():
+            fk = k
+            break
+    if fk is None:
+        return None
+    kid = str((facs[fk].get('info') or {}).get('kingId') or 'None')
+    if kid in ('None', '', 'none'):
+        return None
+    persons, plow = _person_index(d)
+    return _find_person(persons, plow, kid)
+
+
+def _arch_matches_city(arch_name, city_key):
+    if not arch_name:
+        return False
+    a = str(arch_name).lower()
+    ck = str(city_key).lower()
+    if a == ck:
+        return True
+    return a == _city_arch_name(city_key).lower()
+
+
+def _city_importance(a):
+    inf = a.get('info') or {}
+    try:
+        lv = int(inf.get('level') or 0)
+    except Exception:
+        lv = 0
+    try:
+        pop = int(inf.get('population') or 0)
+    except Exception:
+        pop = 0
+    return (lv, pop)
+
+
+def _clear_person_prefect_slots(d, person_camel):
+    """避免同一武将占两座城的太守岗位"""
+    pc = str(person_camel).lower()
+    for a in (d.get('architectures') or {}).values():
+        inf = a.setdefault('info', {})
+        if str(inf.get('prefectId') or 'None').lower() == pc:
+            inf['prefectId'] = 'None'
+        pu = a.setdefault('prefecturalUnit', {})
+        if str(pu.get('staffId') or 'None').lower() == pc:
+            pu['staffId'] = 'None'
+            pu['staffAccTime'] = 0
+
+
+def set_city_prefect(d, city_key, person_key):
+    """把 person_key（personages 键）任命为 city_key 的太守"""
+    arch = d.get('architectures') or {}
+    a = arch.get(city_key)
+    if not a:
+        raise ValueError('城市不存在: ' + city_key)
+    persons, plow = _person_index(d)
+    real = _find_person(persons, plow, person_key)
+    if not real:
+        raise ValueError('武将不存在: ' + person_key)
+    per = persons[real]
+    inf_p = per.setdefault('info', {})
+    city_inf = a.setdefault('info', {})
+    fid_city = str(city_inf.get('faction'))
+    if str(inf_p.get('faction')).lower() != fid_city.lower():
+        raise ValueError('武将不属于该城势力')
+    if inf_p.get('tag1') in ('Death', 'Dead'):
+        raise ValueError('武将已阵亡')
+    pid_show = _person_id_camel(real)
+    _clear_person_prefect_slots(d, pid_show)
+    city_inf['prefectId'] = pid_show
+    pu = a.setdefault('prefecturalUnit', {})
+    pu['staffId'] = pid_show
+    # staffId 有值时 staffAccTime 须与原版一致为非 0（仅 None 时才必须 0）
+    pu['staffAccTime'] = max(1, int(pu.get('staffAccTime') or 0))
+    inf_p['architecture'] = _city_arch_name(city_key)
+    per['state'] = 'InPrefect'
+    return pid_show
+
+
+def auto_assign_prefects(d, fid=None, city_keys=None, combat_threshold=None):
+    """为本国无太守城市自动任命：仅调遣 Idle 内政型武将，武统敏高者保留给出征。"""
+    if combat_threshold is None:
+        combat_threshold = DEFAULT_COMBAT_EXCLUDE
+    try:
+        combat_threshold = int(combat_threshold)
+    except Exception:
+        combat_threshold = DEFAULT_COMBAT_EXCLUDE
+    if fid is None:
+        fid = _player_fid(d)
+    if fid is None:
+        return 0, [], ['找不到玩家势力']
+    arch = d.get('architectures') or {}
+    targets = []
+    for k, a in arch.items():
+        if city_keys is not None and k not in city_keys:
+            continue
+        inf = a.get('info') or {}
+        if str(inf.get('faction')).lower() != str(fid).lower():
+            continue
+        if str(inf.get('prefectId') or 'None') != 'None':
+            continue
+        targets.append((k, a))
+    if not targets:
+        return 0, [], ['没有需要任命太守的城市']
+    targets.sort(key=lambda x: _city_importance(x[1]), reverse=True)
+
+    busy_prefect = _collect_prefect_ids(d)
+    troop_busy = _collect_faction_troop_generals(d, fid)
+    king_key = _player_king_person_key(d, fid)
+    king_low = set()
+    if king_key:
+        king_low.add(str(king_key).lower())
+        king_low.add(_person_id_camel(king_key).lower())
+
+    stat = {
+        'pool': 0,
+        'skip_guid': 0,
+        'skip_state': 0,
+        'skip_prefect_slot': 0,
+        'skip_troop': 0,
+        'skip_fighter': 0,
+        'skip_king': 0,
+        'skip_no_stats': 0,
+    }
+    pool = []
+    for pid, per in (d.get('personages') or {}).items():
+        inf = per.get('info') or {}
+        if str(inf.get('faction', '')).lower() != str(fid).lower():
+            continue
+        if inf.get('tag1') in ('Death', 'Dead'):
+            continue
+        if _looks_like_guid(pid):
+            stat['skip_guid'] += 1
+            continue
+        show = _person_id_camel(pid).lower()
+        plow = str(pid).lower()
+        if show in king_low or plow in king_low:
+            stat['skip_king'] += 1
+            continue
+        state = str(per.get('state') or 'Idle')
+        if state != 'Idle':
+            stat['skip_state'] += 1
+            continue
+        if show in busy_prefect or plow in busy_prefect:
+            stat['skip_prefect_slot'] += 1
+            continue
+        if show in troop_busy or plow in troop_busy:
+            stat['skip_troop'] += 1
+            continue
+        bi = per.get('baseInfo') or {}
+        if not bi:
+            stat['skip_no_stats'] += 1
+            continue
+        if _is_combat_general(bi, combat_threshold):
+            stat['skip_fighter'] += 1
+            continue
+        home = str(inf.get('architecture') or '').lower()
+        pool.append({
+            'pid': pid,
+            'home': home,
+            'suit': _prefect_suitability(bi),
+            'combat': _combat_score(bi),
+            'admin': _admin_score(bi),
+        })
+        stat['pool'] += 1
+
+    summary = [
+        '任命规则：仅 state=Idle；排除出征(InTroop)/编制中/在岗(InPrefect)/工作(Working)等；'
+        '武统敏合计≥%d 或明显偏战斗者不任太守；优先政智魅高且就近（所在城）' % combat_threshold,
+        '  可调遣候选 %d 人 | 非Idle %d | 已在编部队 %d | 高战力 %d | 已有太守岗 %d | 君主 %d'
+        % (stat['pool'], stat['skip_state'], stat['skip_troop'],
+           stat['skip_fighter'], stat['skip_prefect_slot'], stat['skip_king']),
+    ]
+    lines = []
+    assigned = 0
+    for city_key, _a in targets:
+        if not pool:
+            left = len(targets) - assigned
+            if left:
+                lines.append('  内政型空闲武将不足，还有 %d 座城未任命' % left)
+            break
+        ck = city_key.lower()
+        best_i = 0
+        best_score = None
+        for i, c in enumerate(pool):
+            local = 100000 if _arch_matches_city(c['home'], city_key) else 0
+            score = local + c['suit']
+            if best_score is None or score > best_score:
+                best_score = score
+                best_i = i
+        cand = pool.pop(best_i)
+        try:
+            show = set_city_prefect(d, city_key, cand['pid'])
+            assigned += 1
+            busy_prefect.add(show.lower())
+            cn = _city_cn(city_key) or city_key
+            tag = '就近' if _arch_matches_city(cand['home'], city_key) else '调遣'
+            lines.append('  %s ← %s (%s 政%d/战%d)'
+                           % (_pad(cn, 10), show, tag, cand['admin'], cand['combat']))
+        except ValueError as e:
+            lines.append('  跳过 %s: %s' % (city_key, e))
+    return assigned, lines, summary
+
+
+# ----------------------------------------------------------------- 快速编队（一支部队 = 主将 + 2 副将，对应一条 troops）
+def _normalize_generals_triple(gens, sq=None):
+    if not isinstance(gens, list):
+        gens = []
+        if sq:
+            gens = [sq.get('generalId1'), sq.get('generalId2'), sq.get('generalId3')]
+    row = []
+    for g in (gens + [None, None, None])[:3]:
+        if g is None or str(g).strip() in ('', 'None', 'none'):
+            row.append('None')
+        else:
+            row.append(str(g).strip())
+    return row
+
+
+def _flat_preset_entry(pid, name, kind, generals, staffing=0):
+    if not kind:
+        return None
+    return {
+        'id': pid,
+        'name': name,
+        'troopKindId': kind,
+        'generals': _normalize_generals_triple(generals),
+        'staffing': int(staffing) if str(staffing or '').isdigit() else 0,
+    }
+
+
+def normalize_team_presets(raw):
+    """校验 config 中的 team_presets。
+    一条预设 = 游戏意义的一支「编队」（三人部队），不是 teamInfos 编组。"""
+    out = []
+    if not isinstance(raw, list):
+        return out
+    seen = set()
+    seq = 0
+    for i, p in enumerate(raw):
+        if not isinstance(p, dict):
+            continue
+        base_id = str(p.get('id') or ('preset_%d' % (i + 1))).strip()
+        base_name = str(p.get('name') or base_id).strip() or base_id
+        squads = p.get('squads')
+        if isinstance(squads, list) and squads:
+            for j, sq in enumerate(squads):
+                if not isinstance(sq, dict):
+                    continue
+                kind = str(sq.get('troopKindId') or sq.get('kind') or '').strip()
+                seq += 1
+                pid = base_id if len(squads) == 1 else '%s_%d' % (base_id, j + 1)
+                if pid in seen:
+                    pid = 'preset_%d' % seq
+                seen.add(pid)
+                nm = base_name if len(squads) == 1 else '%s·%s' % (
+                    base_name, sq.get('label') or ('队%d' % (j + 1)))
+                st = int(sq['staffing']) if str(sq.get('staffing') or '').isdigit() else 0
+                ent = _flat_preset_entry(pid, nm, kind, sq.get('generals'), st)
+                if ent:
+                    if not isinstance(sq.get('generals'), list):
+                        ent['generals'] = _normalize_generals_triple(None, sq)
+                    try:
+                        ent['gameTeamId'] = int(sq.get('gameTeamId') or p.get('gameTeamId') or 0)
+                    except Exception:
+                        ent['gameTeamId'] = 0
+                    out.append(ent)
+            continue
+        kind = str(p.get('troopKindId') or p.get('kind') or '').strip()
+        if not kind:
+            continue
+        seq += 1
+        pid = base_id or ('preset_%d' % seq)
+        if pid in seen:
+            pid = 'preset_%d' % seq
+        seen.add(pid)
+        st = int(p['staffing']) if str(p.get('staffing') or '').isdigit() else 0
+        ent = _flat_preset_entry(pid, base_name, kind, p.get('generals'), st)
+        if ent:
+            try:
+                ent['gameTeamId'] = int(p.get('gameTeamId') or 0)
+            except Exception:
+                ent['gameTeamId'] = 0
+            out.append(ent)
+    return out
+
+
+def get_team_presets(cfg=None):
+    cfg = cfg if cfg is not None else load_cfg()
+    raw = cfg.get('team_presets')
+    normed = normalize_team_presets(raw) if raw else []
+    if not normed:
+        return normalize_team_presets(DEFAULT_TEAM_PRESETS)
+    return normed
+
+
+def ensure_team_presets():
+    """保证 config 含全部内置预设：空则写入；缺 id 则按 DEFAULT 顺序补全并落盘。"""
+    cfg = load_cfg()
+    current = normalize_team_presets(cfg.get('team_presets') or [])
+    if not current:
+        presets = normalize_team_presets(DEFAULT_TEAM_PRESETS)
+        cfg['team_presets'] = presets
+        save_cfg(cfg)
+        return presets
+    by_id = {p['id']: p for p in current}
+    merged = []
+    seen = set()
+    changed = False
+    for d in DEFAULT_TEAM_PRESETS:
+        did = d['id']
+        if did in by_id:
+            merged.append(by_id[did])
+        else:
+            merged.append(dict(d))
+            changed = True
+        seen.add(did)
+    for p in current:
+        pid = p.get('id')
+        if pid and pid not in seen:
+            merged.append(p)
+            seen.add(pid)
+    if changed or len(merged) != len(current):
+        cfg['team_presets'] = normalize_team_presets(merged)
+        save_cfg(cfg)
+    return get_team_presets(cfg)
+
+
+def seed_team_presets_if_empty():
+    """兼容旧调用名。"""
+    return ensure_team_presets()
+
+
+def save_team_presets(presets):
+    cfg = load_cfg()
+    cfg['team_presets'] = normalize_team_presets(presets)
+    save_cfg(cfg)
+    return cfg['team_presets']
+
+
+def _faction_key(d, fid):
+    for k in (d.get('factions') or {}):
+        if str(k).lower() == str(fid).lower():
+            return k
+    return None
+
+
+def _max_troop_id(d):
+    m = 0
+    for f in (d.get('factions') or {}).values():
+        for t in (f.get('troops') or {}).values():
+            try:
+                m = max(m, int(t.get('troopId') or 0))
+            except Exception:
+                pass
+    return m
+
+
+def _collect_troop_general_tokens(d, fid=None):
+    busy = set()
+    facs = d.get('factions') or {}
+    items = []
+    if fid is not None:
+        fk = _faction_key(d, fid)
+        if fk:
+            tr = (facs[fk].get('troops') or {})
+            items = tr.values() if isinstance(tr, dict) else tr
+    else:
+        for f in facs.values():
+            tr = (f.get('troops') or {})
+            items.extend(tr.values() if isinstance(tr, dict) else tr)
+    for t in items:
+        if not isinstance(t, dict):
+            continue
+        for g in ('generalId1', 'generalId2', 'generalId3'):
+            gid = str(t.get(g) or 'None')
+            if gid != 'None':
+                busy.add(gid.lower())
+    return busy
+
+
+def _general_troop_token(pid):
+    if _looks_like_guid(pid):
+        return str(pid).upper()
+    return _person_id_camel(pid)
+
+
+def _resolve_person_for_troop(d, token, fid):
+    if token is None or str(token).strip() in ('', 'None', 'none'):
+        return None
+    persons, plow = _person_index(d)
+    real = _find_person(persons, plow, token)
+    if not real:
+        raise ValueError('武将不存在: ' + str(token))
+    per = persons[real]
+    inf = per.get('info') or {}
+    if str(inf.get('faction', '')).lower() != str(fid).lower():
+        raise ValueError('武将 %s 不属于玩家势力' % token)
+    if inf.get('tag1') in ('Death', 'Dead'):
+        raise ValueError('武将 %s 已阵亡' % token)
+    return real, per
+
+
+def _build_architecture_pos_index(d):
+    arch = d.get('architectures') or {}
+    key_by_lower = {}
+    for k, a in arch.items():
+        key_by_lower[k.lower()] = k
+        iD = str(a.get('iD') or k)
+        key_by_lower[iD.lower()] = k
+    pos = {}
+    for f in (d.get('factions') or {}).values():
+        for t in (f.get('troops') or {}).values():
+            ai = t.get('troopAI') or {}
+            if not isinstance(ai, dict):
+                continue
+            p = t.get('pos') or {}
+            if p.get('x') is None:
+                continue
+            for _k, aid in ai.items():
+                if 'architecture' not in str(_k).lower():
+                    continue
+                aid = str(aid or 'None')
+                if aid == 'None':
+                    continue
+                ck = key_by_lower.get(aid.lower())
+                if ck and ck not in pos:
+                    pos[ck] = {'x': int(p['x']), 'y': int(p['y'])}
+    return pos
+
+
+def _city_pos_override(city_key):
+    cfg = load_cfg()
+    raw = cfg.get('city_pos') or cfg.get('city_pos_overrides') or {}
+    if not isinstance(raw, dict):
+        return None
+    for k, v in raw.items():
+        if str(k).lower() != str(city_key).lower():
+            continue
+        if isinstance(v, dict) and v.get('x') is not None and v.get('y') is not None:
+            return {'x': int(v['x']), 'y': int(v['y'])}
+    return None
+
+
+def _resolve_city_deploy_pos(d, city_key, slot_index, pos_index=None):
+    if pos_index is None:
+        pos_index = _build_architecture_pos_index(d)
+    base = pos_index.get(city_key) or _city_pos_override(city_key)
+    if not base:
+        raise ValueError(
+            '无法确定「%s」的地图坐标：请先在游戏中到此城驻扎一支部队，或在 config.json 的 city_pos 里填写 {"%s": {"x":..,"y":..}}'
+            % (_city_cn(city_key) or city_key, city_key))
+    dx = (slot_index % 3) - 1
+    dy = slot_index // 3
+    return {'x': base['x'] + dx, 'y': base['y'] + dy}
+
+
+def _pick_troop_template(d, fid, troop_kind_id):
+    fk = _faction_key(d, fid)
+    if fk is None:
+        raise ValueError('找不到势力')
+    troops = (d['factions'][fk].get('troops') or {})
+    items = list(troops.values()) if isinstance(troops, dict) else list(troops)
+    for t in items:
+        if str(t.get('troopKindId')) == str(troop_kind_id):
+            return copy.deepcopy(t)
+    if items:
+        return copy.deepcopy(items[0])
+    raise ValueError('势力中没有部队可参考，无法新建')
+
+
+def _alloc_team_id(d):
+    ti = d.setdefault('teamInfos', {})
+    used = set()
+    for k in ti:
+        try:
+            used.add(int(k))
+        except Exception:
+            pass
+    for n in range(1, 128):
+        slot = ti.get(str(n)) or ti.get(n)
+        if slot is None:
+            return n
+        if not (slot.get('troopIds') or []):
+            return n
+    return (max(used) + 1) if used else 1
+
+
+def _general_display_name(d, token):
+    if not token or str(token) == 'None':
+        return '—'
+    persons, plow = _person_index(d)
+    real = _find_person(persons, plow, token)
+    if not real:
+        s = str(token)
+        return s[:10] + '…' if len(s) > 12 else s
+    bi = (persons[real].get('baseInfo') or {})
+    fn = bi.get('fullName')
+    if isinstance(fn, dict) and fn.get('key'):
+        return str(fn.get('key'))
+    return _person_id_camel(real)
+
+
+def list_player_teams(d, fid=None):
+    """读档内玩家「三人编队」列表：每条 troops = 主将 + 2 副将。"""
+    if fid is None:
+        fid = _player_fid(d)
+    if fid is None:
+        return []
+    fk = _faction_key(d, fid)
+    if fk is None:
+        return []
+    rows = []
+    for t in (d['factions'][fk].get('troops') or {}).values():
+        if not isinstance(t, dict):
+            continue
+        gens = []
+        gens_cn = []
+        for g in ('generalId1', 'generalId2', 'generalId3'):
+            v = str(t.get(g) or 'None')
+            if v == 'None':
+                gens.append('None')
+                gens_cn.append('—')
+            else:
+                gens.append(v)
+                gens_cn.append(_general_display_name(d, v))
+        tid = int(t.get('troopId') or 0)
+        lead = gens_cn[0] if gens_cn else '—'
+        rows.append({
+            'troopId': tid,
+            'gameTeamId': int(t.get('teamId') or 0),
+            'name': lead,
+            'troopKindId': str(t.get('troopKindId') or ''),
+            'generals': gens,
+            'generals_cn': gens_cn,
+            'label': '%s / %s / %s' % tuple(gens_cn),
+        })
+    rows.sort(key=lambda r: (r.get('gameTeamId') or 0, r.get('troopId') or 0))
+    return rows
+
+
+def _append_troop_to_game_team(d, game_team_id, troop_id):
+    """可选：挂到游戏 teamInfos 编组（与「三人编队」不同层）。"""
+    if not game_team_id:
+        return
+    try:
+        gid = int(game_team_id)
+    except Exception:
+        return
+    if gid <= 0:
+        return
+    ti = d.setdefault('teamInfos', {})
+    tkey = str(gid)
+    slot = ti.get(tkey)
+    if not isinstance(slot, dict):
+        slot = {'troopIds': []}
+        ti[tkey] = slot
+    ids = list(slot.get('troopIds') or [])
+    tid = int(troop_id)
+    if tid not in ids:
+        ids.append(tid)
+    slot['troopIds'] = ids
+
+
+def _create_one_troop_at_city(d, city_key, preset, fid, slot_index, busy_g, pos_index,
+                              arch_id, troops, fac, game_team_id=0):
+    kind = str(preset.get('troopKindId') or '')
+    if not kind:
+        raise ValueError('预设缺少兵种 troopKindId')
+    t = _pick_troop_template(d, fid, kind)
+    next_tid = _max_troop_id(d) + 1
+    # 上面 max 在循环外应递增 — 调用方传 busy 并每次 +1 tid
+    t['troopId'] = next_tid
+    t['factionId'] = str(fac.get('iD') or fid)
+    t['troopKindId'] = kind
+    try:
+        gt = int(game_team_id or 0)
+    except Exception:
+        gt = 0
+    t['teamId'] = gt
+    cap = int(preset.get('staffing') or 0)
+    if cap <= 0:
+        cap = troop_cap(kind, t.get('staffing'))
+    t['staffing'] = cap
+    t['healthyNum'] = cap
+    t['injuriedNum'] = 0
+    t['bDestroyed'] = False
+    t['pos'] = _resolve_city_deploy_pos(d, city_key, slot_index, pos_index)
+    t['state'] = 'TroopAction'
+    ai = t.setdefault('troopAI', {})
+    if not isinstance(ai, dict):
+        ai = {}
+        t['troopAI'] = ai
+    ai['belongArchitectureId'] = arch_id
+    ai.setdefault('aIState', 'None')
+
+    slots = ('generalId1', 'generalId2', 'generalId3')
+    gen_names = []
+    for si, slot in enumerate(slots):
+        tok = (preset.get('generals') or [None, None, None])[si]
+        if tok in (None, 'None', 'none', ''):
+            t[slot] = 'None'
+            continue
+        real, per = _resolve_person_for_troop(d, tok, fid)
+        show = _general_troop_token(real)
+        if show.lower() in busy_g:
+            raise ValueError('武将 %s 已在其他部队中' % tok)
+        if str(per.get('state') or 'Idle') not in ('Idle',):
+            raise ValueError('武将 %s 状态为 %s，无法编入新队' % (tok, per.get('state')))
+        t[slot] = show
+        busy_g.add(show.lower())
+        per['state'] = 'InTroop'
+        gen_names.append(_general_display_name(d, show))
+
+    troops[str(next_tid)] = t
+    _append_troop_to_game_team(d, gt, next_tid)
+    cn = _city_cn(city_key) or city_key
+    gcn = (_general_display_name(d, t.get('generalId2')),
+           _general_display_name(d, t.get('generalId3')))
+    line = '  %s @ %s · %s  主:%s  副:%s / %s' % (
+        kind, cn, preset.get('name') or kind,
+        gen_names[0] if gen_names else '—', gcn[0], gcn[1],
+    )
+    return next_tid, line
+
+
+def create_team_preset_at_city(d, city_key, preset, fid=None, team_id=None):
+    """
+    在 city_key 按一条预设创建一支三人部队（一条 troops）。
+    preset: normalize 后的 { troopKindId, generals[3], ... }
+    team_id: 可选游戏 teamInfos 编组号；0/None 表示不写入编组（散队）。
+    """
+    if fid is None:
+        fid = _player_fid(d)
+    if fid is None:
+        raise ValueError('找不到玩家势力')
+    fk = _faction_key(d, fid)
+    if fk is None:
+        raise ValueError('找不到玩家势力')
+    arch = d.get('architectures') or {}
+    a = arch.get(city_key)
+    if not a:
+        raise ValueError('城市不存在: ' + city_key)
+    if str((a.get('info') or {}).get('faction')).lower() != str(fid).lower():
+        raise ValueError('该城不属于玩家')
+
+    fac = d['factions'][fk]
+    troops = fac.setdefault('troops', {})
+    if not isinstance(troops, dict):
+        troops = {str(t.get('troopId')): t for t in troops if isinstance(t, dict)}
+        fac['troops'] = troops
+
+    busy_g = _collect_troop_general_tokens(d, fid)
+    pos_index = _build_architecture_pos_index(d)
+    arch_id = _city_arch_id(city_key, d)
+    if team_id in (None, '', 'none'):
+        team_id = preset.get('gameTeamId', 0)
+    gt = 0 if team_id in (None, '', 'none') else team_id
+    tid, line = _create_one_troop_at_city(
+        d, city_key, preset, fid, 0, busy_g, pos_index, arch_id, troops, fac, gt)
+    return gt, 1, [line]
+
+
+def deploy_team_presets_at_city(d, city_key, presets, fid=None, game_team_id=None):
+    """在同一城市连续创建多支「三人编队」。"""
+    if not presets:
+        raise ValueError('没有选中任何预设')
+    if fid is None:
+        fid = _player_fid(d)
+    fk = _faction_key(d, fid)
+    arch = (d.get('architectures') or {}).get(city_key)
+    if not arch:
+        raise ValueError('城市不存在: ' + city_key)
+    if str((arch.get('info') or {}).get('faction')).lower() != str(fid).lower():
+        raise ValueError('该城不属于玩家')
+    fac = d['factions'][fk]
+    troops = fac.setdefault('troops', {})
+    if not isinstance(troops, dict):
+        troops = {str(t.get('troopId')): t for t in troops if isinstance(t, dict)}
+        fac['troops'] = troops
+    busy_g = _collect_troop_general_tokens(d, fid)
+    pos_index = _build_architecture_pos_index(d)
+    arch_id = _city_arch_id(city_key, d)
+    gt = game_team_id
+    lines = []
+    for i, preset in enumerate(presets):
+        before = _max_troop_id(d)
+        pg = gt if gt not in (None, '', 0) else preset.get('gameTeamId', 0)
+        _tid, line = _create_one_troop_at_city(
+            d, city_key, preset, fid, i, busy_g, pos_index, arch_id, troops, fac, pg)
+        if _max_troop_id(d) <= before:
+            raise ValueError('创建部队失败')
+        lines.append(line)
+    return gt or 0, len(presets), lines
+
+
+def _city_arch_id(city_key, d):
+    a = (d.get('architectures') or {}).get(city_key)
+    if not a:
+        return _city_arch_name(city_key)
+    return str(a.get('iD') or _city_arch_name(city_key))
 
 
 def check_map(d):

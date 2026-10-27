@@ -31,7 +31,7 @@ Copy-Item -LiteralPath $guide -Destination $dest
 $desk = Join-Path $dest 'desktop'
 New-Item -ItemType Directory -Path $desk | Out-Null
 Copy-Item -LiteralPath (Join-Path $repo 'desktop\server.py') -Destination $desk
-foreach ($extra in @('names_zh.json', 'cities_zh.json')) {
+foreach ($extra in @('names_zh.json', 'cities_zh.json', 'troop_kinds_zh.json')) {
     $src = Join-Path $repo (Join-Path 'desktop' $extra)
     if (Test-Path -LiteralPath $src) { Copy-Item -LiteralPath $src -Destination $desk }
 }

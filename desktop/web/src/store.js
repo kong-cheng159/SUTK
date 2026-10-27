@@ -42,6 +42,13 @@ export const store = reactive({
   /** 配置里的自定义路径，空字符串表示用系统默认 */
   savesDir: '',
   externPath: '',
+  teamPresets: [],
+  teamPresetId: '',
+  /** 创建编队页勾选的预设 id */
+  selectedTeamPresetIds: [],
+  teamsInSave: [],
+  /** troopKindId → 中文兵种名（来自游戏 locres） */
+  troopKindLabels: {},
 })
 
 export function namesOrCurrent() {
@@ -71,7 +78,18 @@ export function pathConfigBody() {
 export async function boot() {
   store.status = await api('/api/status')
   applyStatusCfg()
+  await loadTroopKindLabels()
+  await loadTeamPresets()
   await loadSaves()
+}
+
+export async function loadTroopKindLabels() {
+  try {
+    const data = await api('/api/troop-kinds')
+    store.troopKindLabels = data.kinds || {}
+  } catch {
+    store.troopKindLabels = {}
+  }
 }
 
 export function applyStatusCfg() {
@@ -85,6 +103,30 @@ export function applyStatusCfg() {
   store.sections = [...s.cfg.sections]
   store.savesDir = s.cfg.saves_dir || ''
   store.externPath = s.cfg.extern_path || ''
+}
+
+/** 编队预设以 GET /api/team-presets 为准（会补全内置十支） */
+export async function loadTeamPresets() {
+  try {
+    const data = await api('/api/team-presets')
+    store.teamPresets = data.presets || []
+    if (!store.teamPresetId && store.teamPresets.length) {
+      store.teamPresetId = store.teamPresets[0].id
+    }
+    const ids = new Set(store.teamPresets.map((p) => p.id))
+    store.selectedTeamPresetIds = store.selectedTeamPresetIds.filter((id) => ids.has(id))
+  } catch {
+    /* 旧后端无接口时保留已有列表 */
+  }
+}
+
+async function ensureGeneralsForTeams() {
+  if (!store.current || store.generals.length) return
+  try {
+    await loadGenerals()
+  } catch {
+    /* 仅用于预设表中文名 */
+  }
 }
 
 export async function loadSaves() {
@@ -185,9 +227,40 @@ export async function loadOrphans() {
   store.orphansText = data.targets.length ? data.targets.join('\n') : '没有待清理的副本。'
 }
 
+export async function loadTeamPresetsPage() {
+  await loadTeamPresets()
+  await ensureGeneralsForTeams()
+}
+
+export async function loadTeamsInSave() {
+  if (!store.current) {
+    store.teamsInSave = []
+    return
+  }
+  try {
+    const data = await api('/api/teams?name=' + encodeURIComponent(store.current))
+    store.teamsInSave = data.teams || []
+  } catch {
+    store.teamsInSave = []
+  }
+}
+
+export async function loadTeamDeployPage() {
+  await loadTeamPresets()
+  await loadCities()
+  await ensureGeneralsForTeams()
+}
+
+export async function loadTeamTroopsPage() {
+  await loadTeamsInSave()
+}
+
 export async function refreshPage(key) {
   if (key === 'generals') await loadGenerals()
   if (key === 'cities') await loadCities()
+  if (key === 'teamPresets') await loadTeamPresetsPage()
+  if (key === 'teamDeploy') await loadTeamDeployPage()
+  if (key === 'teamTroops') await loadTeamTroopsPage()
   if (key === 'diplo') await loadDiplo()
   if (key === 'check') {
     await loadAudit()
