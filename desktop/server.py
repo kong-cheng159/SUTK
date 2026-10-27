@@ -914,11 +914,13 @@ def api_uninstall():
 
 
 def api_guide():
-    path = os.path.join(PROJ, '经验总结.md')
-    if not os.path.isfile(path):
-        raise ValueError('没找到经验总结.md')
-    with open(path, encoding='utf-8') as f:
-        return {'text': f.read()}
+    """桌面「说明」页：优先用户向文档，否则经验总结。"""
+    for name in ('桌面版使用说明.md', '经验总结.md'):
+        path = os.path.join(PROJ, name)
+        if os.path.isfile(path):
+            with open(path, encoding='utf-8') as f:
+                return {'text': f.read(), 'source': name}
+    raise ValueError('没找到 桌面版使用说明.md 或 经验总结.md')
 
 
 def _i32(value):

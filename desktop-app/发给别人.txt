@@ -1,11 +1,33 @@
-SUTK 修改器（桌面版）
+SUTK 修改器（桌面版 · 便携文件夹）
 
-把整个文件夹一起拷走，不要只发 exe。
-双击「SUTK修改器.exe」即可打开。不需要安装 Python，也不需要安装 Rust。
+【怎么运行】
+  双击「SUTK修改器.exe」打开图形界面。
+  把整个文件夹一起拷贝或压缩发送，不要只发 exe。
 
-电脑需要自带 Microsoft Edge（WebView2）。Windows 10 和 Windows 11 一般已经有了。
+【系统要求】
+  Windows 10 / 11（64 位）
+  需要 Microsoft Edge WebView2（一般系统已自带）
+  不需要安装 Python、不需要安装 Rust
 
-这个程序只改游戏存档，不改游戏本体。
-存档仍在：%LOCALAPPDATA%\ProjectA\Saved\Saves
-第一次改某个存档时，原始备份会出现在本文件夹的 backup 里。
-配置和历史记录也在本文件夹，不会写进游戏目录。
+【改的是什么】
+  只改游戏存档，不改游戏安装目录。
+  存档默认在：%LOCALAPPDATA%\ProjectA\Saved\Saves
+  可在软件「设置」里改成别的文件夹。
+
+【第一次使用】
+  1. 顶部选择要改的 .sav
+  2. 左侧「存档」勾选模块 → 应用修改
+  3. 进游戏：主菜单重新读档（必须读档才会生效）
+
+【本文件夹里会生成的内容】
+  config.json     你的设置和编队预设
+  backup\         每个档第一次改前的备份
+  history\        改档前快照，可回滚
+
+【详细说明】
+  同目录「桌面版使用说明.md」（若有）
+  或解压包里的 README.md
+
+【控制台版】
+  若文件夹里还有 1 安装.bat / 控制台.bat，那是文字菜单版，
+  与 exe 共用 SUTKMod 逻辑，详见「安装教程.txt」「使用说明.md」。

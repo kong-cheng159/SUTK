@@ -28,6 +28,10 @@ $guideName = -join @([char]0x7ECF, [char]0x9A8C, [char]0x603B, [char]0x7ED3) + '
 $guide = Join-Path $repo $guideName
 if (-not (Test-Path -LiteralPath $guide)) { throw "missing $guide" }
 Copy-Item -LiteralPath $guide -Destination $dest
+foreach ($doc in @('桌面版使用说明.md', 'README.md', '使用说明.md')) {
+    $docPath = Join-Path $repo $doc
+    if (Test-Path -LiteralPath $docPath) { Copy-Item -LiteralPath $docPath -Destination $dest }
+}
 $desk = Join-Path $dest 'desktop'
 New-Item -ItemType Directory -Path $desk | Out-Null
 Copy-Item -LiteralPath (Join-Path $repo 'desktop\server.py') -Destination $desk
