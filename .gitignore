@@ -1,0 +1,12 @@
+# 运行时产物
+__pycache__/
+*.pyc
+*.pyo
+mod.log
+watch_err.log
+memscan.json
+诊断结果.txt
+
+# 本地存档备份与历史快照（含个人存档，不入库）
+backup/
+history/
