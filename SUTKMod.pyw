@@ -894,7 +894,41 @@ CONFIG_PATH = os.path.join(APP_DIR, 'config.json')
 DEFAULT_CFG = {'scope': 'player', 'sections': 'all', 'hotkey': True,
                'ui': 'bat', 'target': 'all',
                'auto_apply': False,     # 游戏启动时自动改档（默认关）
-               'snapshot_game': False}  # 游戏自己存档时本地留底（默认关）
+               'snapshot_game': False,  # 游戏自己存档时本地留底（默认关）
+               'saves_dir': '',         # 空=系统默认 ProjectA\Saved\Saves
+               'extern_path': ''}      # 空=存档目录上一级的 ExternPersonage.sav
+
+
+def default_saves_dir():
+    return os.path.join(LOCAL, r'ProjectA\Saved\Saves')
+
+
+def default_extern_path():
+    return os.path.join(LOCAL, r'ProjectA\Saved\ExternPersonage.sav')
+
+
+def _norm_user_path(raw):
+    if raw is None:
+        return ''
+    s = str(raw).strip()
+    if not s:
+        return ''
+    return os.path.normpath(os.path.expandvars(os.path.expanduser(s)))
+
+
+def apply_path_cfg(cfg):
+    """按 config.json 刷新全局 SAVES_DIR / EXTERN_PATH"""
+    global SAVES_DIR, EXTERN_PATH
+    custom = _norm_user_path(cfg.get('saves_dir'))
+    if custom:
+        SAVES_DIR = custom
+    else:
+        SAVES_DIR = default_saves_dir()
+    custom_e = _norm_user_path(cfg.get('extern_path'))
+    if custom_e:
+        EXTERN_PATH = custom_e
+    else:
+        EXTERN_PATH = os.path.join(os.path.dirname(SAVES_DIR), 'ExternPersonage.sav')
 
 
 def load_cfg():
@@ -906,6 +940,7 @@ def load_cfg():
         pass
     if cfg.get('sections') not in ('all',) and isinstance(cfg.get('sections'), list):
         cfg['sections'] = ','.join(cfg['sections'])
+    apply_path_cfg(cfg)
     return cfg
 
 
