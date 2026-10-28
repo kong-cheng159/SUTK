@@ -1,0 +1,242 @@
+[
+  {
+    "old": "霍骠垒",
+    "new": "张铁垒",
+    "new_guid": "7AF38BF3E01D43E1B9704ABEF02BD4C5",
+    "source_guid": "6CD5900E4F37C42335D7F981B59DA06D",
+    "team_char_b": "铁",
+    "team_char_a": "骠"
+  },
+  {
+    "old": "卫骠垣",
+    "new": "李铁垣",
+    "new_guid": "A756E3C8B836481AAEF81F0D52B21569",
+    "source_guid": "41C0A6BC45871BAFDE21B4AE8ABC2B46",
+    "team_char_b": "铁",
+    "team_char_a": "骠"
+  },
+  {
+    "old": "韩骠锐",
+    "new": "王铁锐",
+    "new_guid": "9147080BA6204A30BFF934F6D0521B77",
+    "source_guid": "D2F74D744AF146645CD692B44A273D83",
+    "team_char_b": "铁",
+    "team_char_a": "骠"
+  },
+  {
+    "old": "卫骧城",
+    "new": "刘锋城",
+    "new_guid": "27421825BFB348BD86C434C74ACB71DF",
+    "source_guid": "CA7F1D7B4AC4A6ED7450FF9D268CD804",
+    "team_char_b": "锋",
+    "team_char_a": "骧"
+  },
+  {
+    "old": "罗骧羽",
+    "new": "陈锋羽",
+    "new_guid": "8CCCD39BD80B4CA58B5EE2C213E80C76",
+    "source_guid": "730821634495A78221B9A6B07262E4CE",
+    "team_char_b": "锋",
+    "team_char_a": "骧"
+  },
+  {
+    "old": "苏骧烈",
+    "new": "杨锋烈",
+    "new_guid": "827DDEC791D949A7BF323EEC6EB65B17",
+    "source_guid": "A0B9C1E84E602BE52930CAA4AFE5F6B3",
+    "team_char_b": "锋",
+    "team_char_a": "骧"
+  },
+  {
+    "old": "江骏岳",
+    "new": "黄虹岳",
+    "new_guid": "926E62A440C541FEAB282E26E8C0C909",
+    "source_guid": "2DEF536E48FD36C72BFA49875A1DFCE2",
+    "team_char_b": "虹",
+    "team_char_a": "骏"
+  },
+  {
+    "old": "白骏策",
+    "new": "赵虹策",
+    "new_guid": "D7D1708F43994AAFBF67A04D40262098",
+    "source_guid": "358B5B6945D9DE51E43B6D8A32ECBCA7",
+    "team_char_b": "虹",
+    "team_char_a": "骏"
+  },
+  {
+    "old": "叶骏骁",
+    "new": "吴虹骁",
+    "new_guid": "2CE8CCAF220D4B05866AB2B1BDA35609",
+    "source_guid": "56E2FC3C4944380267008891DC5D4B92",
+    "team_char_b": "虹",
+    "team_char_a": "骏"
+  },
+  {
+    "old": "韩澜靖",
+    "new": "徐崖靖",
+    "new_guid": "A96612160CA54D8BB4D2C5C10F48F01D",
+    "source_guid": "9547BA294273067B4675F9A5BB02C5BF",
+    "team_char_b": "崖",
+    "team_char_a": "澜"
+  },
+  {
+    "old": "谢澜锋",
+    "new": "孙崖锋",
+    "new_guid": "E877A32F12EC4A6AB9A4C279DEEEC900",
+    "source_guid": "7C30DA8C4308F11DEAD6FE8FBDC38736",
+    "team_char_b": "崖",
+    "team_char_a": "澜"
+  },
+  {
+    "old": "楚澜骁",
+    "new": "朱崖骁",
+    "new_guid": "348E497EFAA24EE182055FE27A363347",
+    "source_guid": "16E026D74454F25DE6EE50AF1B774083",
+    "team_char_b": "崖",
+    "team_char_a": "澜"
+  },
+  {
+    "old": "秦霆烈",
+    "new": "胡磐烈",
+    "new_guid": "3F6351FB43BE4970990C460651D82032",
+    "source_guid": "57DA2E7146AB0E03CE644DBA84BC5C67",
+    "team_char_b": "磐",
+    "team_char_a": "霆"
+  },
+  {
+    "old": "顾霆衡",
+    "new": "郭磐衡",
+    "new_guid": "90328171F8BD4B5D98D3B812670BDC89",
+    "source_guid": "E22F020243D5563E834102AA27ADB803",
+    "team_char_b": "磐",
+    "team_char_a": "霆"
+  },
+  {
+    "old": "裴霆羽",
+    "new": "何磐羽",
+    "new_guid": "A49BC15A916E45A19E1198BE322F5E9A",
+    "source_guid": "8DEED9344CC360B21F3046B73EAC8572",
+    "team_char_b": "磐",
+    "team_char_a": "霆"
+  },
+  {
+    "old": "段烬壁",
+    "new": "高焰壁",
+    "new_guid": "673B8F58F6F24D5DB634848A96ADB3BE",
+    "source_guid": "E999FE1C42A1FE53DCE154B07352FF1A",
+    "team_char_b": "焰",
+    "team_char_a": "烬"
+  },
+  {
+    "old": "曹烬刃",
+    "new": "林焰刃",
+    "new_guid": "24A32D7B24D24CEFB83AA2F2B99BB8DA",
+    "source_guid": "5A4B3D96433B662301F581988C4B1E95",
+    "team_char_b": "焰",
+    "team_char_a": "烬"
+  },
+  {
+    "old": "杜烬炎",
+    "new": "郑焰炎",
+    "new_guid": "F0AD85D673804F198A94275B091DA2A9",
+    "source_guid": "2D5490EC44C44DCFFD65629A646C91D7",
+    "team_char_b": "焰",
+    "team_char_a": "烬"
+  },
+  {
+    "old": "沈岳川",
+    "new": "梁鸿川",
+    "new_guid": "056C01826BBB4864B4EEC044FF51DD47",
+    "source_guid": "CBCDA3C646BC03EB0948939F19AE4EB7",
+    "team_char_b": "鸿",
+    "team_char_a": "岳"
+  },
+  {
+    "old": "陆岳衡",
+    "new": "宋鸿衡",
+    "new_guid": "BA862ECB715847C0AC0EE8EEC99B4636",
+    "source_guid": "C0DC6C66474153135CA41C8018F050C4",
+    "team_char_b": "鸿",
+    "team_char_a": "岳"
+  },
+  {
+    "old": "萧岳策",
+    "new": "唐鸿策",
+    "new_guid": "49F2520882A9494A9CD818F496C84021",
+    "source_guid": "771E8B884CC72102DA9D31ABE65018BB",
+    "team_char_b": "鸿",
+    "team_char_a": "岳"
+  },
+  {
+    "old": "赵朔川",
+    "new": "冯启川",
+    "new_guid": "FD9C1953CF5C44A6BC455369B7088F7F",
+    "source_guid": "CA4DF5114B33F46B7397DA980518C509",
+    "team_char_b": "启",
+    "team_char_a": "朔"
+  },
+  {
+    "old": "林朔霆",
+    "new": "于启霆",
+    "new_guid": "B85176C115D14BDCBC01EF8BE5D83CFB",
+    "source_guid": "F7A0B9D94259190B605EDC82682D88A4",
+    "team_char_b": "启",
+    "team_char_a": "朔"
+  },
+  {
+    "old": "程朔锋",
+    "new": "董启锋",
+    "new_guid": "7DD6F1CEB1284FC28C4F3C684D2C2DF3",
+    "source_guid": "609EEB434715EFAC62DC66ACBACA2CD1",
+    "team_char_b": "启",
+    "team_char_a": "朔"
+  },
+  {
+    "old": "周晟垒",
+    "new": "袁耀垒",
+    "new_guid": "CC0DD2F038E441B89D8B9D4CC69CBDC8",
+    "source_guid": "DF87C0C540D5DB62A4C774B8C7063DA6",
+    "team_char_b": "耀",
+    "team_char_a": "晟"
+  },
+  {
+    "old": "韩晟锐",
+    "new": "潘耀锐",
+    "new_guid": "0091E57BD4F9478C877B20C1C396EB51",
+    "source_guid": "2EADA85B43664646618BE5AB7F4BC88A",
+    "team_char_b": "耀",
+    "team_char_a": "晟"
+  },
+  {
+    "old": "许晟垣",
+    "new": "蒋耀垣",
+    "new_guid": "B5776A7A045A4D0A8D2D40D1207CC5EC",
+    "source_guid": "2A285CCA47ED0B5B037BFDB4F6E4E1A6",
+    "team_char_b": "耀",
+    "team_char_a": "晟"
+  },
+  {
+    "old": "卫霄城",
+    "new": "蔡云城",
+    "new_guid": "85D06E9317584E85B692CB7C8C10C154",
+    "source_guid": "58A46E394011E4DE0DB666BE2573F157",
+    "team_char_b": "云",
+    "team_char_a": "霄"
+  },
+  {
+    "old": "苏霄烈",
+    "new": "余云烈",
+    "new_guid": "D7B02A799BA34442AD117C877207D003",
+    "source_guid": "685DCD5F4EFA05C4A00D05893C34548D",
+    "team_char_b": "云",
+    "team_char_a": "霄"
+  },
+  {
+    "old": "罗霄羽",
+    "new": "魏云羽",
+    "new_guid": "F296355510334970AC974BB65F571B6A",
+    "source_guid": "002DB39B40A41CE8E1CA4389CDE22C84",
+    "team_char_b": "云",
+    "team_char_a": "霄"
+  }
+]

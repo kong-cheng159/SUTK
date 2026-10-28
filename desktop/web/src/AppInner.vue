@@ -13,7 +13,7 @@ import {
   useDialog,
   useMessage,
 } from 'naive-ui'
-import { MENU } from './constants'
+import { MENU, MENU_PARENT_DEFAULT } from './constants'
 import { menuIcon } from './menuIcons'
 import { appendLog } from './log'
 import { api } from './api'
@@ -24,6 +24,7 @@ import {
   loadSaves,
   loadGenerals,
   loadExtern,
+  loadCustomGenerals,
   loadCities,
   loadDiplo,
   loadAudit,
@@ -39,6 +40,7 @@ import {
 } from './store'
 import SavesView from './views/SavesView.vue'
 import GeneralsView from './views/GeneralsView.vue'
+import CustomGeneralsView from './views/CustomGeneralsView.vue'
 import CitiesView from './views/CitiesView.vue'
 import TeamPresetsView from './views/TeamPresetsView.vue'
 import TeamDeployView from './views/TeamDeployView.vue'
@@ -83,7 +85,7 @@ function buildMenuOptions(items) {
 
 const menuOptions = buildMenuOptions(MENU)
 /** 编队二级菜单默认展开 */
-const menuExpandedKeys = ref(['teams'])
+const menuExpandedKeys = ref(['generalsRoot', 'teamsRoot'])
 
 function confirm(content, fn) {
   dialog.warning({
@@ -96,6 +98,31 @@ function confirm(content, fn) {
       return true
     },
   })
+}
+
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms))
+}
+
+/** 提权后后端会重启，轮询直到连上且 admin=true */
+async function elevateAdmin() {
+  await api('/api/elevate', {})
+  appendLog('等待提权…请在 UAC 窗口点「是」')
+  for (let i = 0; i < 30; i++) {
+    await sleep(1000)
+    try {
+      store.status = await api('/api/status')
+      if (store.status.admin) {
+        await loadMem()
+        appendLog('已提权，可扫描游戏内存')
+        message.success('已是管理员')
+        return
+      }
+    } catch {
+      /* 旧服务已关、新服务尚未就绪 */
+    }
+  }
+  throw new Error('提权后 30 秒内未连上后端，请手动关闭修改器并以管理员身份重新打开 exe')
 }
 
 async function run(fn) {
@@ -112,6 +139,9 @@ async function run(fn) {
 }
 
 async function onPage(key) {
+  if (MENU_PARENT_DEFAULT[key]) {
+    key = MENU_PARENT_DEFAULT[key]
+  }
   page.value = key
   if (key === 'guide') await loadGuide(renderMarkdown)
   await refreshPage(key)
@@ -287,6 +317,32 @@ function diploRowPayload(row) {
                         await loadExtern()
                       })
                   "
+                  @clone-extern="
+                    (payload) =>
+                      run(async () => {
+                        if (!store.current && payload.add_to_save) {
+                          throw new Error('请先在顶部选择存档')
+                        }
+                        const label = (payload.surname || '') + (payload.name || '')
+                        confirm(
+                          `新建自建武将「${label}」？\n会写入 ExternPersonage.sav` +
+                            (payload.add_to_save ? '，并复制进当前存档（实验，请先备份）。' : '（仅模板，当前档需新开战役才有）。'),
+                          async () => {
+                            const data = await api('/api/extern/clone', {
+                              source_guid: payload.source_guid,
+                              surname: payload.surname,
+                              name: payload.name,
+                              add_to_save: payload.add_to_save,
+                              save: store.current,
+                            })
+                            message.success(`已创建 ${data.name || label}`)
+                            await loadExtern()
+                            await loadCustomGenerals()
+                            if (payload.add_to_save) await loadGenerals()
+                          },
+                        )
+                      })
+                  "
                 >
                   <template #save-actions>
                     <n-button type="primary" @click="run(() => confirm('把本国在世武将六维全部改成目标值？', async () => {
@@ -296,6 +352,13 @@ function diploRowPayload(row) {
                     <n-button @click="run(loadGenerals)">刷新</n-button>
                   </template>
                 </GeneralsView>
+
+                <CustomGeneralsView v-else-if="page === 'customGenerals'">
+                  <template #actions>
+                    <n-button @click="run(loadCustomGenerals)">刷新</n-button>
+                    <n-button quaternary @click="run(() => api('/api/open-folder', { kind: 'extern' }))">打开模板文件夹</n-button>
+                  </template>
+                </CustomGeneralsView>
 
                 <CitiesView v-else-if="page === 'cities'" ref="citiesRef">
                   <template #toolbar>
@@ -326,7 +389,11 @@ function diploRowPayload(row) {
                       secondary
                       @click="
                         run(() =>
-                          confirm('为本国所有「尚无太守」的城市自动任命？\n只用空闲内政型武将，高武统敏保留给出征；不足时会提示剩余座数。', async () => {
+                          confirm(
+                            '将为本国「每一座」尚无太守的城市自动任命（与是否勾选无关）。\n' +
+                              '只用空闲内政型武将，高武统敏保留给出征；武将不够时剩余城会写在记录里。\n' +
+                              '若只想改几座城，请用「任命选中城」。',
+                            async () => {
                             await api('/api/cities/assign-prefects', {
                               name: store.current,
                               all_player: true,
@@ -335,7 +402,7 @@ function diploRowPayload(row) {
                           }),
                         )
                       "
-                    >填补无太守城</n-button>
+                    >本国全部无太守</n-button>
                   </template>
                   <template #transfer>
                     <n-button
@@ -482,18 +549,7 @@ function diploRowPayload(row) {
                     })">写入</n-button>
                   </template>
                   <template #elevate>
-                    <n-button @click="run(async () => {
-                      await api('/api/elevate')
-                      appendLog('等待提权…')
-                      for (let i = 0; i < 30; i++) {
-                        await new Promise((r) => setTimeout(r, 1000))
-                        try {
-                          store.status = await api('/api/status')
-                          if (store.status.admin) { await loadMem(); appendLog('已提权'); return }
-                        } catch { /* wait */ }
-                      }
-                      throw new Error('提权后未连上')
-                    })">管理员重新打开</n-button>
+                    <n-button @click="run(elevateAdmin)">管理员重新打开</n-button>
                   </template>
                 </MemoryView>
 

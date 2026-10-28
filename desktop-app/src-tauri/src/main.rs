@@ -145,6 +145,30 @@ fn stop_server() {
     }
 }
 
+/// 8765 上若残留旧 python 服务，exe 会误用旧接口；启动前清掉监听该端口的进程。
+#[cfg(windows)]
+fn kill_listeners_on_port(port: u16) {
+    let ps = format!(
+        "Get-NetTCPConnection -LocalPort {port} -State Listen -ErrorAction SilentlyContinue | \
+         ForEach-Object {{ Stop-Process -Id $_.OwningProcess -Force -ErrorAction SilentlyContinue }}"
+    );
+    let _ = Command::new("powershell")
+        .args([
+            "-NoProfile",
+            "-NonInteractive",
+            "-ExecutionPolicy",
+            "Bypass",
+            "-Command",
+            &ps,
+        ])
+        .creation_flags(CREATE_NO_WINDOW)
+        .status();
+    std::thread::sleep(Duration::from_millis(400));
+}
+
+#[cfg(not(windows))]
+fn kill_listeners_on_port(_port: u16) {}
+
 fn main() {
     tauri::Builder::default()
         .plugin(tauri_plugin_dialog::init())
@@ -152,6 +176,10 @@ fn main() {
             let root = app_root();
             let data_dir = exe_dir();
             let _ = fs::create_dir_all(&data_dir);
+            stop_server();
+            if status_ok(PORT) {
+                kill_listeners_on_port(PORT);
+            }
             if !status_ok(PORT) {
                 match spawn_server(&root, &data_dir) {
                     Ok(child) => {

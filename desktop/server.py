@@ -25,6 +25,7 @@ CITIES_PATH = os.path.join(HERE, 'cities_zh.json')
 TROOP_KINDS_PATH = os.path.join(HERE, 'troop_kinds_zh.json')
 PORT = 8731
 APP_ID = 'sutk-desktop'
+API_VERSION = 2
 
 sys.path.insert(0, PROJ)
 
@@ -166,6 +167,10 @@ def api_status():
         watchers = []
     return {
         'app': APP_ID,
+        'api_version': API_VERSION,
+        'features': {
+            'custom_generals': True,
+        },
         'saves_dir': M.SAVES_DIR,
         'saves_dir_default': M.default_saves_dir(),
         'saves_dir_ok': os.path.isdir(M.SAVES_DIR),
@@ -477,6 +482,136 @@ def api_edit_general(body):
     return {'lines': [msg], 'changed': changed, 'people': people}
 
 
+def _preset_guid_index(presets):
+    """GUID(大写) -> [预设显示名, ...]"""
+    out = {}
+    for p in presets or []:
+        label = str(p.get('name') or p.get('id') or '预设').strip()
+        for g in p.get('generals') or []:
+            gu = str(g or '').strip().upper()
+            if gu and gu != 'NONE':
+                out.setdefault(gu, []).append(label)
+    return out
+
+
+def _person_on_player_faction(data, per, player_fid):
+    """与 _own_generals 一致：按势力表 canonical 键比较。"""
+    if not player_fid or not per:
+        return False
+    inf = per.get('info') or {}
+    pfk = M._faction_key(data, player_fid)
+    ofk = M._faction_key(data, inf.get('faction'))
+    if pfk and ofk:
+        return str(pfk).lower() == str(ofk).lower()
+    return str(inf.get('faction', '')).lower() == str(player_fid).lower()
+
+
+def _save_custom_presence_index(data, player_fid):
+    """GUID(大写) -> {in_file, on_player, state, dead}"""
+    out = {}
+    if not data:
+        return out
+    for pid, per in (data.get('personages') or {}).items():
+        gu = str(pid).upper()
+        inf = per.get('info') or {}
+        dead = inf.get('tag1') in ('Death', 'Dead')
+        on_player = _person_on_player_faction(data, per, player_fid)
+        ent = {
+            'in_file': True,
+            'on_player': on_player and not dead,
+            'state': str(per.get('state') or '') or '—',
+            'dead': dead,
+        }
+        out[gu] = ent
+    return out
+
+
+def api_custom_generals(body):
+    """仅 newInfos：自建模板名录，可选对照当前存档是否在档、是否在编队预设。"""
+    save_name = (body or {}).get('name') or ''
+    data, _raw = M.read_extern()
+    if data is None:
+        return {
+            'path': M.EXTERN_PATH,
+            'missing': True,
+            'rows': [],
+            'save_name': save_name or None,
+            'lines': ['找不到 ExternPersonage.sav'],
+        }
+    cfg = _cfg()
+    preset_ix = _preset_guid_index(M.get_team_presets(cfg))
+    save_data = None
+    player_fid = None
+    if save_name:
+        try:
+            _path, _sav, save_data = _open_save(save_name)
+            save_name = os.path.basename(_path)
+            player_fid = M._player_fid(save_data)
+        except Exception:
+            save_data = None
+
+    save_ix = _save_custom_presence_index(save_data, player_fid) if save_data else {}
+
+    rows = []
+    for gid, info, kind in M._extern_rows(data):
+        if kind != 'new':
+            continue
+        sn = str(info.get('surname') or '').strip()
+        nm = str(info.get('name') or '').strip()
+        full = M._extern_name(info)
+        team_char = nm[0] if len(nm) >= 2 else ''
+        role_char = nm[1] if len(nm) >= 2 else ''
+        gu = str(gid).upper()
+        presets = preset_ix.get(gu) or []
+        in_save = False
+        in_save_file = False
+        save_state = ''
+        save_dead = False
+        if save_data is not None:
+            ent = save_ix.get(gu)
+            if ent:
+                in_save_file = True
+                save_dead = bool(ent.get('dead'))
+                in_save = bool(ent.get('on_player'))
+                save_state = ent.get('state') or '—'
+        rows.append({
+            'guid': gid,
+            'name': full,
+            'surname': sn,
+            'given': nm,
+            'team_char': team_char,
+            'role_char': role_char,
+            'tactical': info.get('tactical'),
+            'stats': {k: info.get(k) for k in M.STAT_KEYS},
+            'presets': presets,
+            'in_preset': bool(presets),
+            'in_save': in_save,
+            'in_save_file': in_save_file,
+            'save_state': save_state,
+            'save_dead': save_dead,
+        })
+
+    rows.sort(key=lambda r: (r.get('team_char') or '～', r.get('name') or ''))
+    team_groups = {}
+    for r in rows:
+        tc = r.get('team_char') or '—'
+        team_groups[tc] = team_groups.get(tc, 0) + 1
+
+    return {
+        'path': M.EXTERN_PATH,
+        'missing': False,
+        'save_name': save_name or None,
+        'rows': rows,
+        'total': len(rows),
+        'modify_count': len(data.get('modifyInfos') or {}),
+        'team_groups': team_groups,
+        'lines': [
+            '自建模板 %d 人（modifyInfos 改造 %d 人未列入本页）'
+            % (len(rows), len(data.get('modifyInfos') or {})),
+        ],
+    }
+
+
 def api_extern():
     data, _raw = M.read_extern()
     if data is None:
@@ -496,6 +631,33 @@ def api_extern():
         'rows': rows,
         'lines': ['改的是模板，只影响以后新建的战役，已有存档不变'],
     }
+
+
+def api_extern_clone(body):
+    body = body or {}
+    source = str(body.get('source_guid') or body.get('source') or '').strip()
+    if not source:
+        source = '6CD5900E4F37C42335D7F981B59DA06D'
+    surname = body.get('surname') or ''
+    name = body.get('name') or ''
+    tactical = body.get('tactical')
+    new_gid, cn = M.clone_custom_extern(source, surname, name, tactical=tactical)
+    lines = [
+        '已在 ExternPersonage.sav 新建模板：%s（%s）' % (cn, new_gid),
+        '新开战役会自动带上；已有战役需勾选「同时加入当前存档」或手动在游戏里登用。',
+    ]
+    added_save = False
+    if body.get('add_to_save'):
+        save_fn = body.get('save') or body.get('save_name') or body.get('sav')
+        path, sav, data = _open_save(save_fn)
+        save_source = body.get('save_source_guid') or source
+        M.spawn_custom_in_save(data, save_source, new_gid, surname, name)
+        M._write_save_json(path, sav, data)
+        added_save = True
+        lines.append('已写入存档 %s，请回主菜单重新读档后在「存档武将」查看。' % os.path.basename(path))
+        if M.game_running():
+            lines.append('游戏正在运行：读档前不要在游戏里覆盖存档。')
+    return {'guid': new_gid, 'name': cn, 'lines': lines, 'added_to_save': added_save}
 
 
 def api_edit_extern(body):
@@ -589,7 +751,10 @@ def api_assign_prefects(body):
         if not city_keys:
             raise ValueError('所选城市里没有属于你的、且无太守可任命的城')
     combat_threshold = body.get('combat_threshold')
-    lines = []
+    lines = [
+        '范围：仅玩家势力「%s」，不修改他国城市与太守'
+        % _label_cn(M._faction_label(data, fid)),
+    ]
     with Capture() as cap:
         n, part, summary = M.auto_assign_prefects(
             data, fid=fid, city_keys=city_keys, combat_threshold=combat_threshold)
@@ -1059,9 +1224,12 @@ def api_elevate():
     if not os.path.isfile(exe):
         exe = os.path.join(PROJ, 'python', 'python.exe')
     script = os.path.abspath(__file__)
-    params = '"%s" --elevated --no-browser' % script
+    app_dir = os.environ.get('SUTK_APP_DIR', '').strip() or getattr(M, 'APP_DIR', PROJ)
+    params = '"%s" --elevated --no-browser --port %d' % (script, PORT)
+    if app_dir:
+        params += ' --app-dir "%s"' % app_dir.replace('"', '')
     r = __import__('ctypes').windll.shell32.ShellExecuteW(
-        None, 'runas', exe, params, HERE, 0)
+        None, 'runas', exe, params, PROJ, 0)
     if r <= 32:
         raise ValueError('提权被取消或失败（%s）' % r)
 
@@ -1084,7 +1252,9 @@ ROUTES = {
     '/api/open-folder': ('POST', api_open_folder),
     '/api/generals': ('GET', lambda b: api_generals(b.get('name'))),
     '/api/generals/edit': ('POST', api_edit_general),
+    '/api/custom-generals': ('GET', lambda b: api_custom_generals(b)),
     '/api/extern': ('GET', lambda b: api_extern()),
+    '/api/extern/clone': ('POST', api_extern_clone),
     '/api/extern/edit': ('POST', api_edit_extern),
     '/api/cities': ('GET', lambda b: api_cities(b.get('name'))),
     '/api/transfer': ('POST', api_transfer),
@@ -1230,6 +1400,9 @@ def _open_window(url):
 def main():
     global HTTPD, PORT
     args = sys.argv[1:]
+    if '--app-dir' in args:
+        os.environ['SUTK_APP_DIR'] = args[args.index('--app-dir') + 1]
+        _apply_app_dir()
     if '--port' in args:
         PORT = int(args[args.index('--port') + 1])
     no_browser = '--no-browser' in args

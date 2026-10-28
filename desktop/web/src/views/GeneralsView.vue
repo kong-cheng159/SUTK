@@ -1,6 +1,6 @@
 <script setup>
 import { ref, computed, h, watch } from 'vue'
-import { NInputNumber, NButton } from 'naive-ui'
+import { NInputNumber, NButton, NInput, NSelect, NCheckbox, NSpace } from 'naive-ui'
 import { store } from '../store'
 import { STATS, STAT_NAME } from '../constants'
 import { useTableMaxHeight } from '../useTableMaxHeight'
@@ -26,9 +26,39 @@ const externPagination = useTablePagination(20)
 const saveSort = useTableSort(savePagination)
 const externSort = useTableSort(externPagination)
 
-const emit = defineEmits(['write-one', 'write-extern', 'reload-extern'])
+const emit = defineEmits(['write-one', 'write-extern', 'reload-extern', 'clone-extern'])
 const tab = ref('save')
 const search = ref('')
+const cloneSurname = ref('')
+const cloneName = ref('')
+const cloneSource = ref('6CD5900E4F37C42335D7F981B59DA06D')
+const cloneAddSave = ref(true)
+
+const externSourceOptions = computed(() =>
+  (store.externRows || [])
+    .filter((r) => r.kind === 'new')
+    .map((r) => ({ label: `${r.name} · ${String(r.guid).slice(0, 8)}…`, value: r.guid })),
+)
+
+watch(
+  () => externSourceOptions.value.length,
+  (n) => {
+    if (n && !externSourceOptions.value.some((o) => o.value === cloneSource.value)) {
+      cloneSource.value = externSourceOptions.value[0].value
+    }
+  },
+  { immediate: true },
+)
+
+function submitClone() {
+  if (!cloneSurname.value.trim() && !cloneName.value.trim()) return
+  emit('clone-extern', {
+    source_guid: cloneSource.value,
+    surname: cloneSurname.value.trim(),
+    name: cloneName.value.trim(),
+    add_to_save: cloneAddSave.value,
+  })
+}
 
 watch(search, () => resetPaginationPage(savePagination))
 watch(
@@ -237,7 +267,29 @@ const externColumns = computed(() => {
       </div>
     </template>
     <template v-else>
-      <p class="hint">改的是 ExternPersonage.sav 模板，只影响以后新开的战役。</p>
+      <p class="hint">
+        模板在 ExternPersonage.sav：新开战役会带上。完整列表见侧栏「自建名录」。下方「克隆新建」可复制一名现有自建（如霍骠垒）改姓名为新人。
+      </p>
+      <n-space align="center" wrap style="margin-bottom: 10px">
+        <n-select
+          v-model:value="cloneSource"
+          :options="externSourceOptions"
+          placeholder="复制自"
+          size="small"
+          style="width: 220px"
+        />
+        <n-input v-model:value="cloneSurname" size="small" placeholder="姓" style="width: 72px" />
+        <n-input v-model:value="cloneName" size="small" placeholder="名" style="width: 96px" />
+        <n-checkbox v-model:checked="cloneAddSave" size="small">同时加入当前存档</n-checkbox>
+        <n-button
+          type="primary"
+          size="small"
+          :disabled="!cloneSurname.trim() && !cloneName.trim()"
+          @click="submitClone"
+        >
+          克隆新建
+        </n-button>
+      </n-space>
       <div class="table-stack">
         <div ref="externTableBodyRef" class="table-stack-body">
           <n-data-table

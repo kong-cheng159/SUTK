@@ -3,6 +3,7 @@ import { NIcon } from 'naive-ui'
 import {
   FolderOpenOutline,
   PeopleOutline,
+  PersonAddOutline,
   MapOutline,
   GridOutline,
   AddCircleOutline,
@@ -13,17 +14,21 @@ import {
   BookOutline,
   ReaderOutline,
   SettingsOutline,
+  BuildOutline,
 } from '@vicons/ionicons5'
 
 const ICON_BY_KEY = {
   saves: FolderOpenOutline,
+  generalsRoot: PeopleOutline,
   generals: PeopleOutline,
+  customGenerals: PersonAddOutline,
   cities: MapOutline,
-  teams: GridOutline,
+  teamsRoot: GridOutline,
   teamPresets: GridOutline,
   teamDeploy: AddCircleOutline,
   teamTroops: FlagOutline,
   diplo: GlobeOutline,
+  toolsRoot: BuildOutline,
   check: ShieldCheckmarkOutline,
   memory: HardwareChipOutline,
   guide: BookOutline,

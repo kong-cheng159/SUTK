@@ -20,7 +20,8 @@ const memText = computed(() => {
   <n-scrollbar style="max-height:100%">
     <n-space vertical size="medium">
       <n-alert type="warning" :bordered="false">
-        只扫描 SUTK-Win64-Shipping.exe。先在游戏里改数值，再用新数值过滤，候选少了再写入。
+        只扫描 SUTK-Win64-Shipping.exe。需先<strong>开游戏并进档</strong>，再扫描；先在游戏里改数值，用新数值过滤，候选少了再写入。
+        内存读写需管理员：点「管理员重新打开」并在 UAC 里选「是」。
       </n-alert>
       <n-card size="small">
         <pre style="margin:0;white-space:pre-wrap">{{ memText }}</pre>

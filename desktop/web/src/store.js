@@ -11,6 +11,8 @@ export const store = reactive({
   generalHint: '',
   generalTargets: {},
   externRows: [],
+  customGenerals: [],
+  customGeneralsMeta: {},
   cities: [],
   cityProblems: [],
   cityFactions: [],
@@ -163,6 +165,88 @@ export async function loadExtern() {
   }))
 }
 
+function mapExternRowToCustom(r, playerPidSet, anyPidSet) {
+  const full = String(r.name || '').trim()
+  const sn = full.length >= 3 ? full[0] : ''
+  const given = full.length >= 3 ? full.slice(1) : full
+  const team_char = given.length >= 2 ? given[0] : ''
+  const role_char = given.length >= 2 ? given[1] : ''
+  const gu = String(r.guid || '').toUpperCase()
+  const in_save_file = anyPidSet.has(gu)
+  const in_save = playerPidSet.has(gu)
+  return {
+    guid: r.guid,
+    name: full,
+    surname: sn,
+    given,
+    team_char,
+    role_char,
+    tactical: r.tactical,
+    stats: r.stats || {},
+    presets: [],
+    in_preset: false,
+    in_save,
+    in_save_file,
+    save_state: in_save ? '在档' : '',
+    save_dead: false,
+  }
+}
+
+function buildTeamGroups(rows) {
+  const team_groups = {}
+  for (const r of rows) {
+    const tc = r.team_char || '—'
+    team_groups[tc] = (team_groups[tc] || 0) + 1
+  }
+  return team_groups
+}
+
+export async function loadCustomGenerals() {
+  const q = store.current ? '?name=' + encodeURIComponent(store.current) : ''
+  try {
+    const data = await api('/api/custom-generals' + q)
+    store.customGenerals = data.rows || []
+    store.customGeneralsMeta = {
+      path: data.path,
+      missing: data.missing,
+      total: data.total,
+      modify_count: data.modify_count,
+      team_groups: data.team_groups || {},
+      fallback: false,
+    }
+    return
+  } catch (e) {
+    if (!String(e.message || '').includes('没有这个接口')) throw e
+  }
+  if (!store.generals.length && store.current) {
+    try {
+      await loadGenerals()
+    } catch {
+      /* 仅用于对照在档 */
+    }
+  }
+  const data = await api('/api/extern')
+  const playerPidSet = new Set(
+    (store.generals || []).map((g) => String(g.pid || '').toUpperCase()),
+  )
+  const rows = (data.rows || [])
+    .filter((r) => r.kind === 'new')
+    .map((r) => mapExternRowToCustom(r, playerPidSet, playerPidSet))
+  rows.sort((a, b) =>
+    String(a.team_char).localeCompare(String(b.team_char), 'zh') ||
+    String(a.name).localeCompare(String(b.name), 'zh'),
+  )
+  store.customGenerals = rows
+  store.customGeneralsMeta = {
+    path: data.path,
+    missing: data.missing,
+    total: rows.length,
+    modify_count: (data.rows || []).filter((r) => r.kind !== 'new').length,
+    team_groups: buildTeamGroups(rows),
+    fallback: true,
+  }
+}
+
 export async function loadCities() {
   if (!store.current) return
   const data = await api('/api/cities?name=' + encodeURIComponent(store.current))
@@ -257,6 +341,7 @@ export async function loadTeamTroopsPage() {
 
 export async function refreshPage(key) {
   if (key === 'generals') await loadGenerals()
+  if (key === 'customGenerals') await loadCustomGenerals()
   if (key === 'cities') await loadCities()
   if (key === 'teamPresets') await loadTeamPresetsPage()
   if (key === 'teamDeploy') await loadTeamDeployPage()

@@ -18,6 +18,8 @@ import {
 import { useTableSort, applyTableSort } from '../useTableSort'
 
 const search = ref('')
+/** 任命太守等操作时默认只看本国，避免误以为会改他国 */
+const playerOnly = ref(true)
 const checkedKeys = ref([])
 const pagination = useTablePagination(20)
 const tableSort = useTableSort(pagination)
@@ -32,10 +34,17 @@ const tableBodyRef = ref(null)
 const tableMaxHeight = useTableMaxHeight(tableBodyRef)
 const tableWrapWidth = ref(900)
 
+const playerFid = computed(() => String(store.status?.player ?? ''))
+
 const filtered = computed(() => {
+  let rows = store.cities
+  if (playerOnly.value && playerFid.value) {
+    const pf = playerFid.value.toLowerCase()
+    rows = rows.filter((c) => String(c.fid ?? '').toLowerCase() === pf)
+  }
   const q = search.value.trim().toLowerCase()
-  if (!q) return store.cities
-  return store.cities.filter((c) =>
+  if (!q) return rows
+  return rows.filter((c) =>
     (c.cn + c.key + c.label + c.fid + c.prefect).toLowerCase().includes(q),
   )
 })
@@ -160,6 +169,7 @@ onUnmounted(() => ro?.disconnect())
           <n-icon :component="SearchOutline" :size="16" />
         </template>
       </n-input>
+      <n-checkbox v-model:checked="playerOnly" size="small">仅我国</n-checkbox>
       <span v-if="selectedCount" class="cities-selection">已选 {{ selectedCount }} 座</span>
       <div class="cities-toolbar-actions">
         <slot name="toolbar" />
@@ -181,7 +191,8 @@ onUnmounted(() => ro?.disconnect())
           </template>
           <ul class="cities-help-list hint">
             <li>转移时若未勾选「太守跟着走」，新城往往无太守，可用自动任命填补。</li>
-            <li>自动任命仅调遣空闲且偏内政的武将；武统敏过高、已在部队/工作或已有岗位者不会动。</li>
+            <li>自动任命<strong>只改玩家势力</strong>的无太守城，他国城市与 AI 太守不会被本工具改动。</li>
+            <li>自动任命仅调遣<strong>我国</strong>空闲且偏内政的武将；武统敏过高、已在部队/工作或已有岗位者不会动。</li>
             <li>「修复全吞并」需选对照存档，会先备份当前档。</li>
           </ul>
         </n-popover>
@@ -217,7 +228,10 @@ onUnmounted(() => ro?.disconnect())
             <n-icon :component="PersonOutline" :size="18" class="cities-ops-icon" />
             <span>任命太守</span>
           </div>
-          <p class="cities-ops-note">内政型空闲武将；高武统敏保留给出征。</p>
+          <p class="cities-ops-note">
+            仅<strong>玩家势力</strong>：他国不管。内政型空闲武将；高武统敏保留给出征。
+            「任命选中城」= 勾选的本国城；「本国全部无太守」= 我国每一座无太守城（与勾选无关）。
+          </p>
           <div class="cities-ops-foot cities-ops-foot--stack">
             <slot name="prefect" />
           </div>

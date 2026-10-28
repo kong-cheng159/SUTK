@@ -22,7 +22,7 @@ SUTK 存档修改器（常驻版）
     python  SUTKMod.pyw --restore  立刻还原全部存档
     python  SUTKMod.pyw --report   查看状态
 """
-import sys, os, io, json, zlib, struct, shutil, time, subprocess, ctypes, threading, copy
+import sys, os, io, json, zlib, struct, shutil, time, subprocess, ctypes, threading, copy, uuid
 import unicodedata
 import re
 
@@ -2304,6 +2304,151 @@ def edit_extern():
             log('  没有改动')
 
 
+def _find_newinfo_entry(d, guid):
+    """在 newInfos 里按 GUID 找模板（大小写不敏感）。"""
+    ni = (d or {}).get('newInfos') or {}
+    g = str(guid or '').strip()
+    if not g:
+        return None, None
+    if g in ni:
+        return g, ni[g]
+    gup = g.upper()
+    for k, v in ni.items():
+        if str(k).upper() == gup:
+            return k, v
+    return None, None
+
+
+def _find_personage_entry(d, pid):
+    ps = (d or {}).get('personages') or {}
+    p = str(pid or '').strip()
+    if not p:
+        return None, None
+    if p in ps:
+        return p, ps[p]
+    pup = p.upper()
+    for k, v in ps.items():
+        if str(k).upper() == pup:
+            return k, v
+    return None, None
+
+
+def _faction_id_sample(data, fid):
+    """与存档里同势力其它武将一致的 faction 字段写法（如 19 / new_6）。"""
+    fk = str(fid or '')
+    for per in (data.get('personages') or {}).values():
+        inf = per.get('info') or {}
+        if str(inf.get('faction', '')).lower() == fk.lower():
+            return inf.get('faction')
+    return fid
+
+
+def _set_save_person_display(bi, surname, name):
+    sn = str(surname or '').strip()
+    nm = str(name or '').strip()
+    full = sn + nm
+    bi['fullName'] = {'scene': 'None', 'file': 'NO_TABLE', 'key': full or nm or sn}
+    bi['name'] = {'scene': 'None', 'file': 'NO_TABLE', 'key': nm or full}
+    if sn:
+        bi['clan'] = {'scene': 'None', 'file': 'NO_TABLE', 'key': sn}
+        bi['surname'] = {'scene': 'None', 'file': 'NO_TABLE', 'key': sn}
+
+
+# 自建模板里引用其它武将 GUID 的字段（clone 时需按 old->new 映射）
+_CUSTOM_REL_LIST_KEYS = ('closees', 'hatedes')
+_CUSTOM_REL_SCALAR_KEYS = ('idelPersonage',)
+
+
+def _norm_guid_map(guid_remap):
+    """{ 32位HEX大写 -> 新GUID }"""
+    if not guid_remap:
+        return {}
+    out = {}
+    for k, v in guid_remap.items():
+        ku = str(k or '').strip().upper()
+        vu = str(v or '').strip().upper()
+        if re.fullmatch(r'[0-9A-F]{32}', ku) and re.fullmatch(r'[0-9A-F]{32}', vu):
+            out[ku] = vu
+    return out
+
+
+def _remap_one_guid(val, gmap):
+    if not val or not gmap:
+        return val
+    s = str(val).strip().upper()
+    if re.fullmatch(r'[0-9A-F]{32}', s):
+        return gmap.get(s, val)
+    return val
+
+
+def remap_custom_relations(info, guid_remap):
+    """亲近(closees)、相性/理想(idelPersonage) 等 GUID 引用按映射表替换。"""
+    gmap = _norm_guid_map(guid_remap)
+    if not gmap or not isinstance(info, dict):
+        return info
+    for k in _CUSTOM_REL_LIST_KEYS:
+        raw = info.get(k)
+        if isinstance(raw, list) and raw:
+            info[k] = [_remap_one_guid(x, gmap) for x in raw]
+    for k in _CUSTOM_REL_SCALAR_KEYS:
+        if info.get(k):
+            info[k] = _remap_one_guid(info[k], gmap)
+    return info
+
+
+def clone_custom_extern(source_guid, surname, name, tactical=None, guid_remap=None):
+    """复制 newInfos 里一名自建武将模板，生成新 GUID。仅写 ExternPersonage.sav。"""
+    d, _ = read_extern()
+    if d is None:
+        raise ValueError('找不到 ExternPersonage.sav：' + EXTERN_PATH)
+    _sg, src = _find_newinfo_entry(d, source_guid)
+    if src is None:
+        raise ValueError('模板里没有源武将 GUID：' + str(source_guid))
+    sn = str(surname or '').strip()
+    nm = str(name or '').strip()
+    if not sn and not nm:
+        raise ValueError('请至少填写姓或名')
+    new_gid = uuid.uuid4().hex.upper()
+    v = copy.deepcopy(src)
+    if sn:
+        v['surname'] = sn
+    if nm:
+        v['name'] = nm
+    if tactical is not None and str(tactical).strip() != '':
+        v['tactical'] = str(tactical).strip()
+    remap_custom_relations(v, guid_remap)
+    d.setdefault('newInfos', {})[new_gid] = v
+    if not write_extern(d):
+        raise ValueError('写入 ExternPersonage.sav 失败')
+    return new_gid, _extern_name(v)
+
+
+def spawn_custom_in_save(data, source_pid, new_pid, surname, name, fid=None):
+    """把存档里已有自建武将复制为新人（新 GUID），并设为 Idle。实验功能，请先备份。"""
+    if fid is None:
+        fid = _player_fid(data)
+    if fid is None:
+        raise ValueError('存档里没有玩家势力')
+    _sp, src = _find_personage_entry(data, source_pid)
+    if src is None:
+        raise ValueError('存档里没有源武将：' + str(source_pid))
+    np = str(new_pid or '').strip().upper()
+    if not re.fullmatch(r'[0-9A-F]{32}', np):
+        raise ValueError('新武将 GUID 不合法')
+    if _find_personage_entry(data, np)[1] is not None:
+        raise ValueError('该 GUID 已在存档中存在')
+    per = copy.deepcopy(src)
+    per['iD'] = np
+    inf = per.setdefault('info', {})
+    inf['faction'] = _faction_id_sample(data, fid)
+    per['state'] = 'Idle'
+    per['stateParam'] = 0
+    per['stateChangeReason'] = None
+    _set_save_person_display(per.setdefault('baseInfo', {}), surname, name)
+    data.setdefault('personages', {})[np] = per
+    return np, _general_display_name(data, np)
+
+
 def _load_save_json(path):
     sav = read_sav(path)
     return sav, json.loads(sav['body'].decode('utf-8'))
@@ -2970,7 +3115,7 @@ def auto_assign_prefects(d, fid=None, city_keys=None, combat_threshold=None):
             continue
         targets.append((k, a))
     if not targets:
-        return 0, [], ['没有需要任命太守的城市']
+        return 0, [], ['玩家势力没有需要任命太守的城市（他国不在处理范围内）']
     targets.sort(key=lambda x: _city_importance(x[1]), reverse=True)
 
     busy_prefect = _collect_prefect_ids(d)
@@ -3033,7 +3178,10 @@ def auto_assign_prefects(d, fid=None, city_keys=None, combat_threshold=None):
         })
         stat['pool'] += 1
 
+    fac_label = _faction_label(d, fid)
     summary = [
+        '任命范围：仅玩家势力「%s」的无太守城，共 %d 座（他国城市不处理）'
+        % (fac_label, len(targets)),
         '任命规则：仅 state=Idle；排除出征(InTroop)/编制中/在岗(InPrefect)/工作(Working)等；'
         '武统敏合计≥%d 或明显偏战斗者不任太守；优先政智魅高且就近（所在城）' % combat_threshold,
         '  可调遣候选 %d 人 | 非Idle %d | 已在编部队 %d | 高战力 %d | 已有太守岗 %d | 君主 %d'
