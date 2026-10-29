@@ -17,6 +17,7 @@ import { MENU, MENU_PARENT_DEFAULT } from './constants'
 import { menuIcon } from './menuIcons'
 import { appendLog } from './log'
 import { api } from './api'
+import { restartApiServer } from './restartApi'
 import { renderMarkdown } from './markdown'
 import {
   store,
@@ -26,6 +27,7 @@ import {
   loadExtern,
   loadCustomGenerals,
   loadCities,
+  loadOfficials,
   loadDiplo,
   loadAudit,
   loadHistory,
@@ -42,6 +44,7 @@ import SavesView from './views/SavesView.vue'
 import GeneralsView from './views/GeneralsView.vue'
 import CustomGeneralsView from './views/CustomGeneralsView.vue'
 import CitiesView from './views/CitiesView.vue'
+import OfficialsView from './views/OfficialsView.vue'
 import TeamPresetsView from './views/TeamPresetsView.vue'
 import TeamDeployView from './views/TeamDeployView.vue'
 import TeamTroopsView from './views/TeamTroopsView.vue'
@@ -123,6 +126,18 @@ async function elevateAdmin() {
     }
   }
   throw new Error('提权后 30 秒内未连上后端，请手动关闭修改器并以管理员身份重新打开 exe')
+}
+
+async function restartApiAndReload() {
+  await run(async () => {
+    await restartApiServer()
+    store.status = await api('/api/status')
+    if (store.status?.features?.officials !== true) {
+      throw new Error('重启后仍无官职接口，请确认 desktop\\server.py 已更新，或完全退出后运行「重启后端.bat」。')
+    }
+    await refreshPage(page.value)
+    message.success('界面服务已重启')
+  })
 }
 
 async function run(fn) {
@@ -445,6 +460,66 @@ function diploRowPayload(row) {
                     >修复全吞并</n-button>
                   </template>
                 </CitiesView>
+
+                <OfficialsView
+                  v-else-if="page === 'officials'"
+                  @restart-api="restartApiAndReload"
+                  @done="
+                    (msg) => {
+                      if (msg) message.success(msg)
+                      run(loadOfficials)
+                    }
+                  "
+                >
+                  <template #toolbar>
+                    <n-button size="small" quaternary @click="run(loadOfficials)">刷新</n-button>
+                    <n-button
+                      size="small"
+                      quaternary
+                      @click="run(() => api('/api/open-folder', { kind: 'officials-mod' }))"
+                    >官职模组</n-button>
+                    <n-button size="small" quaternary @click="restartApiAndReload">重启界面服务</n-button>
+                    <n-button
+                      type="primary"
+                      size="small"
+                      @click="
+                        run(() =>
+                          confirm(
+                            '按星级分层自动任命？\n' +
+                              '9星岗位先填统+武+敏最高的一批，再填8星……（汉系与模组同一队列）。\n' +
+                              '已有任职者若弱于该岗应对应的人选会被改任；空岗优先。\n' +
+                              '不任命：太守/驻守、部队副将、君主。\n' +
+                              '说明：列表里「俸禄」列（九星多为20）不是武将能力。',
+                            async () => {
+                              const data = await api('/api/officials/auto-assign', {
+                                name: store.current,
+                                only_vacant: true,
+                              })
+                              message.success(`已任命 ${data.assigned ?? 0} 人`)
+                              await loadOfficials()
+                            },
+                          ),
+                        )
+                      "
+                    >自动任命</n-button>
+                    <n-button
+                      size="small"
+                      secondary
+                      @click="
+                        run(() =>
+                          confirm(
+                            '清空本国所有武将在汉系官职（id 1–144）上的任职？\n不影响太守、部队等其他岗位。',
+                            async () => {
+                              const data = await api('/api/officials/clear-han', { name: store.current })
+                              message.success(data.lines?.[0] || '已清空')
+                              await loadOfficials()
+                            },
+                          ),
+                        )
+                      "
+                    >清空汉系任职</n-button>
+                  </template>
+                </OfficialsView>
 
                 <TeamPresetsView v-else-if="page === 'teamPresets'" />
                 <TeamDeployView v-else-if="page === 'teamDeploy'" />

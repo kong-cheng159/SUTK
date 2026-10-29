@@ -1,0 +1,4 @@
+[[permission]]
+identifier = "allow-restart-api"
+description = "Restart the Python API server on port 8765"
+commands.allow = ["restart_api"]

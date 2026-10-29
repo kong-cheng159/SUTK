@@ -37,16 +37,37 @@ function Copy-RepoDoc([string]$name) {
     }
     if ($name -ne 'README.md') { throw "missing doc: $name" }
 }
-Copy-RepoDoc '经验总结.md'
-foreach ($doc in @('桌面版使用说明.md', 'README.md', '使用说明.md')) { Copy-RepoDoc $doc }
+$docJingyan = [char]0x7ECF + [char]0x9A8C + [char]0x603B + [char]0x7ED3 + '.md'
+$docDesktop = [char]0x684C + [char]0x9762 + [char]0x7248 + [char]0x4F7F + [char]0x7528 + [char]0x8BF4 + [char]0x660E + '.md'
+$docConsole = [char]0x4F7F + [char]0x7528 + [char]0x8BF4 + [char]0x660E + '.md'
+Copy-RepoDoc $docJingyan
+foreach ($doc in @($docDesktop, 'README.md', $docConsole)) { Copy-RepoDoc $doc }
 $desk = Join-Path $dest 'desktop'
 New-Item -ItemType Directory -Path $desk | Out-Null
 Copy-Item -LiteralPath (Join-Path $repo 'desktop\server.py') -Destination $desk
-foreach ($extra in @('names_zh.json', 'cities_zh.json', 'troop_kinds_zh.json')) {
+foreach ($extra in @(
+        'names_zh.json', 'cities_zh.json', 'troop_kinds_zh.json',
+        'officials_han_staffing.json', 'game_titles_zh.json'
+    )) {
     $src = Join-Path $repo (Join-Path 'desktop' $extra)
     if (Test-Path -LiteralPath $src) { Copy-Item -LiteralPath $src -Destination $desk }
 }
 Copy-Item -LiteralPath (Join-Path $repo 'desktop\static') -Destination $desk -Recurse
+$dataSrc = Join-Path $repo 'desktop\data'
+if (Test-Path -LiteralPath $dataSrc) {
+    Copy-Item -LiteralPath $dataSrc -Destination (Join-Path $desk 'data') -Recurse
+}
+$restartName = [char]0x91CD + [char]0x542F + [char]0x540E + [char]0x7AEF + '.ps1'
+$restartPs1 = Join-Path $repo (Join-Path 'desktop' $restartName)
+if (Test-Path -LiteralPath $restartPs1) {
+    Copy-Item -LiteralPath $restartPs1 -Destination $desk
+    @(
+        '@echo off',
+        'chcp 65001 >nul',
+        'powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0desktop\重启后端.ps1"',
+        'pause'
+    ) | Set-Content -LiteralPath (Join-Path $dest ($restartName -replace '\.ps1$', '.bat')) -Encoding UTF8
+}
 $index = Join-Path $desk 'static\index.html'
 if (-not (Test-Path -LiteralPath $index)) { throw "missing $index" }
 $pyDest = Join-Path $dest 'python'

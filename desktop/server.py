@@ -32,6 +32,9 @@ def _proj_doc(name):
 NAMES_PATH = os.path.join(HERE, 'names_zh.json')
 CITIES_PATH = os.path.join(HERE, 'cities_zh.json')
 TROOP_KINDS_PATH = os.path.join(HERE, 'troop_kinds_zh.json')
+HAN_OFFICIALS_PATH = os.path.join(HERE, 'officials_han_staffing.json')
+OFFICIALS_MOD_PATH = os.path.join(HERE, 'data', 'officials_mod.json')
+GAME_TITLES_PATH = os.path.join(HERE, 'game_titles_zh.json')
 PORT = 8731
 APP_ID = 'sutk-desktop'
 API_VERSION = 2
@@ -179,6 +182,7 @@ def api_status():
         'api_version': API_VERSION,
         'features': {
             'custom_generals': True,
+            'officials': True,
         },
         'saves_dir': M.SAVES_DIR,
         'saves_dir_default': M.default_saves_dir(),
@@ -339,6 +343,24 @@ def api_open_folder(body):
         if not os.path.isfile(path):
             raise ValueError('文件不存在: ' + path)
         os.startfile(os.path.dirname(path))
+    elif kind == 'officials-mod':
+        path = OFFICIALS_MOD_PATH
+        folder = os.path.dirname(path)
+        os.makedirs(folder, exist_ok=True)
+        if not os.path.isfile(path):
+            with open(path, 'w', encoding='utf-8') as f:
+                json.dump(
+                    {
+                        'version': 1,
+                        'description': '官职模组：append_rows 追加，override_rows 覆盖同 id',
+                        'append_rows': [],
+                        'override_rows': [],
+                    },
+                    f,
+                    ensure_ascii=False,
+                    indent=2,
+                )
+        os.startfile(folder)
     else:
         path = M.SAVES_DIR
         if not os.path.isdir(path):
@@ -361,6 +383,177 @@ def _load_json_map(path):
 _NAMES = _load_json_map(NAMES_PATH)
 _CITIES = _load_json_map(CITIES_PATH)
 _TROOP_KINDS = _load_json_map(TROOP_KINDS_PATH)
+
+_PANEL_OFFICIAL_ROWS = None
+_PANEL_OFFICIAL_NAME = {}
+_PANEL_OFFICIAL_IDS = set()
+_PANEL_BASE_IDS = set()
+_PANEL_MOD_META = {'append': 0, 'override': 0}
+_PANEL_CACHE_KEY = None
+_FACTION_RANK_LABEL = {}
+_CENTRAL_OFFICIAL_CN = {}
+
+
+def _panel_cache_key():
+    parts = []
+    for p in (HAN_OFFICIALS_PATH, OFFICIALS_MOD_PATH):
+        try:
+            parts.append('%s:%d' % (p, os.path.getmtime(p)))
+        except Exception:
+            parts.append(p + ':missing')
+    return '|'.join(parts)
+
+
+def _load_central_official_cn():
+    global _CENTRAL_OFFICIAL_CN
+    if _CENTRAL_OFFICIAL_CN:
+        return _CENTRAL_OFFICIAL_CN
+    try:
+        with open(GAME_TITLES_PATH, encoding='utf-8') as f:
+            data = json.load(f)
+        for r in data.get('central_officials') or []:
+            rid = str(r.get('id') or '')
+            if rid:
+                _CENTRAL_OFFICIAL_CN[rid] = str(r.get('name') or rid)
+    except Exception:
+        pass
+    return _CENTRAL_OFFICIAL_CN
+
+
+def _load_panel_official_rows():
+    """汉系基准表 + data/officials_mod.json（追加/覆盖）。"""
+    global _PANEL_OFFICIAL_ROWS, _PANEL_OFFICIAL_NAME, _PANEL_OFFICIAL_IDS
+    global _PANEL_BASE_IDS, _PANEL_MOD_META, _PANEL_CACHE_KEY
+    key = _panel_cache_key()
+    if _PANEL_OFFICIAL_ROWS is not None and key == _PANEL_CACHE_KEY:
+        return _PANEL_OFFICIAL_ROWS
+    try:
+        with open(HAN_OFFICIALS_PATH, encoding='utf-8') as f:
+            base_rows = json.load(f).get('rows') or []
+    except FileNotFoundError:
+        raise ValueError(
+            '缺少官职数据文件 officials_han_staffing.json（应在 desktop 目录，与 server.py 同级）'
+        )
+    except Exception as e:
+        raise ValueError('读取官职数据失败: %s' % e)
+    _PANEL_BASE_IDS = {str(r['id']) for r in base_rows if r.get('id') is not None}
+    by_id = {}
+    for r in base_rows:
+        rid = str(r['id'])
+        by_id[rid] = dict(r)
+        by_id[rid]['mod'] = False
+    mod_append = 0
+    mod_override = 0
+    if os.path.isfile(OFFICIALS_MOD_PATH):
+        try:
+            with open(OFFICIALS_MOD_PATH, encoding='utf-8') as f:
+                mod = json.load(f)
+            for r in mod.get('override_rows') or []:
+                rid = str(r.get('id') or '')
+                if not rid:
+                    continue
+                prev = by_id.get(rid, {'id': rid})
+                merged = dict(prev)
+                merged.update(r)
+                merged['mod'] = True
+                by_id[rid] = merged
+                if rid in _PANEL_BASE_IDS:
+                    mod_override += 1
+            cn_map = _load_central_official_cn()
+            for r in mod.get('append_rows') or []:
+                rid = str(r.get('id') or '')
+                if not rid:
+                    continue
+                row = dict(r)
+                row['mod'] = True
+                gname = cn_map.get(rid) or ''
+                if gname and gname != row.get('name'):
+                    row.setdefault('game_name', gname)
+                if rid not in by_id:
+                    mod_append += 1
+                by_id[rid] = row
+        except Exception as e:
+            raise ValueError('读取官职模组失败: %s' % e)
+    def _row_sort(r):
+        try:
+            lv = int(r.get('level') or 0)
+        except Exception:
+            lv = 0
+        try:
+            oid = int(r.get('id') or 0)
+        except Exception:
+            oid = 0
+        return (-lv, -oid)
+    rows = sorted(by_id.values(), key=_row_sort)
+    _PANEL_OFFICIAL_ROWS = rows
+    _PANEL_OFFICIAL_NAME = {str(r['id']): str(r.get('name') or '') for r in rows if r.get('id') is not None}
+    _PANEL_OFFICIAL_IDS = set(_PANEL_OFFICIAL_NAME.keys())
+    _PANEL_MOD_META = {'append': mod_append, 'override': mod_override}
+    _PANEL_CACHE_KEY = key
+    return _PANEL_OFFICIAL_ROWS
+
+
+def _load_han_official_rows():
+    return _load_panel_official_rows()
+
+
+def _load_faction_rank_labels():
+    global _FACTION_RANK_LABEL
+    if _FACTION_RANK_LABEL:
+        return _FACTION_RANK_LABEL
+    try:
+        with open(GAME_TITLES_PATH, encoding='utf-8') as f:
+            data = json.load(f)
+        for r in data.get('faction_ranks') or []:
+            rid = str(r.get('id') or '')
+            if rid:
+                name = str(r.get('name') or rid)
+                _FACTION_RANK_LABEL[rid] = name
+                _FACTION_RANK_LABEL[rid.lower()] = name
+    except Exception:
+        pass
+    return _FACTION_RANK_LABEL
+
+
+def _official_cn(oid):
+    oid = str(oid or '')
+    if not oid or oid == 'None':
+        return ''
+    _load_panel_official_rows()
+    return _PANEL_OFFICIAL_NAME.get(oid) or _load_central_official_cn().get(oid) or ''
+
+
+def _set_person_official(inf, official_id):
+    inf = inf or {}
+    val = 'None' if not official_id or str(official_id) == 'None' else str(official_id)
+    if 'official' in inf:
+        return M._set(inf, 'official', val)
+    inf['official'] = val
+    return True
+
+
+def _player_generals_for_officials(data, fid):
+    """[(pid, cn, official_id, official_name)] 本国在世武将。"""
+    _load_han_official_rows()
+    out = []
+    for pid, per in (data.get('personages') or {}).items():
+        inf = per.get('info') or {}
+        if str(inf.get('faction', '')).lower() != str(fid).lower():
+            continue
+        if inf.get('tag1') in ('Death', 'Dead'):
+            continue
+        bi = per.get('baseInfo') or {}
+        if not bi:
+            continue
+        oid = str(inf.get('official') or 'None')
+        out.append({
+            'pid': pid,
+            'cn': _person_cn(pid, bi) or pid,
+            'official': oid if oid != 'None' else '',
+            'official_name': _official_cn(oid),
+        })
+    out.sort(key=lambda x: (-len(x['cn']), x['cn']))
+    return out
 
 
 def _troop_kind_cn(kind_id):
@@ -729,6 +922,189 @@ def api_cities(name):
         'problems': problems,
         'lines': cap.lines,
     }
+
+
+def api_officials(name):
+    _path, _sav, data = _open_save(name)
+    fid = M._player_fid(data)
+    if not fid:
+        raise ValueError('这个存档里找不到玩家势力')
+    _load_han_official_rows()
+    rank_labels = _load_faction_rank_labels()
+    fac = (data.get('factions') or {}).get(fid) or {}
+    inf_fac = fac.get('info') or {}
+    rank_id = str(inf_fac.get('rankId') or '')
+    rank_label = rank_labels.get(rank_id) or rank_labels.get(rank_id.lower()) or rank_id
+    holders = {}
+    appointed = 0
+    for pid, per in (data.get('personages') or {}).items():
+        inf = per.get('info') or {}
+        if str(inf.get('faction', '')).lower() != str(fid).lower():
+            continue
+        if inf.get('tag1') in ('Death', 'Dead'):
+            continue
+        oid = str(inf.get('official') or 'None')
+        if oid == 'None' or oid not in _PANEL_OFFICIAL_IDS:
+            continue
+        bi = per.get('baseInfo') or {}
+        holders[oid] = {
+            'pid': pid,
+            'cn': _person_cn(pid, bi) or pid,
+        }
+        appointed += 1
+    rows = []
+    for tpl in _load_han_official_rows():
+        oid = str(tpl['id'])
+        level = int(tpl.get('level') or 0)
+        h = holders.get(oid)
+        gname = tpl.get('game_name') or ''
+        rows.append({
+            'id': oid,
+            'name': tpl.get('name') or _official_cn(oid),
+            'game_name': gname,
+            'level': level,
+            'staffing': int(tpl.get('staffing') or (level + 3) * 1000),
+            'salary': level * 2 + 2,
+            'holder_pid': h['pid'] if h else '',
+            'holder_cn': h['cn'] if h else '',
+            'mod': bool(tpl.get('mod')),
+        })
+    warning = None
+    if not os.path.isfile(OFFICIALS_MOD_PATH):
+        warning = (
+            '未找到官职模组文件：%s。追加职（如 4091 伏波）不会出现；'
+            '请点「官职模组」打开目录，或从开发包复制 officials_mod.json 后重启界面服务。'
+            % OFFICIALS_MOD_PATH
+        )
+    mod_n = _PANEL_MOD_META.get('append', 0) + _PANEL_MOD_META.get('override', 0)
+    if mod_n:
+        warning = (
+            '已加载官职模组 %d 项（追加 %d、覆盖 %d）。修改器可任免；'
+            '游戏内要出现新职名/编制/效果，还需改 pak 的 DT_Official 与本地化。'
+            % (mod_n, _PANEL_MOD_META.get('append', 0), _PANEL_MOD_META.get('override', 0))
+        )
+    elif rank_id and not rank_id.lower().startswith('han'):
+        warning = (
+            '当前爵位路线为「%s」，游戏内任免面板可能不是汉系 1–144 表；'
+            '本页仍按面板职名展示与修改 info.official。'
+            % (rank_label or rank_id)
+        )
+    game_running = bool(M.game_running())
+    hint = '%s · 玩家 %s · 爵位 %s%s' % (
+        os.path.basename(_path),
+        _label_cn(M._faction_label(data, fid)),
+        rank_label or '—',
+        ' · 游戏运行中，读档后生效' if game_running else '',
+    )
+    return {
+        'name': os.path.basename(_path),
+        'faction': fid,
+        'label': M._faction_label(data, fid),
+        'rank_id': rank_id,
+        'rank_label': rank_label,
+        'warning': warning,
+        'appointed_count': appointed,
+        'rows': rows,
+        'generals': _player_generals_for_officials(data, fid),
+        'hint': hint,
+        'game_running': game_running,
+        'mod': dict(_PANEL_MOD_META),
+        'panel_count': len(_PANEL_OFFICIAL_ROWS or []),
+    }
+
+
+def api_officials_assign(body):
+    path, sav, data = _open_save(body.get('name'))
+    fid = M._player_fid(data)
+    if not fid:
+        raise ValueError('这个存档里找不到玩家势力')
+    _load_han_official_rows()
+    oid = str(body.get('official_id') or '')
+    if oid not in _PANEL_OFFICIAL_IDS:
+        raise ValueError('无效的官职 id: ' + oid)
+    pid = body.get('pid')
+    pid = '' if pid is None else str(pid).strip()
+    changed = 0
+    ps = data.get('personages') or {}
+    for _pid, per in ps.items():
+        inf = per.get('info') or {}
+        if str(inf.get('faction', '')).lower() != str(fid).lower():
+            continue
+        if str(inf.get('official') or 'None') != oid:
+            continue
+        if _set_person_official(inf, 'None'):
+            changed += 1
+    name_line = _official_cn(oid) or oid
+    if pid:
+        per = ps.get(pid)
+        if per is None:
+            low = pid.lower()
+            for k, v in ps.items():
+                if str(k).lower() == low:
+                    per = v
+                    pid = k
+                    break
+        if per is None:
+            raise ValueError('找不到武将: ' + str(body.get('pid')))
+        inf = per.get('info') or {}
+        if str(inf.get('faction', '')).lower() != str(fid).lower():
+            raise ValueError('该武将不属于玩家势力')
+        if inf.get('tag1') in ('Death', 'Dead'):
+            raise ValueError('不能任命已死亡武将')
+        if _set_person_official(inf, oid):
+            changed += 1
+        cn = _person_cn(pid, per.get('baseInfo') or {}) or pid
+        msg = '已将「%s」任命为 %s（id %s）' % (cn, name_line, oid)
+    else:
+        msg = '已清空官职 %s（id %s）的任职' % (name_line, oid)
+    if changed:
+        M._write_save_json(path, sav, data)
+    if M.game_running() and changed:
+        msg += '。游戏正在运行，需要重新读档才生效'
+    return {'lines': [msg], 'changed': changed}
+
+
+def api_officials_auto_assign(body):
+    path, sav, data = _open_save(body.get('name'))
+    fid = M._player_fid(data)
+    if not fid:
+        raise ValueError('这个存档里找不到玩家势力')
+    rows = _load_han_official_rows()
+    only_vacant = body.get('only_vacant', True) is not False
+    with Capture() as cap:
+        n, part, summary = M.auto_assign_han_officials(
+            data, fid=fid, rows=rows, only_vacant=only_vacant)
+        if n:
+            M._write_save_json(path, sav, data)
+    lines = list(cap.lines)
+    lines.extend(summary or [])
+    lines.extend(part or [])
+    lines.append('已任命 %d 个汉系官职' % n)
+    if M.game_running() and n:
+        lines.append('游戏正在运行：请回主菜单重新读档后生效。')
+    return {'lines': lines, 'assigned': n}
+
+
+def api_officials_clear_han(body):
+    path, sav, data = _open_save(body.get('name'))
+    fid = M._player_fid(data)
+    if not fid:
+        raise ValueError('这个存档里找不到玩家势力')
+    _load_han_official_rows()
+    changed = 0
+    for _pid, per in (data.get('personages') or {}).items():
+        inf = per.get('info') or {}
+        if str(inf.get('faction', '')).lower() != str(fid).lower():
+            continue
+        oid = str(inf.get('official') or 'None')
+        if oid in _PANEL_OFFICIAL_IDS and _set_person_official(inf, 'None'):
+            changed += 1
+    msg = '已清空本国 %d 名武将在汉系官职（1–144）上的任职' % changed if changed else '没有汉系官职任职需要清空'
+    if changed:
+        M._write_save_json(path, sav, data)
+    if M.game_running() and changed:
+        msg += '。游戏正在运行，需要重新读档才生效'
+    return {'lines': [msg], 'changed': changed}
 
 
 def api_assign_prefects(body):
@@ -1252,6 +1628,43 @@ def api_elevate():
             'restarting': True}
 
 
+def api_server_restart(_body):
+    """拉起新进程后关闭当前服务（用于 dev 或新版后端自助重启）。"""
+    import subprocess
+
+    exe = os.path.join(PROJ, 'python', 'python.exe')
+    if not os.path.isfile(exe):
+        raise ValueError('找不到 Python：' + exe)
+    script = os.path.abspath(__file__)
+    app_dir = os.environ.get('SUTK_APP_DIR', '').strip()
+    port = PORT
+    args = [exe, script, '--no-browser', '--port', str(port)]
+    env = os.environ.copy()
+    if app_dir:
+        env['SUTK_APP_DIR'] = app_dir
+
+    def _relay():
+        time.sleep(0.35)
+        try:
+            subprocess.Popen(
+                args,
+                cwd=PROJ,
+                env=env,
+                stdin=subprocess.DEVNULL,
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+                creationflags=getattr(subprocess, 'CREATE_NO_WINDOW', 0),
+            )
+        except Exception:
+            pass
+        time.sleep(0.25)
+        if HTTPD is not None:
+            threading.Thread(target=HTTPD.shutdown, daemon=True).start()
+
+    threading.Thread(target=_relay, daemon=True).start()
+    return {'lines': ['正在重启界面服务…'], 'restarting': True}
+
+
 ROUTES = {
     '/api/status': ('GET', lambda b: api_status()),
     '/api/saves': ('GET', lambda b: api_saves()),
@@ -1266,6 +1679,10 @@ ROUTES = {
     '/api/extern/clone': ('POST', api_extern_clone),
     '/api/extern/edit': ('POST', api_edit_extern),
     '/api/cities': ('GET', lambda b: api_cities(b.get('name'))),
+    '/api/officials': ('GET', lambda b: api_officials(b.get('name'))),
+    '/api/officials/assign': ('POST', api_officials_assign),
+    '/api/officials/auto-assign': ('POST', api_officials_auto_assign),
+    '/api/officials/clear-han': ('POST', api_officials_clear_han),
     '/api/transfer': ('POST', api_transfer),
     '/api/cities/assign-prefects': ('POST', api_assign_prefects),
     '/api/troop-kinds': ('GET', lambda b: api_troop_kinds_get()),
@@ -1290,6 +1707,7 @@ ROUTES = {
     '/api/mem/filter': ('POST', api_mem_filter),
     '/api/mem/write': ('POST', api_mem_write),
     '/api/elevate': ('POST', lambda b: api_elevate()),
+    '/api/server/restart': ('POST', lambda b: api_server_restart(b)),
 }
 
 

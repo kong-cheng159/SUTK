@@ -1,0 +1,859 @@
+{
+  "version": 1,
+  "description": "追加 6–9 星：库内将军 + 文职（共 142 条，不含汉系 1–144）。不改游戏可任命；任免面板需 pak 才多行。",
+  "append_rows": [
+    {
+      "id": "5104",
+      "name": "越骑将军",
+      "level": 9,
+      "staffing": 12000
+    },
+    {
+      "id": "5103",
+      "name": "怀山将军",
+      "level": 9,
+      "staffing": 12000
+    },
+    {
+      "id": "5102",
+      "name": "振远将军",
+      "level": 9,
+      "staffing": 12000
+    },
+    {
+      "id": "5101",
+      "name": "保塞将军",
+      "level": 9,
+      "staffing": 12000
+    },
+    {
+      "id": "5100",
+      "name": "理讼尚书",
+      "level": 9,
+      "staffing": 12000
+    },
+    {
+      "id": "5099",
+      "name": "奉法尚书",
+      "level": 9,
+      "staffing": 12000
+    },
+    {
+      "id": "5098",
+      "name": "仓曹尚书",
+      "level": 9,
+      "staffing": 12000
+    },
+    {
+      "id": "5097",
+      "name": "典辞尚书",
+      "level": 9,
+      "staffing": 12000
+    },
+    {
+      "id": "4104",
+      "name": "义从将军",
+      "level": 9,
+      "staffing": 12000
+    },
+    {
+      "id": "4103",
+      "name": "镇抚将军",
+      "level": 9,
+      "staffing": 12000
+    },
+    {
+      "id": "4102",
+      "name": "讨叛将军",
+      "level": 9,
+      "staffing": 12000
+    },
+    {
+      "id": "4101",
+      "name": "镇南将军",
+      "level": 9,
+      "staffing": 12000
+    },
+    {
+      "id": "4100",
+      "name": "奉神尚书",
+      "level": 9,
+      "staffing": 12000
+    },
+    {
+      "id": "4099",
+      "name": "掌赋尚书",
+      "level": 9,
+      "staffing": 12000
+    },
+    {
+      "id": "4098",
+      "name": "明俗尚书",
+      "level": 9,
+      "staffing": 12000
+    },
+    {
+      "id": "4097",
+      "name": "绥远尚书",
+      "level": 9,
+      "staffing": 12000
+    },
+    {
+      "id": "3106",
+      "name": "突骑将军",
+      "level": 9,
+      "staffing": 12000
+    },
+    {
+      "id": "3105",
+      "name": "建威将军",
+      "level": 9,
+      "staffing": 12000
+    },
+    {
+      "id": "3104",
+      "name": "昭信将军",
+      "level": 9,
+      "staffing": 12000
+    },
+    {
+      "id": "3103",
+      "name": "中垒将军",
+      "level": 9,
+      "staffing": 12000
+    },
+    {
+      "id": "3102",
+      "name": "明法尚书",
+      "level": 9,
+      "staffing": 12000
+    },
+    {
+      "id": "3101",
+      "name": "怀众尚书",
+      "level": 9,
+      "staffing": 12000
+    },
+    {
+      "id": "3100",
+      "name": "奉祀长史",
+      "level": 9,
+      "staffing": 12000
+    },
+    {
+      "id": "3099",
+      "name": "劝牧尚书",
+      "level": 9,
+      "staffing": 12000
+    },
+    {
+      "id": "2108",
+      "name": "大将军",
+      "level": 9,
+      "staffing": 12000
+    },
+    {
+      "id": "2107",
+      "name": "太尉",
+      "level": 9,
+      "staffing": 12000
+    },
+    {
+      "id": "2104",
+      "name": "卫将军",
+      "level": 9,
+      "staffing": 12000
+    },
+    {
+      "id": "2102",
+      "name": "大都督",
+      "level": 9,
+      "staffing": 12000
+    },
+    {
+      "id": "2100",
+      "name": "丞相",
+      "level": 9,
+      "staffing": 12000
+    },
+    {
+      "id": "1144",
+      "name": "黄天大圣",
+      "level": 9,
+      "staffing": 12000
+    },
+    {
+      "id": "1143",
+      "name": "太平道主",
+      "level": 9,
+      "staffing": 12000
+    },
+    {
+      "id": "1141",
+      "name": "太平太师",
+      "level": 9,
+      "staffing": 12000
+    },
+    {
+      "id": "1140",
+      "name": "黄天太傅",
+      "level": 9,
+      "staffing": 12000
+    },
+    {
+      "id": "1136",
+      "name": "护道大师",
+      "level": 9,
+      "staffing": 12000
+    },
+    {
+      "id": "1135",
+      "name": "黄天信公",
+      "level": 9,
+      "staffing": 12000
+    },
+    {
+      "id": "5096",
+      "name": "归义中郎将",
+      "level": 8,
+      "staffing": 11000
+    },
+    {
+      "id": "5095",
+      "name": "率善中郎将",
+      "level": 8,
+      "staffing": 11000
+    },
+    {
+      "id": "5094",
+      "name": "建义中郎将",
+      "level": 8,
+      "staffing": 11000
+    },
+    {
+      "id": "5093",
+      "name": "怀义中郎将",
+      "level": 8,
+      "staffing": 11000
+    },
+    {
+      "id": "5092",
+      "name": "奋威中郎将",
+      "level": 8,
+      "staffing": 11000
+    },
+    {
+      "id": "5091",
+      "name": "守善中郎将",
+      "level": 8,
+      "staffing": 11000
+    },
+    {
+      "id": "5085",
+      "name": "保塞侯",
+      "level": 8,
+      "staffing": 9000
+    },
+    {
+      "id": "4096",
+      "name": "赤旌将军",
+      "level": 8,
+      "staffing": 11000
+    },
+    {
+      "id": "4095",
+      "name": "白虎将军",
+      "level": 8,
+      "staffing": 11000
+    },
+    {
+      "id": "4094",
+      "name": "威边将军",
+      "level": 8,
+      "staffing": 11000
+    },
+    {
+      "id": "4093",
+      "name": "安边将军",
+      "level": 8,
+      "staffing": 11000
+    },
+    {
+      "id": "4092",
+      "name": "义叟将军",
+      "level": 8,
+      "staffing": 11000
+    },
+    {
+      "id": "4091",
+      "name": "破虏将军",
+      "level": 8,
+      "staffing": 11000
+    },
+    {
+      "id": "4090",
+      "name": "将兵长史",
+      "level": 8,
+      "staffing": 9000
+    },
+    {
+      "id": "4089",
+      "name": "度支长史",
+      "level": 8,
+      "staffing": 9000
+    },
+    {
+      "id": "4088",
+      "name": "平准长史",
+      "level": 8,
+      "staffing": 9000
+    },
+    {
+      "id": "4087",
+      "name": "典农长史",
+      "level": 8,
+      "staffing": 9000
+    },
+    {
+      "id": "4086",
+      "name": "通商长史",
+      "level": 8,
+      "staffing": 9000
+    },
+    {
+      "id": "4085",
+      "name": "劝课长史",
+      "level": 8,
+      "staffing": 9000
+    },
+    {
+      "id": "3091",
+      "name": "掌军谋主",
+      "level": 8,
+      "staffing": 9000
+    },
+    {
+      "id": "2098",
+      "name": "辅国将军",
+      "level": 8,
+      "staffing": 11000
+    },
+    {
+      "id": "2097",
+      "name": "镇军将军",
+      "level": 8,
+      "staffing": 11000
+    },
+    {
+      "id": "2096",
+      "name": "武卫将军",
+      "level": 8,
+      "staffing": 11000
+    },
+    {
+      "id": "2095",
+      "name": "翊军将军",
+      "level": 8,
+      "staffing": 11000
+    },
+    {
+      "id": "2094",
+      "name": "立义将军",
+      "level": 8,
+      "staffing": 11000
+    },
+    {
+      "id": "2093",
+      "name": "吏曹尚书",
+      "level": 8,
+      "staffing": 9000
+    },
+    {
+      "id": "2092",
+      "name": "民曹尚书",
+      "level": 8,
+      "staffing": 9000
+    },
+    {
+      "id": "2091",
+      "name": "客曹尚书",
+      "level": 8,
+      "staffing": 9000
+    },
+    {
+      "id": "2090",
+      "name": "度支尚书",
+      "level": 8,
+      "staffing": 9000
+    },
+    {
+      "id": "2089",
+      "name": "给事中",
+      "level": 8,
+      "staffing": 9000
+    },
+    {
+      "id": "1134",
+      "name": "天公将军",
+      "level": 8,
+      "staffing": 11000
+    },
+    {
+      "id": "1133",
+      "name": "黄天太尉",
+      "level": 8,
+      "staffing": 11000
+    },
+    {
+      "id": "1132",
+      "name": "都督方伯",
+      "level": 8,
+      "staffing": 11000
+    },
+    {
+      "id": "1131",
+      "name": "上军都护",
+      "level": 8,
+      "staffing": 11000
+    },
+    {
+      "id": "1130",
+      "name": "黄天上佐",
+      "level": 8,
+      "staffing": 11000
+    },
+    {
+      "id": "1129",
+      "name": "黄天司马",
+      "level": 8,
+      "staffing": 11000
+    },
+    {
+      "id": "1128",
+      "name": "黄天金吾",
+      "level": 8,
+      "staffing": 11000
+    },
+    {
+      "id": "1125",
+      "name": "黄天司空",
+      "level": 8,
+      "staffing": 9000
+    },
+    {
+      "id": "1124",
+      "name": "黄天大人",
+      "level": 8,
+      "staffing": 9000
+    },
+    {
+      "id": "1123",
+      "name": "四方都牧",
+      "level": 8,
+      "staffing": 9000
+    },
+    {
+      "id": "1122",
+      "name": "大祝祭酒",
+      "level": 8,
+      "staffing": 9000
+    },
+    {
+      "id": "1121",
+      "name": "神人祭酒",
+      "level": 8,
+      "staffing": 9000
+    },
+    {
+      "id": "1120",
+      "name": "录道台事",
+      "level": 8,
+      "staffing": 9000
+    },
+    {
+      "id": "5084",
+      "name": "率善都尉",
+      "level": 7,
+      "staffing": 10000
+    },
+    {
+      "id": "5083",
+      "name": "折冲都尉",
+      "level": 7,
+      "staffing": 10000
+    },
+    {
+      "id": "5082",
+      "name": "守善都尉",
+      "level": 7,
+      "staffing": 10000
+    },
+    {
+      "id": "5081",
+      "name": "向化都尉",
+      "level": 7,
+      "staffing": 10000
+    },
+    {
+      "id": "5080",
+      "name": "归义都尉",
+      "level": 7,
+      "staffing": 10000
+    },
+    {
+      "id": "5079",
+      "name": "怀义都尉",
+      "level": 7,
+      "staffing": 10000
+    },
+    {
+      "id": "5078",
+      "name": "保塞都尉",
+      "level": 7,
+      "staffing": 10000
+    },
+    {
+      "id": "5077",
+      "name": "奋威都尉",
+      "level": 7,
+      "staffing": 10000
+    },
+    {
+      "id": "3079",
+      "name": "掌礼师傅",
+      "level": 7,
+      "staffing": 8000
+    },
+    {
+      "id": "3078",
+      "name": "掌法师傅",
+      "level": 7,
+      "staffing": 8000
+    },
+    {
+      "id": "2088",
+      "name": "镇前护军",
+      "level": 7,
+      "staffing": 10000
+    },
+    {
+      "id": "2087",
+      "name": "镇后护军",
+      "level": 7,
+      "staffing": 10000
+    },
+    {
+      "id": "2086",
+      "name": "镇左护军",
+      "level": 7,
+      "staffing": 10000
+    },
+    {
+      "id": "2085",
+      "name": "镇右护军",
+      "level": 7,
+      "staffing": 10000
+    },
+    {
+      "id": "2084",
+      "name": "卫军护军",
+      "level": 7,
+      "staffing": 10000
+    },
+    {
+      "id": "2083",
+      "name": "抚军护军",
+      "level": 7,
+      "staffing": 10000
+    },
+    {
+      "id": "2082",
+      "name": "安远护军",
+      "level": 7,
+      "staffing": 10000
+    },
+    {
+      "id": "2081",
+      "name": "平虏护军",
+      "level": 7,
+      "staffing": 10000
+    },
+    {
+      "id": "2080",
+      "name": "奉礼大夫",
+      "level": 7,
+      "staffing": 8000
+    },
+    {
+      "id": "2079",
+      "name": "修史大夫",
+      "level": 7,
+      "staffing": 8000
+    },
+    {
+      "id": "2078",
+      "name": "典言大夫",
+      "level": 7,
+      "staffing": 8000
+    },
+    {
+      "id": "2077",
+      "name": "议曹大夫",
+      "level": 7,
+      "staffing": 8000
+    },
+    {
+      "id": "1119",
+      "name": "地公将军",
+      "level": 7,
+      "staffing": 10000
+    },
+    {
+      "id": "1118",
+      "name": "人公将军",
+      "level": 7,
+      "staffing": 10000
+    },
+    {
+      "id": "1117",
+      "name": "辅天将军",
+      "level": 7,
+      "staffing": 10000
+    },
+    {
+      "id": "1116",
+      "name": "卫道将军",
+      "level": 7,
+      "staffing": 10000
+    },
+    {
+      "id": "1115",
+      "name": "黄天飞骑",
+      "level": 7,
+      "staffing": 10000
+    },
+    {
+      "id": "1114",
+      "name": "黄天锐骑",
+      "level": 7,
+      "staffing": 10000
+    },
+    {
+      "id": "1112",
+      "name": "太平道君",
+      "level": 7,
+      "staffing": 8000
+    },
+    {
+      "id": "1110",
+      "name": "太平大师",
+      "level": 7,
+      "staffing": 8000
+    },
+    {
+      "id": "1108",
+      "name": "太平辅师",
+      "level": 7,
+      "staffing": 8000
+    },
+    {
+      "id": "1107",
+      "name": "太平良师",
+      "level": 7,
+      "staffing": 8000
+    },
+    {
+      "id": "1106",
+      "name": "仙人祭酒",
+      "level": 7,
+      "staffing": 8000
+    },
+    {
+      "id": "1105",
+      "name": "掌方祭酒",
+      "level": 7,
+      "staffing": 8000
+    },
+    {
+      "id": "5072",
+      "name": "左统督军",
+      "level": 6,
+      "staffing": 9000
+    },
+    {
+      "id": "5071",
+      "name": "右统督军",
+      "level": 6,
+      "staffing": 9000
+    },
+    {
+      "id": "5070",
+      "name": "统众督军",
+      "level": 6,
+      "staffing": 9000
+    },
+    {
+      "id": "5069",
+      "name": "临寨督军",
+      "level": 6,
+      "staffing": 9000
+    },
+    {
+      "id": "5068",
+      "name": "执牛督军",
+      "level": 6,
+      "staffing": 9000
+    },
+    {
+      "id": "5067",
+      "name": "镇寨督军",
+      "level": 6,
+      "staffing": 9000
+    },
+    {
+      "id": "5066",
+      "name": "守库典仓",
+      "level": 6,
+      "staffing": 7000
+    },
+    {
+      "id": "5065",
+      "name": "分赏典仓",
+      "level": 6,
+      "staffing": 7000
+    },
+    {
+      "id": "5064",
+      "name": "掌金典仓",
+      "level": 6,
+      "staffing": 7000
+    },
+    {
+      "id": "5063",
+      "name": "理库典仓",
+      "level": 6,
+      "staffing": 7000
+    },
+    {
+      "id": "5062",
+      "name": "平粮典仓",
+      "level": 6,
+      "staffing": 7000
+    },
+    {
+      "id": "5061",
+      "name": "均输典仓",
+      "level": 6,
+      "staffing": 7000
+    },
+    {
+      "id": "4066",
+      "name": "观俗主簿",
+      "level": 6,
+      "staffing": 7000
+    },
+    {
+      "id": "4065",
+      "name": "平讼主簿",
+      "level": 6,
+      "staffing": 7000
+    },
+    {
+      "id": "4064",
+      "name": "修好主簿",
+      "level": 6,
+      "staffing": 7000
+    },
+    {
+      "id": "4063",
+      "name": "掌礼主簿",
+      "level": 6,
+      "staffing": 7000
+    },
+    {
+      "id": "4062",
+      "name": "记言主簿",
+      "level": 6,
+      "staffing": 7000
+    },
+    {
+      "id": "4061",
+      "name": "典法主簿",
+      "level": 6,
+      "staffing": 7000
+    },
+    {
+      "id": "3070",
+      "name": "典法议曹",
+      "level": 6,
+      "staffing": 7000
+    },
+    {
+      "id": "3069",
+      "name": "掌盟议曹",
+      "level": 6,
+      "staffing": 7000
+    },
+    {
+      "id": "3068",
+      "name": "掌教议曹",
+      "level": 6,
+      "staffing": 7000
+    },
+    {
+      "id": "3067",
+      "name": "明俗议曹",
+      "level": 6,
+      "staffing": 7000
+    },
+    {
+      "id": "3066",
+      "name": "掌畜议曹",
+      "level": 6,
+      "staffing": 7000
+    },
+    {
+      "id": "2066",
+      "name": "典法骨都侯",
+      "level": 6,
+      "staffing": 7000
+    },
+    {
+      "id": "2065",
+      "name": "掌牲骨都侯",
+      "level": 6,
+      "staffing": 7000
+    },
+    {
+      "id": "1087",
+      "name": "宣化渠帅",
+      "level": 6,
+      "staffing": 9000
+    },
+    {
+      "id": "1084",
+      "name": "典教祭酒",
+      "level": 6,
+      "staffing": 7000
+    },
+    {
+      "id": "1083",
+      "name": "典宾祭酒",
+      "level": 6,
+      "staffing": 7000
+    },
+    {
+      "id": "1082",
+      "name": "太平祠主",
+      "level": 6,
+      "staffing": 7000
+    },
+    {
+      "id": "1081",
+      "name": "黄天农师",
+      "level": 6,
+      "staffing": 7000
+    }
+  ],
+  "override_rows": []
+}

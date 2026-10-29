@@ -1,0 +1,4535 @@
+{
+  "description": "全库 710 职名中不在汉系任免面板 1-144、且 DT_Official 有行的 id，可写入 officials_mod.json append_rows",
+  "count": 566,
+  "panel_base": 144,
+  "officials": [
+    {
+      "id": "1001",
+      "name": "道伍长",
+      "level": 1,
+      "staffing": 3000,
+      "salary": 4,
+      "route": "1000"
+    },
+    {
+      "id": "1002",
+      "name": "太平子",
+      "level": 1,
+      "staffing": 3000,
+      "salary": 4,
+      "route": "1000"
+    },
+    {
+      "id": "1003",
+      "name": "小道人",
+      "level": 1,
+      "staffing": 3000,
+      "salary": 4,
+      "route": "1000"
+    },
+    {
+      "id": "1004",
+      "name": "施药吏",
+      "level": 1,
+      "staffing": 3000,
+      "salary": 4,
+      "route": "1000"
+    },
+    {
+      "id": "1005",
+      "name": "掌鬼吏",
+      "level": 1,
+      "staffing": 3000,
+      "salary": 4,
+      "route": "1000"
+    },
+    {
+      "id": "1006",
+      "name": "书符吏",
+      "level": 1,
+      "staffing": 3000,
+      "salary": 4,
+      "route": "1000"
+    },
+    {
+      "id": "1007",
+      "name": "劝农师",
+      "level": 1,
+      "staffing": 3000,
+      "salary": 4,
+      "route": "1000"
+    },
+    {
+      "id": "1008",
+      "name": "里祭酒",
+      "level": 1,
+      "staffing": 3000,
+      "salary": 4,
+      "route": "1000"
+    },
+    {
+      "id": "1009",
+      "name": "造兵校",
+      "level": 1,
+      "staffing": 4000,
+      "salary": 4,
+      "route": "1000"
+    },
+    {
+      "id": "1010",
+      "name": "执旗校",
+      "level": 1,
+      "staffing": 4000,
+      "salary": 4,
+      "route": "1000"
+    },
+    {
+      "id": "1011",
+      "name": "课农督",
+      "level": 1,
+      "staffing": 4000,
+      "salary": 4,
+      "route": "1000"
+    },
+    {
+      "id": "1012",
+      "name": "斥候督",
+      "level": 1,
+      "staffing": 4000,
+      "salary": 4,
+      "route": "1000"
+    },
+    {
+      "id": "1013",
+      "name": "率队督",
+      "level": 1,
+      "staffing": 4000,
+      "salary": 4,
+      "route": "1000"
+    },
+    {
+      "id": "1014",
+      "name": "守屯督",
+      "level": 1,
+      "staffing": 4000,
+      "salary": 4,
+      "route": "1000"
+    },
+    {
+      "id": "1015",
+      "name": "坞壁督",
+      "level": 1,
+      "staffing": 4000,
+      "salary": 4,
+      "route": "1000"
+    },
+    {
+      "id": "1016",
+      "name": "方下督",
+      "level": 1,
+      "staffing": 4000,
+      "salary": 4,
+      "route": "1000"
+    },
+    {
+      "id": "1017",
+      "name": "方书记",
+      "level": 2,
+      "staffing": 3000,
+      "salary": 6,
+      "route": "1000"
+    },
+    {
+      "id": "1018",
+      "name": "记箓吏",
+      "level": 2,
+      "staffing": 3000,
+      "salary": 6,
+      "route": "1000"
+    },
+    {
+      "id": "1019",
+      "name": "掌鬼箓",
+      "level": 2,
+      "staffing": 3000,
+      "salary": 6,
+      "route": "1000"
+    },
+    {
+      "id": "1020",
+      "name": "黄天使",
+      "level": 2,
+      "staffing": 3000,
+      "salary": 6,
+      "route": "1000"
+    },
+    {
+      "id": "1021",
+      "name": "典符令",
+      "level": 2,
+      "staffing": 3000,
+      "salary": 6,
+      "route": "1000"
+    },
+    {
+      "id": "1022",
+      "name": "奸令",
+      "level": 2,
+      "staffing": 3000,
+      "salary": 6,
+      "route": "1000"
+    },
+    {
+      "id": "1023",
+      "name": "道经师",
+      "level": 2,
+      "staffing": 3000,
+      "salary": 6,
+      "route": "1000"
+    },
+    {
+      "id": "1024",
+      "name": "掌兵师",
+      "level": 2,
+      "staffing": 3000,
+      "salary": 6,
+      "route": "1000"
+    },
+    {
+      "id": "1025",
+      "name": "守圉军将",
+      "level": 2,
+      "staffing": 5000,
+      "salary": 6,
+      "route": "1000"
+    },
+    {
+      "id": "1026",
+      "name": "烽烛军将",
+      "level": 2,
+      "staffing": 5000,
+      "salary": 6,
+      "route": "1000"
+    },
+    {
+      "id": "1027",
+      "name": "巡骑都长",
+      "level": 2,
+      "staffing": 5000,
+      "salary": 6,
+      "route": "1000"
+    },
+    {
+      "id": "1028",
+      "name": "壁垒军督",
+      "level": 2,
+      "staffing": 5000,
+      "salary": 6,
+      "route": "1000"
+    },
+    {
+      "id": "1029",
+      "name": "方下都帅",
+      "level": 2,
+      "staffing": 5000,
+      "salary": 6,
+      "route": "1000"
+    },
+    {
+      "id": "1030",
+      "name": "小方军督",
+      "level": 2,
+      "staffing": 5000,
+      "salary": 6,
+      "route": "1000"
+    },
+    {
+      "id": "1031",
+      "name": "掌记道人",
+      "level": 3,
+      "staffing": 4000,
+      "salary": 8,
+      "route": "1000"
+    },
+    {
+      "id": "1032",
+      "name": "神官书记",
+      "level": 3,
+      "staffing": 4000,
+      "salary": 8,
+      "route": "1000"
+    },
+    {
+      "id": "1033",
+      "name": "方帅典记",
+      "level": 3,
+      "staffing": 4000,
+      "salary": 8,
+      "route": "1000"
+    },
+    {
+      "id": "1034",
+      "name": "太平议师",
+      "level": 3,
+      "staffing": 4000,
+      "salary": 8,
+      "route": "1000"
+    },
+    {
+      "id": "1035",
+      "name": "方帅谋主",
+      "level": 3,
+      "staffing": 4000,
+      "salary": 8,
+      "route": "1000"
+    },
+    {
+      "id": "1036",
+      "name": "巡方祭酒",
+      "level": 3,
+      "staffing": 4000,
+      "salary": 8,
+      "route": "1000"
+    },
+    {
+      "id": "1037",
+      "name": "掌事祭酒",
+      "level": 3,
+      "staffing": 4000,
+      "salary": 8,
+      "route": "1000"
+    },
+    {
+      "id": "1038",
+      "name": "黄箓祭酒",
+      "level": 3,
+      "staffing": 4000,
+      "salary": 8,
+      "route": "1000"
+    },
+    {
+      "id": "1039",
+      "name": "监斋祭酒",
+      "level": 3,
+      "staffing": 4000,
+      "salary": 8,
+      "route": "1000"
+    },
+    {
+      "id": "1040",
+      "name": "都讲祭酒",
+      "level": 3,
+      "staffing": 4000,
+      "salary": 8,
+      "route": "1000"
+    },
+    {
+      "id": "1041",
+      "name": "帐下军吏",
+      "level": 3,
+      "staffing": 6000,
+      "salary": 8,
+      "route": "1000"
+    },
+    {
+      "id": "1042",
+      "name": "中垒军吏",
+      "level": 3,
+      "staffing": 6000,
+      "salary": 8,
+      "route": "1000"
+    },
+    {
+      "id": "1043",
+      "name": "一方都佐",
+      "level": 3,
+      "staffing": 6000,
+      "salary": 8,
+      "route": "1000"
+    },
+    {
+      "id": "1044",
+      "name": "部曲军候",
+      "level": 3,
+      "staffing": 6000,
+      "salary": 8,
+      "route": "1000"
+    },
+    {
+      "id": "1045",
+      "name": "镇方军将",
+      "level": 3,
+      "staffing": 6000,
+      "salary": 8,
+      "route": "1000"
+    },
+    {
+      "id": "1046",
+      "name": "一方军帅",
+      "level": 3,
+      "staffing": 6000,
+      "salary": 8,
+      "route": "1000"
+    },
+    {
+      "id": "1047",
+      "name": "掌簿道人",
+      "level": 4,
+      "staffing": 5000,
+      "salary": 10,
+      "route": "1000"
+    },
+    {
+      "id": "1048",
+      "name": "典兵道人",
+      "level": 4,
+      "staffing": 5000,
+      "salary": 10,
+      "route": "1000"
+    },
+    {
+      "id": "1049",
+      "name": "四方式佐",
+      "level": 4,
+      "staffing": 5000,
+      "salary": 10,
+      "route": "1000"
+    },
+    {
+      "id": "1050",
+      "name": "宣化大夫",
+      "level": 4,
+      "staffing": 5000,
+      "salary": 10,
+      "route": "1000"
+    },
+    {
+      "id": "1051",
+      "name": "太平道士",
+      "level": 4,
+      "staffing": 5000,
+      "salary": 10,
+      "route": "1000"
+    },
+    {
+      "id": "1052",
+      "name": "持节祭酒",
+      "level": 4,
+      "staffing": 5000,
+      "salary": 10,
+      "route": "1000"
+    },
+    {
+      "id": "1053",
+      "name": "符水使者",
+      "level": 4,
+      "staffing": 7000,
+      "salary": 10,
+      "route": "1000"
+    },
+    {
+      "id": "1054",
+      "name": "破虏军督",
+      "level": 4,
+      "staffing": 7000,
+      "salary": 10,
+      "route": "1000"
+    },
+    {
+      "id": "1055",
+      "name": "讨逆军督",
+      "level": 4,
+      "staffing": 7000,
+      "salary": 10,
+      "route": "1000"
+    },
+    {
+      "id": "1056",
+      "name": "镇北军帅",
+      "level": 4,
+      "staffing": 7000,
+      "salary": 10,
+      "route": "1000"
+    },
+    {
+      "id": "1057",
+      "name": "镇南军帅",
+      "level": 4,
+      "staffing": 7000,
+      "salary": 10,
+      "route": "1000"
+    },
+    {
+      "id": "1058",
+      "name": "镇西军帅",
+      "level": 4,
+      "staffing": 7000,
+      "salary": 10,
+      "route": "1000"
+    },
+    {
+      "id": "1059",
+      "name": "镇东军帅",
+      "level": 4,
+      "staffing": 7000,
+      "salary": 10,
+      "route": "1000"
+    },
+    {
+      "id": "1060",
+      "name": "方面将军",
+      "level": 4,
+      "staffing": 7000,
+      "salary": 10,
+      "route": "1000"
+    },
+    {
+      "id": "1061",
+      "name": "典记道人",
+      "level": 5,
+      "staffing": 6000,
+      "salary": 12,
+      "route": "1000"
+    },
+    {
+      "id": "1062",
+      "name": "太平典录",
+      "level": 5,
+      "staffing": 6000,
+      "salary": 12,
+      "route": "1000"
+    },
+    {
+      "id": "1063",
+      "name": "黄衣道士",
+      "level": 5,
+      "staffing": 6000,
+      "salary": 12,
+      "route": "1000"
+    },
+    {
+      "id": "1064",
+      "name": "持符祭酒",
+      "level": 5,
+      "staffing": 6000,
+      "salary": 12,
+      "route": "1000"
+    },
+    {
+      "id": "1065",
+      "name": "祛邪渠帅",
+      "level": 5,
+      "staffing": 8000,
+      "salary": 12,
+      "route": "1000"
+    },
+    {
+      "id": "1066",
+      "name": "秉直渠帅",
+      "level": 5,
+      "staffing": 8000,
+      "salary": 12,
+      "route": "1000"
+    },
+    {
+      "id": "1067",
+      "name": "解承渠帅",
+      "level": 5,
+      "staffing": 8000,
+      "salary": 12,
+      "route": "1000"
+    },
+    {
+      "id": "1068",
+      "name": "涤殃渠帅",
+      "level": 5,
+      "staffing": 8000,
+      "salary": 12,
+      "route": "1000"
+    },
+    {
+      "id": "1069",
+      "name": "传符渠帅",
+      "level": 5,
+      "staffing": 8000,
+      "salary": 12,
+      "route": "1000"
+    },
+    {
+      "id": "1070",
+      "name": "布德渠帅",
+      "level": 5,
+      "staffing": 8000,
+      "salary": 12,
+      "route": "1000"
+    },
+    {
+      "id": "1071",
+      "name": "合望渠帅",
+      "level": 5,
+      "staffing": 8000,
+      "salary": 12,
+      "route": "1000"
+    },
+    {
+      "id": "1072",
+      "name": "循朔渠帅",
+      "level": 5,
+      "staffing": 8000,
+      "salary": 12,
+      "route": "1000"
+    },
+    {
+      "id": "1073",
+      "name": "敛藏渠帅",
+      "level": 5,
+      "staffing": 8000,
+      "salary": 12,
+      "route": "1000"
+    },
+    {
+      "id": "1074",
+      "name": "沉肃渠帅",
+      "level": 5,
+      "staffing": 8000,
+      "salary": 12,
+      "route": "1000"
+    },
+    {
+      "id": "1075",
+      "name": "升曜渠帅",
+      "level": 5,
+      "staffing": 8000,
+      "salary": 12,
+      "route": "1000"
+    },
+    {
+      "id": "1076",
+      "name": "景明渠帅",
+      "level": 5,
+      "staffing": 8000,
+      "salary": 12,
+      "route": "1000"
+    },
+    {
+      "id": "1077",
+      "name": "开冥渠帅",
+      "level": 5,
+      "staffing": 8000,
+      "salary": 12,
+      "route": "1000"
+    },
+    {
+      "id": "1078",
+      "name": "合气渠帅",
+      "level": 5,
+      "staffing": 8000,
+      "salary": 12,
+      "route": "1000"
+    },
+    {
+      "id": "1079",
+      "name": "调元渠帅",
+      "level": 5,
+      "staffing": 8000,
+      "salary": 12,
+      "route": "1000"
+    },
+    {
+      "id": "1080",
+      "name": "肇始渠帅",
+      "level": 5,
+      "staffing": 8000,
+      "salary": 12,
+      "route": "1000"
+    },
+    {
+      "id": "1081",
+      "name": "黄天农师",
+      "level": 6,
+      "staffing": 7000,
+      "salary": 14,
+      "route": "1000"
+    },
+    {
+      "id": "1082",
+      "name": "太平祠主",
+      "level": 6,
+      "staffing": 7000,
+      "salary": 14,
+      "route": "1000"
+    },
+    {
+      "id": "1083",
+      "name": "典宾祭酒",
+      "level": 6,
+      "staffing": 7000,
+      "salary": 14,
+      "route": "1000"
+    },
+    {
+      "id": "1084",
+      "name": "典教祭酒",
+      "level": 6,
+      "staffing": 7000,
+      "salary": 14,
+      "route": "1000"
+    },
+    {
+      "id": "1085",
+      "name": "破厄渠帅",
+      "level": 6,
+      "staffing": 9000,
+      "salary": 14,
+      "route": "1000"
+    },
+    {
+      "id": "1086",
+      "name": "守正渠帅",
+      "level": 6,
+      "staffing": 9000,
+      "salary": 14,
+      "route": "1000"
+    },
+    {
+      "id": "1087",
+      "name": "宣化渠帅",
+      "level": 6,
+      "staffing": 9000,
+      "salary": 14,
+      "route": "1000"
+    },
+    {
+      "id": "1088",
+      "name": "应甲渠帅",
+      "level": 6,
+      "staffing": 9000,
+      "salary": 14,
+      "route": "1000"
+    },
+    {
+      "id": "1089",
+      "name": "感灵渠帅",
+      "level": 6,
+      "staffing": 9000,
+      "salary": 14,
+      "route": "1000"
+    },
+    {
+      "id": "1090",
+      "name": "广生渠帅",
+      "level": 6,
+      "staffing": 9000,
+      "salary": 14,
+      "route": "1000"
+    },
+    {
+      "id": "1091",
+      "name": "育黎渠帅",
+      "level": 6,
+      "staffing": 9000,
+      "salary": 14,
+      "route": "1000"
+    },
+    {
+      "id": "1092",
+      "name": "滋荣渠帅",
+      "level": 6,
+      "staffing": 9000,
+      "salary": 14,
+      "route": "1000"
+    },
+    {
+      "id": "1093",
+      "name": "静纪渠帅",
+      "level": 6,
+      "staffing": 9000,
+      "salary": 14,
+      "route": "1000"
+    },
+    {
+      "id": "1094",
+      "name": "定辰渠帅",
+      "level": 6,
+      "staffing": 9000,
+      "salary": 14,
+      "route": "1000"
+    },
+    {
+      "id": "1095",
+      "name": "凝阴渠帅",
+      "level": 6,
+      "staffing": 9000,
+      "salary": 14,
+      "route": "1000"
+    },
+    {
+      "id": "1096",
+      "name": "昭阳渠帅",
+      "level": 6,
+      "staffing": 9000,
+      "salary": 14,
+      "route": "1000"
+    },
+    {
+      "id": "1097",
+      "name": "守常渠帅",
+      "level": 6,
+      "staffing": 9000,
+      "salary": 14,
+      "route": "1000"
+    },
+    {
+      "id": "1098",
+      "name": "恒度渠帅",
+      "level": 6,
+      "staffing": 9000,
+      "salary": 14,
+      "route": "1000"
+    },
+    {
+      "id": "1099",
+      "name": "通和渠帅",
+      "level": 6,
+      "staffing": 9000,
+      "salary": 14,
+      "route": "1000"
+    },
+    {
+      "id": "1100",
+      "name": "承和渠帅",
+      "level": 6,
+      "staffing": 9000,
+      "salary": 14,
+      "route": "1000"
+    },
+    {
+      "id": "1101",
+      "name": "交泰渠帅",
+      "level": 6,
+      "staffing": 9000,
+      "salary": 14,
+      "route": "1000"
+    },
+    {
+      "id": "1102",
+      "name": "归黄渠帅",
+      "level": 6,
+      "staffing": 9000,
+      "salary": 14,
+      "route": "1000"
+    },
+    {
+      "id": "1103",
+      "name": "立黄渠帅",
+      "level": 6,
+      "staffing": 9000,
+      "salary": 14,
+      "route": "1000"
+    },
+    {
+      "id": "1104",
+      "name": "启元渠帅",
+      "level": 6,
+      "staffing": 9000,
+      "salary": 14,
+      "route": "1000"
+    },
+    {
+      "id": "1105",
+      "name": "掌方祭酒",
+      "level": 7,
+      "staffing": 8000,
+      "salary": 16,
+      "route": "1000"
+    },
+    {
+      "id": "1106",
+      "name": "仙人祭酒",
+      "level": 7,
+      "staffing": 8000,
+      "salary": 16,
+      "route": "1000"
+    },
+    {
+      "id": "1107",
+      "name": "太平良师",
+      "level": 7,
+      "staffing": 8000,
+      "salary": 16,
+      "route": "1000"
+    },
+    {
+      "id": "1108",
+      "name": "太平辅师",
+      "level": 7,
+      "staffing": 8000,
+      "salary": 16,
+      "route": "1000"
+    },
+    {
+      "id": "1109",
+      "name": "黄钺使者",
+      "level": 7,
+      "staffing": 8000,
+      "salary": 16,
+      "route": "1000"
+    },
+    {
+      "id": "1110",
+      "name": "太平大师",
+      "level": 7,
+      "staffing": 8000,
+      "salary": 16,
+      "route": "1000"
+    },
+    {
+      "id": "1111",
+      "name": "定国黄父",
+      "level": 7,
+      "staffing": 8000,
+      "salary": 16,
+      "route": "1000"
+    },
+    {
+      "id": "1112",
+      "name": "太平道君",
+      "level": 7,
+      "staffing": 8000,
+      "salary": 16,
+      "route": "1000"
+    },
+    {
+      "id": "1113",
+      "name": "统纲渠帅",
+      "level": 7,
+      "staffing": 10000,
+      "salary": 16,
+      "route": "1000"
+    },
+    {
+      "id": "1114",
+      "name": "黄天锐骑",
+      "level": 7,
+      "staffing": 10000,
+      "salary": 16,
+      "route": "1000"
+    },
+    {
+      "id": "1115",
+      "name": "黄天飞骑",
+      "level": 7,
+      "staffing": 10000,
+      "salary": 16,
+      "route": "1000"
+    },
+    {
+      "id": "1116",
+      "name": "卫道将军",
+      "level": 7,
+      "staffing": 10000,
+      "salary": 16,
+      "route": "1000"
+    },
+    {
+      "id": "1117",
+      "name": "辅天将军",
+      "level": 7,
+      "staffing": 10000,
+      "salary": 16,
+      "route": "1000"
+    },
+    {
+      "id": "1118",
+      "name": "人公将军",
+      "level": 7,
+      "staffing": 10000,
+      "salary": 16,
+      "route": "1000"
+    },
+    {
+      "id": "1119",
+      "name": "地公将军",
+      "level": 7,
+      "staffing": 10000,
+      "salary": 16,
+      "route": "1000"
+    },
+    {
+      "id": "1120",
+      "name": "录道台事",
+      "level": 8,
+      "staffing": 9000,
+      "salary": 18,
+      "route": "1000"
+    },
+    {
+      "id": "1121",
+      "name": "神人祭酒",
+      "level": 8,
+      "staffing": 9000,
+      "salary": 18,
+      "route": "1000"
+    },
+    {
+      "id": "1122",
+      "name": "大祝祭酒",
+      "level": 8,
+      "staffing": 9000,
+      "salary": 18,
+      "route": "1000"
+    },
+    {
+      "id": "1123",
+      "name": "四方都牧",
+      "level": 8,
+      "staffing": 9000,
+      "salary": 18,
+      "route": "1000"
+    },
+    {
+      "id": "1124",
+      "name": "黄天大人",
+      "level": 8,
+      "staffing": 9000,
+      "salary": 18,
+      "route": "1000"
+    },
+    {
+      "id": "1125",
+      "name": "黄天司空",
+      "level": 8,
+      "staffing": 9000,
+      "salary": 18,
+      "route": "1000"
+    },
+    {
+      "id": "1126",
+      "name": "辅政上公",
+      "level": 8,
+      "staffing": 9000,
+      "salary": 18,
+      "route": "1000"
+    },
+    {
+      "id": "1127",
+      "name": "大贤师君",
+      "level": 8,
+      "staffing": 9000,
+      "salary": 18,
+      "route": "1000"
+    },
+    {
+      "id": "1128",
+      "name": "黄天金吾",
+      "level": 8,
+      "staffing": 11000,
+      "salary": 18,
+      "route": "1000"
+    },
+    {
+      "id": "1129",
+      "name": "黄天司马",
+      "level": 8,
+      "staffing": 11000,
+      "salary": 18,
+      "route": "1000"
+    },
+    {
+      "id": "1130",
+      "name": "黄天上佐",
+      "level": 8,
+      "staffing": 11000,
+      "salary": 18,
+      "route": "1000"
+    },
+    {
+      "id": "1131",
+      "name": "上军都护",
+      "level": 8,
+      "staffing": 11000,
+      "salary": 18,
+      "route": "1000"
+    },
+    {
+      "id": "1132",
+      "name": "都督方伯",
+      "level": 8,
+      "staffing": 11000,
+      "salary": 18,
+      "route": "1000"
+    },
+    {
+      "id": "1133",
+      "name": "黄天太尉",
+      "level": 8,
+      "staffing": 11000,
+      "salary": 18,
+      "route": "1000"
+    },
+    {
+      "id": "1134",
+      "name": "天公将军",
+      "level": 8,
+      "staffing": 11000,
+      "salary": 18,
+      "route": "1000"
+    },
+    {
+      "id": "1135",
+      "name": "黄天信公",
+      "level": 9,
+      "staffing": 12000,
+      "salary": 20,
+      "route": "1000"
+    },
+    {
+      "id": "1136",
+      "name": "护道大师",
+      "level": 9,
+      "staffing": 12000,
+      "salary": 20,
+      "route": "1000"
+    },
+    {
+      "id": "1137",
+      "name": "人公大人",
+      "level": 9,
+      "staffing": 12000,
+      "salary": 20,
+      "route": "1000"
+    },
+    {
+      "id": "1138",
+      "name": "地公大人",
+      "level": 9,
+      "staffing": 12000,
+      "salary": 20,
+      "route": "1000"
+    },
+    {
+      "id": "1139",
+      "name": "天公大人",
+      "level": 9,
+      "staffing": 12000,
+      "salary": 20,
+      "route": "1000"
+    },
+    {
+      "id": "1140",
+      "name": "黄天太傅",
+      "level": 9,
+      "staffing": 12000,
+      "salary": 20,
+      "route": "1000"
+    },
+    {
+      "id": "1141",
+      "name": "太平太师",
+      "level": 9,
+      "staffing": 12000,
+      "salary": 20,
+      "route": "1000"
+    },
+    {
+      "id": "1142",
+      "name": "大贤良师",
+      "level": 9,
+      "staffing": 12000,
+      "salary": 20,
+      "route": "1000"
+    },
+    {
+      "id": "1143",
+      "name": "太平道主",
+      "level": 9,
+      "staffing": 12000,
+      "salary": 20,
+      "route": "1000"
+    },
+    {
+      "id": "1144",
+      "name": "黄天大圣",
+      "level": 9,
+      "staffing": 12000,
+      "salary": 20,
+      "route": "1000"
+    },
+    {
+      "id": "2001",
+      "name": "守灶巫者",
+      "level": 1,
+      "staffing": 3000,
+      "salary": 4,
+      "route": "2000"
+    },
+    {
+      "id": "2002",
+      "name": "祭天巫者",
+      "level": 1,
+      "staffing": 3000,
+      "salary": 4,
+      "route": "2000"
+    },
+    {
+      "id": "2003",
+      "name": "帐下屯将",
+      "level": 1,
+      "staffing": 4000,
+      "salary": 4,
+      "route": "2000"
+    },
+    {
+      "id": "2004",
+      "name": "护帐屯将",
+      "level": 1,
+      "staffing": 4000,
+      "salary": 4,
+      "route": "2000"
+    },
+    {
+      "id": "2005",
+      "name": "夜巡屯将",
+      "level": 1,
+      "staffing": 4000,
+      "salary": 4,
+      "route": "2000"
+    },
+    {
+      "id": "2006",
+      "name": "强弩屯将",
+      "level": 1,
+      "staffing": 4000,
+      "salary": 4,
+      "route": "2000"
+    },
+    {
+      "id": "2007",
+      "name": "奔突屯将",
+      "level": 1,
+      "staffing": 4000,
+      "salary": 4,
+      "route": "2000"
+    },
+    {
+      "id": "2008",
+      "name": "游奕屯将",
+      "level": 1,
+      "staffing": 4000,
+      "salary": 4,
+      "route": "2000"
+    },
+    {
+      "id": "2009",
+      "name": "牧守屯将",
+      "level": 1,
+      "staffing": 4000,
+      "salary": 4,
+      "route": "2000"
+    },
+    {
+      "id": "2010",
+      "name": "守塞屯将",
+      "level": 1,
+      "staffing": 4000,
+      "salary": 4,
+      "route": "2000"
+    },
+    {
+      "id": "2011",
+      "name": "田猎屯将",
+      "level": 1,
+      "staffing": 4000,
+      "salary": 4,
+      "route": "2000"
+    },
+    {
+      "id": "2012",
+      "name": "弓矢屯将",
+      "level": 1,
+      "staffing": 4000,
+      "salary": 4,
+      "route": "2000"
+    },
+    {
+      "id": "2013",
+      "name": "控弦屯将",
+      "level": 1,
+      "staffing": 4000,
+      "salary": 4,
+      "route": "2000"
+    },
+    {
+      "id": "2014",
+      "name": "邑落屯将",
+      "level": 1,
+      "staffing": 4000,
+      "salary": 4,
+      "route": "2000"
+    },
+    {
+      "id": "2015",
+      "name": "穹庐屯将",
+      "level": 1,
+      "staffing": 4000,
+      "salary": 4,
+      "route": "2000"
+    },
+    {
+      "id": "2016",
+      "name": "决疑卜者",
+      "level": 2,
+      "staffing": 3000,
+      "salary": 6,
+      "route": "2000"
+    },
+    {
+      "id": "2017",
+      "name": "问疾卜者",
+      "level": 2,
+      "staffing": 3000,
+      "salary": 6,
+      "route": "2000"
+    },
+    {
+      "id": "2018",
+      "name": "占灾卜者",
+      "level": 2,
+      "staffing": 3000,
+      "salary": 6,
+      "route": "2000"
+    },
+    {
+      "id": "2019",
+      "name": "灼骨卜者",
+      "level": 2,
+      "staffing": 3000,
+      "salary": 6,
+      "route": "2000"
+    },
+    {
+      "id": "2020",
+      "name": "庭中骑尉",
+      "level": 2,
+      "staffing": 5000,
+      "salary": 6,
+      "route": "2000"
+    },
+    {
+      "id": "2021",
+      "name": "角弓骑尉",
+      "level": 2,
+      "staffing": 5000,
+      "salary": 6,
+      "route": "2000"
+    },
+    {
+      "id": "2022",
+      "name": "金鞍骑尉",
+      "level": 2,
+      "staffing": 5000,
+      "salary": 6,
+      "route": "2000"
+    },
+    {
+      "id": "2023",
+      "name": "黑毡骑尉",
+      "level": 2,
+      "staffing": 5000,
+      "salary": 6,
+      "route": "2000"
+    },
+    {
+      "id": "2024",
+      "name": "白翎骑尉",
+      "level": 2,
+      "staffing": 5000,
+      "salary": 6,
+      "route": "2000"
+    },
+    {
+      "id": "2025",
+      "name": "骁果骑尉",
+      "level": 2,
+      "staffing": 5000,
+      "salary": 6,
+      "route": "2000"
+    },
+    {
+      "id": "2026",
+      "name": "驰射骑尉",
+      "level": 2,
+      "staffing": 5000,
+      "salary": 6,
+      "route": "2000"
+    },
+    {
+      "id": "2027",
+      "name": "游猎骑尉",
+      "level": 2,
+      "staffing": 5000,
+      "salary": 6,
+      "route": "2000"
+    },
+    {
+      "id": "2028",
+      "name": "帐前骑尉",
+      "level": 2,
+      "staffing": 5000,
+      "salary": 6,
+      "route": "2000"
+    },
+    {
+      "id": "2029",
+      "name": "执鼓祝者",
+      "level": 3,
+      "staffing": 4000,
+      "salary": 8,
+      "route": "2000"
+    },
+    {
+      "id": "2030",
+      "name": "祷山祝者",
+      "level": 3,
+      "staffing": 4000,
+      "salary": 8,
+      "route": "2000"
+    },
+    {
+      "id": "2031",
+      "name": "祠天祝者",
+      "level": 3,
+      "staffing": 4000,
+      "salary": 8,
+      "route": "2000"
+    },
+    {
+      "id": "2032",
+      "name": "猎守牙将",
+      "level": 3,
+      "staffing": 6000,
+      "salary": 8,
+      "route": "2000"
+    },
+    {
+      "id": "2033",
+      "name": "弓马牙将",
+      "level": 3,
+      "staffing": 6000,
+      "salary": 8,
+      "route": "2000"
+    },
+    {
+      "id": "2034",
+      "name": "摧锋牙将",
+      "level": 3,
+      "staffing": 6000,
+      "salary": 8,
+      "route": "2000"
+    },
+    {
+      "id": "2035",
+      "name": "强射牙将",
+      "level": 3,
+      "staffing": 6000,
+      "salary": 8,
+      "route": "2000"
+    },
+    {
+      "id": "2036",
+      "name": "陷阵牙将",
+      "level": 3,
+      "staffing": 6000,
+      "salary": 8,
+      "route": "2000"
+    },
+    {
+      "id": "2037",
+      "name": "铁鹰牙将",
+      "level": 3,
+      "staffing": 6000,
+      "salary": 8,
+      "route": "2000"
+    },
+    {
+      "id": "2038",
+      "name": "苍狼牙将",
+      "level": 3,
+      "staffing": 6000,
+      "salary": 8,
+      "route": "2000"
+    },
+    {
+      "id": "2039",
+      "name": "断后牙将",
+      "level": 3,
+      "staffing": 6000,
+      "salary": 8,
+      "route": "2000"
+    },
+    {
+      "id": "2040",
+      "name": "先锋牙将",
+      "level": 3,
+      "staffing": 6000,
+      "salary": 8,
+      "route": "2000"
+    },
+    {
+      "id": "2041",
+      "name": "通神医巫",
+      "level": 4,
+      "staffing": 5000,
+      "salary": 10,
+      "route": "2000"
+    },
+    {
+      "id": "2042",
+      "name": "疗伤医巫",
+      "level": 4,
+      "staffing": 5000,
+      "salary": 10,
+      "route": "2000"
+    },
+    {
+      "id": "2043",
+      "name": "驱病医巫",
+      "level": 4,
+      "staffing": 5000,
+      "salary": 10,
+      "route": "2000"
+    },
+    {
+      "id": "2044",
+      "name": "灸刺医巫",
+      "level": 4,
+      "staffing": 5000,
+      "salary": 10,
+      "route": "2000"
+    },
+    {
+      "id": "2045",
+      "name": "药草医巫",
+      "level": 4,
+      "staffing": 5000,
+      "salary": 10,
+      "route": "2000"
+    },
+    {
+      "id": "2046",
+      "name": "帐前大豪",
+      "level": 4,
+      "staffing": 7000,
+      "salary": 10,
+      "route": "2000"
+    },
+    {
+      "id": "2047",
+      "name": "弯弓大豪",
+      "level": 4,
+      "staffing": 7000,
+      "salary": 10,
+      "route": "2000"
+    },
+    {
+      "id": "2048",
+      "name": "守帐大豪",
+      "level": 4,
+      "staffing": 7000,
+      "salary": 10,
+      "route": "2000"
+    },
+    {
+      "id": "2049",
+      "name": "合众大豪",
+      "level": 4,
+      "staffing": 7000,
+      "salary": 10,
+      "route": "2000"
+    },
+    {
+      "id": "2050",
+      "name": "牧马大豪",
+      "level": 4,
+      "staffing": 7000,
+      "salary": 10,
+      "route": "2000"
+    },
+    {
+      "id": "2051",
+      "name": "驰射大豪",
+      "level": 4,
+      "staffing": 7000,
+      "salary": 10,
+      "route": "2000"
+    },
+    {
+      "id": "2052",
+      "name": "勇健大豪",
+      "level": 4,
+      "staffing": 7000,
+      "salary": 10,
+      "route": "2000"
+    },
+    {
+      "id": "2053",
+      "name": "明俗议士",
+      "level": 5,
+      "staffing": 6000,
+      "salary": 12,
+      "route": "2000"
+    },
+    {
+      "id": "2054",
+      "name": "均平议士",
+      "level": 5,
+      "staffing": 6000,
+      "salary": 12,
+      "route": "2000"
+    },
+    {
+      "id": "2055",
+      "name": "劝牧议士",
+      "level": 5,
+      "staffing": 6000,
+      "salary": 12,
+      "route": "2000"
+    },
+    {
+      "id": "2056",
+      "name": "和亲议士",
+      "level": 5,
+      "staffing": 6000,
+      "salary": 12,
+      "route": "2000"
+    },
+    {
+      "id": "2057",
+      "name": "理冤议士",
+      "level": 5,
+      "staffing": 6000,
+      "salary": 12,
+      "route": "2000"
+    },
+    {
+      "id": "2058",
+      "name": "决讼议士",
+      "level": 5,
+      "staffing": 6000,
+      "salary": 12,
+      "route": "2000"
+    },
+    {
+      "id": "2059",
+      "name": "掌牧当户",
+      "level": 5,
+      "staffing": 8000,
+      "salary": 12,
+      "route": "2000"
+    },
+    {
+      "id": "2060",
+      "name": "统骑当户",
+      "level": 5,
+      "staffing": 8000,
+      "salary": 12,
+      "route": "2000"
+    },
+    {
+      "id": "2061",
+      "name": "勇健当户",
+      "level": 5,
+      "staffing": 8000,
+      "salary": 12,
+      "route": "2000"
+    },
+    {
+      "id": "2062",
+      "name": "田猎当户",
+      "level": 5,
+      "staffing": 8000,
+      "salary": 12,
+      "route": "2000"
+    },
+    {
+      "id": "2063",
+      "name": "游奕当户",
+      "level": 5,
+      "staffing": 8000,
+      "salary": 12,
+      "route": "2000"
+    },
+    {
+      "id": "2064",
+      "name": "护庭当户",
+      "level": 5,
+      "staffing": 8000,
+      "salary": 12,
+      "route": "2000"
+    },
+    {
+      "id": "2065",
+      "name": "掌牲骨都侯",
+      "level": 6,
+      "staffing": 7000,
+      "salary": 14,
+      "route": "2000"
+    },
+    {
+      "id": "2066",
+      "name": "典法骨都侯",
+      "level": 6,
+      "staffing": 7000,
+      "salary": 14,
+      "route": "2000"
+    },
+    {
+      "id": "2067",
+      "name": "修礼骨都侯",
+      "level": 6,
+      "staffing": 7000,
+      "salary": 14,
+      "route": "2000"
+    },
+    {
+      "id": "2068",
+      "name": "明法骨都侯",
+      "level": 6,
+      "staffing": 7000,
+      "salary": 14,
+      "route": "2000"
+    },
+    {
+      "id": "2069",
+      "name": "决事骨都侯",
+      "level": 6,
+      "staffing": 7000,
+      "salary": 14,
+      "route": "2000"
+    },
+    {
+      "id": "2070",
+      "name": "记言骨都侯",
+      "level": 6,
+      "staffing": 7000,
+      "salary": 14,
+      "route": "2000"
+    },
+    {
+      "id": "2071",
+      "name": "扈从万骑",
+      "level": 6,
+      "staffing": 9000,
+      "salary": 14,
+      "route": "2000"
+    },
+    {
+      "id": "2072",
+      "name": "金鼓万骑",
+      "level": 6,
+      "staffing": 9000,
+      "salary": 14,
+      "route": "2000"
+    },
+    {
+      "id": "2073",
+      "name": "狼旗万骑",
+      "level": 6,
+      "staffing": 9000,
+      "salary": 14,
+      "route": "2000"
+    },
+    {
+      "id": "2074",
+      "name": "骁锐万骑",
+      "level": 6,
+      "staffing": 9000,
+      "salary": 14,
+      "route": "2000"
+    },
+    {
+      "id": "2075",
+      "name": "虎贲万骑",
+      "level": 6,
+      "staffing": 9000,
+      "salary": 14,
+      "route": "2000"
+    },
+    {
+      "id": "2076",
+      "name": "宿卫万骑",
+      "level": 6,
+      "staffing": 9000,
+      "salary": 14,
+      "route": "2000"
+    },
+    {
+      "id": "2077",
+      "name": "议曹大夫",
+      "level": 7,
+      "staffing": 8000,
+      "salary": 16,
+      "route": "2000"
+    },
+    {
+      "id": "2078",
+      "name": "典言大夫",
+      "level": 7,
+      "staffing": 8000,
+      "salary": 16,
+      "route": "2000"
+    },
+    {
+      "id": "2079",
+      "name": "修史大夫",
+      "level": 7,
+      "staffing": 8000,
+      "salary": 16,
+      "route": "2000"
+    },
+    {
+      "id": "2080",
+      "name": "奉礼大夫",
+      "level": 7,
+      "staffing": 8000,
+      "salary": 16,
+      "route": "2000"
+    },
+    {
+      "id": "2081",
+      "name": "平虏护军",
+      "level": 7,
+      "staffing": 10000,
+      "salary": 16,
+      "route": "2000"
+    },
+    {
+      "id": "2082",
+      "name": "安远护军",
+      "level": 7,
+      "staffing": 10000,
+      "salary": 16,
+      "route": "2000"
+    },
+    {
+      "id": "2083",
+      "name": "抚军护军",
+      "level": 7,
+      "staffing": 10000,
+      "salary": 16,
+      "route": "2000"
+    },
+    {
+      "id": "2084",
+      "name": "卫军护军",
+      "level": 7,
+      "staffing": 10000,
+      "salary": 16,
+      "route": "2000"
+    },
+    {
+      "id": "2085",
+      "name": "镇右护军",
+      "level": 7,
+      "staffing": 10000,
+      "salary": 16,
+      "route": "2000"
+    },
+    {
+      "id": "2086",
+      "name": "镇左护军",
+      "level": 7,
+      "staffing": 10000,
+      "salary": 16,
+      "route": "2000"
+    },
+    {
+      "id": "2087",
+      "name": "镇后护军",
+      "level": 7,
+      "staffing": 10000,
+      "salary": 16,
+      "route": "2000"
+    },
+    {
+      "id": "2088",
+      "name": "镇前护军",
+      "level": 7,
+      "staffing": 10000,
+      "salary": 16,
+      "route": "2000"
+    },
+    {
+      "id": "2089",
+      "name": "给事中",
+      "level": 8,
+      "staffing": 9000,
+      "salary": 18,
+      "route": "2000"
+    },
+    {
+      "id": "2090",
+      "name": "度支尚书",
+      "level": 8,
+      "staffing": 9000,
+      "salary": 18,
+      "route": "2000"
+    },
+    {
+      "id": "2091",
+      "name": "客曹尚书",
+      "level": 8,
+      "staffing": 9000,
+      "salary": 18,
+      "route": "2000"
+    },
+    {
+      "id": "2092",
+      "name": "民曹尚书",
+      "level": 8,
+      "staffing": 9000,
+      "salary": 18,
+      "route": "2000"
+    },
+    {
+      "id": "2093",
+      "name": "吏曹尚书",
+      "level": 8,
+      "staffing": 9000,
+      "salary": 18,
+      "route": "2000"
+    },
+    {
+      "id": "2094",
+      "name": "立义将军",
+      "level": 8,
+      "staffing": 11000,
+      "salary": 18,
+      "route": "2000"
+    },
+    {
+      "id": "2095",
+      "name": "翊军将军",
+      "level": 8,
+      "staffing": 11000,
+      "salary": 18,
+      "route": "2000"
+    },
+    {
+      "id": "2096",
+      "name": "武卫将军",
+      "level": 8,
+      "staffing": 11000,
+      "salary": 18,
+      "route": "2000"
+    },
+    {
+      "id": "2097",
+      "name": "镇军将军",
+      "level": 8,
+      "staffing": 11000,
+      "salary": 18,
+      "route": "2000"
+    },
+    {
+      "id": "2098",
+      "name": "辅国将军",
+      "level": 8,
+      "staffing": 11000,
+      "salary": 18,
+      "route": "2000"
+    },
+    {
+      "id": "2099",
+      "name": "太傅",
+      "level": 9,
+      "staffing": 12000,
+      "salary": 20,
+      "route": "2000"
+    },
+    {
+      "id": "2100",
+      "name": "丞相",
+      "level": 9,
+      "staffing": 12000,
+      "salary": 20,
+      "route": "2000"
+    },
+    {
+      "id": "2101",
+      "name": "散骑常侍",
+      "level": 9,
+      "staffing": 12000,
+      "salary": 20,
+      "route": "2000"
+    },
+    {
+      "id": "2102",
+      "name": "大都督",
+      "level": 9,
+      "staffing": 12000,
+      "salary": 20,
+      "route": "2000"
+    },
+    {
+      "id": "2103",
+      "name": "中领军",
+      "level": 9,
+      "staffing": 12000,
+      "salary": 20,
+      "route": "2000"
+    },
+    {
+      "id": "2104",
+      "name": "卫将军",
+      "level": 9,
+      "staffing": 12000,
+      "salary": 20,
+      "route": "2000"
+    },
+    {
+      "id": "2105",
+      "name": "司空",
+      "level": 9,
+      "staffing": 12000,
+      "salary": 20,
+      "route": "2000"
+    },
+    {
+      "id": "2106",
+      "name": "司徒",
+      "level": 9,
+      "staffing": 12000,
+      "salary": 20,
+      "route": "2000"
+    },
+    {
+      "id": "2107",
+      "name": "太尉",
+      "level": 9,
+      "staffing": 12000,
+      "salary": 20,
+      "route": "2000"
+    },
+    {
+      "id": "2108",
+      "name": "大将军",
+      "level": 9,
+      "staffing": 12000,
+      "salary": 20,
+      "route": "2000"
+    },
+    {
+      "id": "3001",
+      "name": "守庐巫祝",
+      "level": 1,
+      "staffing": 3000,
+      "salary": 4,
+      "route": "3000"
+    },
+    {
+      "id": "3002",
+      "name": "执鼓巫祝",
+      "level": 1,
+      "staffing": 3000,
+      "salary": 4,
+      "route": "3000"
+    },
+    {
+      "id": "3003",
+      "name": "医疾巫祝",
+      "level": 1,
+      "staffing": 3000,
+      "salary": 4,
+      "route": "3000"
+    },
+    {
+      "id": "3004",
+      "name": "占卜巫祝",
+      "level": 1,
+      "staffing": 3000,
+      "salary": 4,
+      "route": "3000"
+    },
+    {
+      "id": "3005",
+      "name": "祷山巫祝",
+      "level": 1,
+      "staffing": 3000,
+      "salary": 4,
+      "route": "3000"
+    },
+    {
+      "id": "3006",
+      "name": "祠天巫祝",
+      "level": 1,
+      "staffing": 3000,
+      "salary": 4,
+      "route": "3000"
+    },
+    {
+      "id": "3007",
+      "name": "牧驼骑尉",
+      "level": 1,
+      "staffing": 4000,
+      "salary": 4,
+      "route": "3000"
+    },
+    {
+      "id": "3008",
+      "name": "射猎骑尉",
+      "level": 1,
+      "staffing": 4000,
+      "salary": 4,
+      "route": "3000"
+    },
+    {
+      "id": "3009",
+      "name": "游猎骑尉",
+      "level": 1,
+      "staffing": 4000,
+      "salary": 4,
+      "route": "3000"
+    },
+    {
+      "id": "3010",
+      "name": "邑落骑尉",
+      "level": 1,
+      "staffing": 4000,
+      "salary": 4,
+      "route": "3000"
+    },
+    {
+      "id": "3011",
+      "name": "穹庐骑尉",
+      "level": 1,
+      "staffing": 4000,
+      "salary": 4,
+      "route": "3000"
+    },
+    {
+      "id": "3012",
+      "name": "夜哨骑尉",
+      "level": 1,
+      "staffing": 4000,
+      "salary": 4,
+      "route": "3000"
+    },
+    {
+      "id": "3013",
+      "name": "铁蹄骑尉",
+      "level": 1,
+      "staffing": 4000,
+      "salary": 4,
+      "route": "3000"
+    },
+    {
+      "id": "3014",
+      "name": "白羽骑尉",
+      "level": 1,
+      "staffing": 4000,
+      "salary": 4,
+      "route": "3000"
+    },
+    {
+      "id": "3015",
+      "name": "控弦骑尉",
+      "level": 1,
+      "staffing": 4000,
+      "salary": 4,
+      "route": "3000"
+    },
+    {
+      "id": "3016",
+      "name": "善医巫医",
+      "level": 2,
+      "staffing": 3000,
+      "salary": 6,
+      "route": "3000"
+    },
+    {
+      "id": "3017",
+      "name": "疗伤巫医",
+      "level": 2,
+      "staffing": 3000,
+      "salary": 6,
+      "route": "3000"
+    },
+    {
+      "id": "3018",
+      "name": "合药巫医",
+      "level": 2,
+      "staffing": 3000,
+      "salary": 6,
+      "route": "3000"
+    },
+    {
+      "id": "3019",
+      "name": "驱病巫医",
+      "level": 2,
+      "staffing": 3000,
+      "salary": 6,
+      "route": "3000"
+    },
+    {
+      "id": "3020",
+      "name": "艾灸巫医",
+      "level": 2,
+      "staffing": 3000,
+      "salary": 6,
+      "route": "3000"
+    },
+    {
+      "id": "3021",
+      "name": "守塞什长",
+      "level": 2,
+      "staffing": 5000,
+      "salary": 6,
+      "route": "3000"
+    },
+    {
+      "id": "3022",
+      "name": "田猎什长",
+      "level": 2,
+      "staffing": 5000,
+      "salary": 6,
+      "route": "3000"
+    },
+    {
+      "id": "3023",
+      "name": "控弦什长",
+      "level": 2,
+      "staffing": 5000,
+      "salary": 6,
+      "route": "3000"
+    },
+    {
+      "id": "3024",
+      "name": "弓矢什长",
+      "level": 2,
+      "staffing": 5000,
+      "salary": 6,
+      "route": "3000"
+    },
+    {
+      "id": "3025",
+      "name": "牧驼什长",
+      "level": 2,
+      "staffing": 5000,
+      "salary": 6,
+      "route": "3000"
+    },
+    {
+      "id": "3026",
+      "name": "游猎什长",
+      "level": 2,
+      "staffing": 5000,
+      "salary": 6,
+      "route": "3000"
+    },
+    {
+      "id": "3027",
+      "name": "邑落什长",
+      "level": 2,
+      "staffing": 5000,
+      "salary": 6,
+      "route": "3000"
+    },
+    {
+      "id": "3028",
+      "name": "帐前什长",
+      "level": 2,
+      "staffing": 5000,
+      "salary": 6,
+      "route": "3000"
+    },
+    {
+      "id": "3029",
+      "name": "掌牲祭主",
+      "level": 3,
+      "staffing": 4000,
+      "salary": 8,
+      "route": "3000"
+    },
+    {
+      "id": "3030",
+      "name": "视牲祭主",
+      "level": 3,
+      "staffing": 4000,
+      "salary": 8,
+      "route": "3000"
+    },
+    {
+      "id": "3031",
+      "name": "祈年祭主",
+      "level": 3,
+      "staffing": 4000,
+      "salary": 8,
+      "route": "3000"
+    },
+    {
+      "id": "3032",
+      "name": "祠兽祭主",
+      "level": 3,
+      "staffing": 4000,
+      "salary": 8,
+      "route": "3000"
+    },
+    {
+      "id": "3033",
+      "name": "肥牛祭主",
+      "level": 3,
+      "staffing": 4000,
+      "salary": 8,
+      "route": "3000"
+    },
+    {
+      "id": "3034",
+      "name": "掌马百长",
+      "level": 3,
+      "staffing": 6000,
+      "salary": 8,
+      "route": "3000"
+    },
+    {
+      "id": "3035",
+      "name": "猎守百长",
+      "level": 3,
+      "staffing": 6000,
+      "salary": 8,
+      "route": "3000"
+    },
+    {
+      "id": "3036",
+      "name": "驰突百长",
+      "level": 3,
+      "staffing": 6000,
+      "salary": 8,
+      "route": "3000"
+    },
+    {
+      "id": "3037",
+      "name": "领众百长",
+      "level": 3,
+      "staffing": 6000,
+      "salary": 8,
+      "route": "3000"
+    },
+    {
+      "id": "3038",
+      "name": "穹庐百长",
+      "level": 3,
+      "staffing": 6000,
+      "salary": 8,
+      "route": "3000"
+    },
+    {
+      "id": "3039",
+      "name": "牧鹰百长",
+      "level": 3,
+      "staffing": 6000,
+      "salary": 8,
+      "route": "3000"
+    },
+    {
+      "id": "3040",
+      "name": "射雕百长",
+      "level": 3,
+      "staffing": 6000,
+      "salary": 8,
+      "route": "3000"
+    },
+    {
+      "id": "3041",
+      "name": "决疑卜人",
+      "level": 4,
+      "staffing": 5000,
+      "salary": 10,
+      "route": "3000"
+    },
+    {
+      "id": "3042",
+      "name": "解梦卜人",
+      "level": 4,
+      "staffing": 5000,
+      "salary": 10,
+      "route": "3000"
+    },
+    {
+      "id": "3043",
+      "name": "问疾卜人",
+      "level": 4,
+      "staffing": 5000,
+      "salary": 10,
+      "route": "3000"
+    },
+    {
+      "id": "3044",
+      "name": "占寇卜人",
+      "level": 4,
+      "staffing": 5000,
+      "salary": 10,
+      "route": "3000"
+    },
+    {
+      "id": "3045",
+      "name": "灼骨卜人",
+      "level": 4,
+      "staffing": 5000,
+      "salary": 10,
+      "route": "3000"
+    },
+    {
+      "id": "3046",
+      "name": "总勒千长",
+      "level": 4,
+      "staffing": 7000,
+      "salary": 10,
+      "route": "3000"
+    },
+    {
+      "id": "3047",
+      "name": "统骑千长",
+      "level": 4,
+      "staffing": 7000,
+      "salary": 10,
+      "route": "3000"
+    },
+    {
+      "id": "3048",
+      "name": "领众千长",
+      "level": 4,
+      "staffing": 7000,
+      "salary": 10,
+      "route": "3000"
+    },
+    {
+      "id": "3049",
+      "name": "奋击千长",
+      "level": 4,
+      "staffing": 7000,
+      "salary": 10,
+      "route": "3000"
+    },
+    {
+      "id": "3050",
+      "name": "苍鹰千长",
+      "level": 4,
+      "staffing": 7000,
+      "salary": 10,
+      "route": "3000"
+    },
+    {
+      "id": "3051",
+      "name": "驰射千长",
+      "level": 4,
+      "staffing": 7000,
+      "salary": 10,
+      "route": "3000"
+    },
+    {
+      "id": "3052",
+      "name": "控弦千长",
+      "level": 4,
+      "staffing": 7000,
+      "salary": 10,
+      "route": "3000"
+    },
+    {
+      "id": "3053",
+      "name": "均平从事",
+      "level": 5,
+      "staffing": 6000,
+      "salary": 12,
+      "route": "3000"
+    },
+    {
+      "id": "3054",
+      "name": "劝牧从事",
+      "level": 5,
+      "staffing": 6000,
+      "salary": 12,
+      "route": "3000"
+    },
+    {
+      "id": "3055",
+      "name": "和亲从事",
+      "level": 5,
+      "staffing": 6000,
+      "salary": 12,
+      "route": "3000"
+    },
+    {
+      "id": "3056",
+      "name": "理冤从事",
+      "level": 5,
+      "staffing": 6000,
+      "salary": 12,
+      "route": "3000"
+    },
+    {
+      "id": "3057",
+      "name": "决讼从事",
+      "level": 5,
+      "staffing": 6000,
+      "salary": 12,
+      "route": "3000"
+    },
+    {
+      "id": "3058",
+      "name": "明断大人",
+      "level": 5,
+      "staffing": 8000,
+      "salary": 12,
+      "route": "3000"
+    },
+    {
+      "id": "3059",
+      "name": "守帐大人",
+      "level": 5,
+      "staffing": 8000,
+      "salary": 12,
+      "route": "3000"
+    },
+    {
+      "id": "3060",
+      "name": "掌牧大人",
+      "level": 5,
+      "staffing": 8000,
+      "salary": 12,
+      "route": "3000"
+    },
+    {
+      "id": "3061",
+      "name": "统骑大人",
+      "level": 5,
+      "staffing": 8000,
+      "salary": 12,
+      "route": "3000"
+    },
+    {
+      "id": "3062",
+      "name": "勇健大人",
+      "level": 5,
+      "staffing": 8000,
+      "salary": 12,
+      "route": "3000"
+    },
+    {
+      "id": "3063",
+      "name": "豪健大人",
+      "level": 5,
+      "staffing": 8000,
+      "salary": 12,
+      "route": "3000"
+    },
+    {
+      "id": "3064",
+      "name": "决讼大人",
+      "level": 5,
+      "staffing": 8000,
+      "salary": 12,
+      "route": "3000"
+    },
+    {
+      "id": "3065",
+      "name": "王庭议曹",
+      "level": 6,
+      "staffing": 7000,
+      "salary": 14,
+      "route": "3000"
+    },
+    {
+      "id": "3066",
+      "name": "掌畜议曹",
+      "level": 6,
+      "staffing": 7000,
+      "salary": 14,
+      "route": "3000"
+    },
+    {
+      "id": "3067",
+      "name": "明俗议曹",
+      "level": 6,
+      "staffing": 7000,
+      "salary": 14,
+      "route": "3000"
+    },
+    {
+      "id": "3068",
+      "name": "掌教议曹",
+      "level": 6,
+      "staffing": 7000,
+      "salary": 14,
+      "route": "3000"
+    },
+    {
+      "id": "3069",
+      "name": "掌盟议曹",
+      "level": 6,
+      "staffing": 7000,
+      "salary": 14,
+      "route": "3000"
+    },
+    {
+      "id": "3070",
+      "name": "典法议曹",
+      "level": 6,
+      "staffing": 7000,
+      "salary": 14,
+      "route": "3000"
+    },
+    {
+      "id": "3071",
+      "name": "控弦大帅",
+      "level": 6,
+      "staffing": 9000,
+      "salary": 14,
+      "route": "3000"
+    },
+    {
+      "id": "3072",
+      "name": "三落大帅",
+      "level": 6,
+      "staffing": 9000,
+      "salary": 14,
+      "route": "3000"
+    },
+    {
+      "id": "3073",
+      "name": "雕翎大帅",
+      "level": 6,
+      "staffing": 9000,
+      "salary": 14,
+      "route": "3000"
+    },
+    {
+      "id": "3074",
+      "name": "虎狼大帅",
+      "level": 6,
+      "staffing": 9000,
+      "salary": 14,
+      "route": "3000"
+    },
+    {
+      "id": "3075",
+      "name": "领众大帅",
+      "level": 6,
+      "staffing": 9000,
+      "salary": 14,
+      "route": "3000"
+    },
+    {
+      "id": "3076",
+      "name": "总勒大帅",
+      "level": 6,
+      "staffing": 9000,
+      "salary": 14,
+      "route": "3000"
+    },
+    {
+      "id": "3077",
+      "name": "佐众师傅",
+      "level": 7,
+      "staffing": 8000,
+      "salary": 16,
+      "route": "3000"
+    },
+    {
+      "id": "3078",
+      "name": "掌法师傅",
+      "level": 7,
+      "staffing": 8000,
+      "salary": 16,
+      "route": "3000"
+    },
+    {
+      "id": "3079",
+      "name": "掌礼师傅",
+      "level": 7,
+      "staffing": 8000,
+      "salary": 16,
+      "route": "3000"
+    },
+    {
+      "id": "3080",
+      "name": "习御师傅",
+      "level": 7,
+      "staffing": 8000,
+      "salary": 16,
+      "route": "3000"
+    },
+    {
+      "id": "3081",
+      "name": "教射师傅",
+      "level": 7,
+      "staffing": 8000,
+      "salary": 16,
+      "route": "3000"
+    },
+    {
+      "id": "3082",
+      "name": "崇义豪帅",
+      "level": 7,
+      "staffing": 10000,
+      "salary": 16,
+      "route": "3000"
+    },
+    {
+      "id": "3083",
+      "name": "雄渠豪帅",
+      "level": 7,
+      "staffing": 10000,
+      "salary": 16,
+      "route": "3000"
+    },
+    {
+      "id": "3084",
+      "name": "总勒豪帅",
+      "level": 7,
+      "staffing": 10000,
+      "salary": 16,
+      "route": "3000"
+    },
+    {
+      "id": "3085",
+      "name": "王庭豪帅",
+      "level": 7,
+      "staffing": 10000,
+      "salary": 16,
+      "route": "3000"
+    },
+    {
+      "id": "3086",
+      "name": "射声豪帅",
+      "level": 7,
+      "staffing": 10000,
+      "salary": 16,
+      "route": "3000"
+    },
+    {
+      "id": "3087",
+      "name": "破敌豪帅",
+      "level": 7,
+      "staffing": 10000,
+      "salary": 16,
+      "route": "3000"
+    },
+    {
+      "id": "3088",
+      "name": "突骑豪帅",
+      "level": 7,
+      "staffing": 10000,
+      "salary": 16,
+      "route": "3000"
+    },
+    {
+      "id": "3089",
+      "name": "和戎谋主",
+      "level": 8,
+      "staffing": 9000,
+      "salary": 18,
+      "route": "3000"
+    },
+    {
+      "id": "3090",
+      "name": "参骑谋主",
+      "level": 8,
+      "staffing": 9000,
+      "salary": 18,
+      "route": "3000"
+    },
+    {
+      "id": "3091",
+      "name": "掌军谋主",
+      "level": 8,
+      "staffing": 9000,
+      "salary": 18,
+      "route": "3000"
+    },
+    {
+      "id": "3092",
+      "name": "决断谋主",
+      "level": 8,
+      "staffing": 9000,
+      "salary": 18,
+      "route": "3000"
+    },
+    {
+      "id": "3093",
+      "name": "征伐王",
+      "level": 8,
+      "staffing": 11000,
+      "salary": 18,
+      "route": "3000"
+    },
+    {
+      "id": "3094",
+      "name": "宿卫王",
+      "level": 8,
+      "staffing": 11000,
+      "salary": 18,
+      "route": "3000"
+    },
+    {
+      "id": "3095",
+      "name": "骁骑王",
+      "level": 8,
+      "staffing": 11000,
+      "salary": 18,
+      "route": "3000"
+    },
+    {
+      "id": "3096",
+      "name": "突骑王",
+      "level": 8,
+      "staffing": 11000,
+      "salary": 18,
+      "route": "3000"
+    },
+    {
+      "id": "3097",
+      "name": "右贤王",
+      "level": 8,
+      "staffing": 11000,
+      "salary": 18,
+      "route": "3000"
+    },
+    {
+      "id": "3098",
+      "name": "左贤王",
+      "level": 8,
+      "staffing": 11000,
+      "salary": 18,
+      "route": "3000"
+    },
+    {
+      "id": "3099",
+      "name": "劝牧尚书",
+      "level": 9,
+      "staffing": 12000,
+      "salary": 20,
+      "route": "3000"
+    },
+    {
+      "id": "3100",
+      "name": "奉祀长史",
+      "level": 9,
+      "staffing": 12000,
+      "salary": 20,
+      "route": "3000"
+    },
+    {
+      "id": "3101",
+      "name": "怀众尚书",
+      "level": 9,
+      "staffing": 12000,
+      "salary": 20,
+      "route": "3000"
+    },
+    {
+      "id": "3102",
+      "name": "明法尚书",
+      "level": 9,
+      "staffing": 12000,
+      "salary": 20,
+      "route": "3000"
+    },
+    {
+      "id": "3103",
+      "name": "中垒将军",
+      "level": 9,
+      "staffing": 12000,
+      "salary": 20,
+      "route": "3000"
+    },
+    {
+      "id": "3104",
+      "name": "昭信将军",
+      "level": 9,
+      "staffing": 12000,
+      "salary": 20,
+      "route": "3000"
+    },
+    {
+      "id": "3105",
+      "name": "建威将军",
+      "level": 9,
+      "staffing": 12000,
+      "salary": 20,
+      "route": "3000"
+    },
+    {
+      "id": "3106",
+      "name": "突骑将军",
+      "level": 9,
+      "staffing": 12000,
+      "salary": 20,
+      "route": "3000"
+    },
+    {
+      "id": "4001",
+      "name": "盟誓巫祝",
+      "level": 1,
+      "staffing": 3000,
+      "salary": 4,
+      "route": "4000"
+    },
+    {
+      "id": "4002",
+      "name": "祈福巫祝",
+      "level": 1,
+      "staffing": 3000,
+      "salary": 4,
+      "route": "4000"
+    },
+    {
+      "id": "4003",
+      "name": "祷祠巫祝",
+      "level": 1,
+      "staffing": 3000,
+      "salary": 4,
+      "route": "4000"
+    },
+    {
+      "id": "4004",
+      "name": "虎祠巫祝",
+      "level": 1,
+      "staffing": 3000,
+      "salary": 4,
+      "route": "4000"
+    },
+    {
+      "id": "4005",
+      "name": "禁忌巫祝",
+      "level": 1,
+      "staffing": 3000,
+      "salary": 4,
+      "route": "4000"
+    },
+    {
+      "id": "4006",
+      "name": "事鬼巫祝",
+      "level": 1,
+      "staffing": 3000,
+      "salary": 4,
+      "route": "4000"
+    },
+    {
+      "id": "4007",
+      "name": "逐兽精夫",
+      "level": 1,
+      "staffing": 4000,
+      "salary": 4,
+      "route": "4000"
+    },
+    {
+      "id": "4008",
+      "name": "执矛精夫",
+      "level": 1,
+      "staffing": 4000,
+      "salary": 4,
+      "route": "4000"
+    },
+    {
+      "id": "4009",
+      "name": "善守精夫",
+      "level": 1,
+      "staffing": 4000,
+      "salary": 4,
+      "route": "4000"
+    },
+    {
+      "id": "4010",
+      "name": "火耕精夫",
+      "level": 1,
+      "staffing": 4000,
+      "salary": 4,
+      "route": "4000"
+    },
+    {
+      "id": "4011",
+      "name": "射猎精夫",
+      "level": 1,
+      "staffing": 4000,
+      "salary": 4,
+      "route": "4000"
+    },
+    {
+      "id": "4012",
+      "name": "操刀精夫",
+      "level": 1,
+      "staffing": 4000,
+      "salary": 4,
+      "route": "4000"
+    },
+    {
+      "id": "4013",
+      "name": "明断卜祝",
+      "level": 2,
+      "staffing": 3000,
+      "salary": 6,
+      "route": "4000"
+    },
+    {
+      "id": "4014",
+      "name": "安落卜祝",
+      "level": 2,
+      "staffing": 3000,
+      "salary": 6,
+      "route": "4000"
+    },
+    {
+      "id": "4015",
+      "name": "睦邻卜祝",
+      "level": 2,
+      "staffing": 3000,
+      "salary": 6,
+      "route": "4000"
+    },
+    {
+      "id": "4016",
+      "name": "习礼卜祝",
+      "level": 2,
+      "staffing": 3000,
+      "salary": 6,
+      "route": "4000"
+    },
+    {
+      "id": "4017",
+      "name": "晓语卜祝",
+      "level": 2,
+      "staffing": 3000,
+      "salary": 6,
+      "route": "4000"
+    },
+    {
+      "id": "4018",
+      "name": "赞祭卜祝",
+      "level": 2,
+      "staffing": 3000,
+      "salary": 6,
+      "route": "4000"
+    },
+    {
+      "id": "4019",
+      "name": "抚众酋豪",
+      "level": 2,
+      "staffing": 5000,
+      "salary": 6,
+      "route": "4000"
+    },
+    {
+      "id": "4020",
+      "name": "持重酋豪",
+      "level": 2,
+      "staffing": 5000,
+      "salary": 6,
+      "route": "4000"
+    },
+    {
+      "id": "4021",
+      "name": "果决酋豪",
+      "level": 2,
+      "staffing": 5000,
+      "salary": 6,
+      "route": "4000"
+    },
+    {
+      "id": "4022",
+      "name": "山行酋豪",
+      "level": 2,
+      "staffing": 5000,
+      "salary": 6,
+      "route": "4000"
+    },
+    {
+      "id": "4023",
+      "name": "秉锋酋豪",
+      "level": 2,
+      "staffing": 5000,
+      "salary": 6,
+      "route": "4000"
+    },
+    {
+      "id": "4024",
+      "name": "弯弧酋豪",
+      "level": 2,
+      "staffing": 5000,
+      "salary": 6,
+      "route": "4000"
+    },
+    {
+      "id": "4025",
+      "name": "诵诗辞人",
+      "level": 3,
+      "staffing": 4000,
+      "salary": 8,
+      "route": "4000"
+    },
+    {
+      "id": "4026",
+      "name": "通珍辞人",
+      "level": 3,
+      "staffing": 4000,
+      "salary": 8,
+      "route": "4000"
+    },
+    {
+      "id": "4027",
+      "name": "辨物辞人",
+      "level": 3,
+      "staffing": 4000,
+      "salary": 8,
+      "route": "4000"
+    },
+    {
+      "id": "4028",
+      "name": "通好辞人",
+      "level": 3,
+      "staffing": 4000,
+      "salary": 8,
+      "route": "4000"
+    },
+    {
+      "id": "4029",
+      "name": "重译辞人",
+      "level": 3,
+      "staffing": 4000,
+      "salary": 8,
+      "route": "4000"
+    },
+    {
+      "id": "4030",
+      "name": "传风辞人",
+      "level": 3,
+      "staffing": 4000,
+      "salary": 8,
+      "route": "4000"
+    },
+    {
+      "id": "4031",
+      "name": "尚勇寨主",
+      "level": 3,
+      "staffing": 6000,
+      "salary": 8,
+      "route": "4000"
+    },
+    {
+      "id": "4032",
+      "name": "凭险寨主",
+      "level": 3,
+      "staffing": 6000,
+      "salary": 8,
+      "route": "4000"
+    },
+    {
+      "id": "4033",
+      "name": "依岩寨主",
+      "level": 3,
+      "staffing": 6000,
+      "salary": 8,
+      "route": "4000"
+    },
+    {
+      "id": "4034",
+      "name": "奉神寨主",
+      "level": 3,
+      "staffing": 6000,
+      "salary": 8,
+      "route": "4000"
+    },
+    {
+      "id": "4035",
+      "name": "守约寨主",
+      "level": 3,
+      "staffing": 6000,
+      "salary": 8,
+      "route": "4000"
+    },
+    {
+      "id": "4036",
+      "name": "劲弓寨主",
+      "level": 3,
+      "staffing": 6000,
+      "salary": 8,
+      "route": "4000"
+    },
+    {
+      "id": "4037",
+      "name": "义赋邑豪",
+      "level": 4,
+      "staffing": 5000,
+      "salary": 10,
+      "route": "4000"
+    },
+    {
+      "id": "4038",
+      "name": "献犀邑豪",
+      "level": 4,
+      "staffing": 5000,
+      "salary": 10,
+      "route": "4000"
+    },
+    {
+      "id": "4039",
+      "name": "盐斛邑豪",
+      "level": 4,
+      "staffing": 5000,
+      "salary": 10,
+      "route": "4000"
+    },
+    {
+      "id": "4040",
+      "name": "常赋邑豪",
+      "level": 4,
+      "staffing": 5000,
+      "salary": 10,
+      "route": "4000"
+    },
+    {
+      "id": "4041",
+      "name": "贯头邑豪",
+      "level": 4,
+      "staffing": 5000,
+      "salary": 10,
+      "route": "4000"
+    },
+    {
+      "id": "4042",
+      "name": "输布邑豪",
+      "level": 4,
+      "staffing": 5000,
+      "salary": 10,
+      "route": "4000"
+    },
+    {
+      "id": "4043",
+      "name": "拓土豪帅",
+      "level": 4,
+      "staffing": 7000,
+      "salary": 10,
+      "route": "4000"
+    },
+    {
+      "id": "4044",
+      "name": "阜民豪帅",
+      "level": 4,
+      "staffing": 7000,
+      "salary": 10,
+      "route": "4000"
+    },
+    {
+      "id": "4045",
+      "name": "守隘豪帅",
+      "level": 4,
+      "staffing": 7000,
+      "salary": 10,
+      "route": "4000"
+    },
+    {
+      "id": "4046",
+      "name": "循江豪帅",
+      "level": 4,
+      "staffing": 7000,
+      "salary": 10,
+      "route": "4000"
+    },
+    {
+      "id": "4047",
+      "name": "板盾豪帅",
+      "level": 4,
+      "staffing": 7000,
+      "salary": 10,
+      "route": "4000"
+    },
+    {
+      "id": "4048",
+      "name": "深溪豪帅",
+      "level": 4,
+      "staffing": 7000,
+      "salary": 10,
+      "route": "4000"
+    },
+    {
+      "id": "4049",
+      "name": "奉祀邑君",
+      "level": 5,
+      "staffing": 6000,
+      "salary": 12,
+      "route": "4000"
+    },
+    {
+      "id": "4050",
+      "name": "向化邑君",
+      "level": 5,
+      "staffing": 6000,
+      "salary": 12,
+      "route": "4000"
+    },
+    {
+      "id": "4051",
+      "name": "理讼邑君",
+      "level": 5,
+      "staffing": 6000,
+      "salary": 12,
+      "route": "4000"
+    },
+    {
+      "id": "4052",
+      "name": "和众邑君",
+      "level": 5,
+      "staffing": 6000,
+      "salary": 12,
+      "route": "4000"
+    },
+    {
+      "id": "4053",
+      "name": "劝农邑君",
+      "level": 5,
+      "staffing": 6000,
+      "salary": 12,
+      "route": "4000"
+    },
+    {
+      "id": "4054",
+      "name": "明法邑君",
+      "level": 5,
+      "staffing": 6000,
+      "salary": 12,
+      "route": "4000"
+    },
+    {
+      "id": "4055",
+      "name": "土珍君长",
+      "level": 5,
+      "staffing": 8000,
+      "salary": 12,
+      "route": "4000"
+    },
+    {
+      "id": "4056",
+      "name": "内属君长",
+      "level": 5,
+      "staffing": 8000,
+      "salary": 12,
+      "route": "4000"
+    },
+    {
+      "id": "4057",
+      "name": "率善君长",
+      "level": 5,
+      "staffing": 8000,
+      "salary": 12,
+      "route": "4000"
+    },
+    {
+      "id": "4058",
+      "name": "朝贡君长",
+      "level": 5,
+      "staffing": 8000,
+      "salary": 12,
+      "route": "4000"
+    },
+    {
+      "id": "4059",
+      "name": "紫绶君长",
+      "level": 5,
+      "staffing": 8000,
+      "salary": 12,
+      "route": "4000"
+    },
+    {
+      "id": "4060",
+      "name": "金印君长",
+      "level": 5,
+      "staffing": 8000,
+      "salary": 12,
+      "route": "4000"
+    },
+    {
+      "id": "4061",
+      "name": "典法主簿",
+      "level": 6,
+      "staffing": 7000,
+      "salary": 14,
+      "route": "4000"
+    },
+    {
+      "id": "4062",
+      "name": "记言主簿",
+      "level": 6,
+      "staffing": 7000,
+      "salary": 14,
+      "route": "4000"
+    },
+    {
+      "id": "4063",
+      "name": "掌礼主簿",
+      "level": 6,
+      "staffing": 7000,
+      "salary": 14,
+      "route": "4000"
+    },
+    {
+      "id": "4064",
+      "name": "修好主簿",
+      "level": 6,
+      "staffing": 7000,
+      "salary": 14,
+      "route": "4000"
+    },
+    {
+      "id": "4065",
+      "name": "平讼主簿",
+      "level": 6,
+      "staffing": 7000,
+      "salary": 14,
+      "route": "4000"
+    },
+    {
+      "id": "4066",
+      "name": "观俗主簿",
+      "level": 6,
+      "staffing": 7000,
+      "salary": 14,
+      "route": "4000"
+    },
+    {
+      "id": "4067",
+      "name": "雄长邑王",
+      "level": 6,
+      "staffing": 9000,
+      "salary": 14,
+      "route": "4000"
+    },
+    {
+      "id": "4068",
+      "name": "山立邑王",
+      "level": 6,
+      "staffing": 9000,
+      "salary": 14,
+      "route": "4000"
+    },
+    {
+      "id": "4069",
+      "name": "世济邑王",
+      "level": 6,
+      "staffing": 9000,
+      "salary": 14,
+      "route": "4000"
+    },
+    {
+      "id": "4070",
+      "name": "水居邑王",
+      "level": 6,
+      "staffing": 9000,
+      "salary": 14,
+      "route": "4000"
+    },
+    {
+      "id": "4071",
+      "name": "习战邑王",
+      "level": 6,
+      "staffing": 9000,
+      "salary": 14,
+      "route": "4000"
+    },
+    {
+      "id": "4072",
+      "name": "奉贡邑王",
+      "level": 6,
+      "staffing": 9000,
+      "salary": 14,
+      "route": "4000"
+    },
+    {
+      "id": "4073",
+      "name": "煮海大豪",
+      "level": 7,
+      "staffing": 8000,
+      "salary": 16,
+      "route": "4000"
+    },
+    {
+      "id": "4074",
+      "name": "畜产大豪",
+      "level": 7,
+      "staffing": 8000,
+      "salary": 16,
+      "route": "4000"
+    },
+    {
+      "id": "4075",
+      "name": "金银大豪",
+      "level": 7,
+      "staffing": 8000,
+      "salary": 16,
+      "route": "4000"
+    },
+    {
+      "id": "4076",
+      "name": "关市大豪",
+      "level": 7,
+      "staffing": 8000,
+      "salary": 16,
+      "route": "4000"
+    },
+    {
+      "id": "4077",
+      "name": "敬信大豪",
+      "level": 7,
+      "staffing": 8000,
+      "salary": 16,
+      "route": "4000"
+    },
+    {
+      "id": "4078",
+      "name": "威服大豪",
+      "level": 7,
+      "staffing": 8000,
+      "salary": 16,
+      "route": "4000"
+    },
+    {
+      "id": "4079",
+      "name": "主祭大帅",
+      "level": 7,
+      "staffing": 10000,
+      "salary": 16,
+      "route": "4000"
+    },
+    {
+      "id": "4080",
+      "name": "问津大帅",
+      "level": 7,
+      "staffing": 10000,
+      "salary": 16,
+      "route": "4000"
+    },
+    {
+      "id": "4081",
+      "name": "行远大帅",
+      "level": 7,
+      "staffing": 10000,
+      "salary": 16,
+      "route": "4000"
+    },
+    {
+      "id": "4082",
+      "name": "青羌大帅",
+      "level": 7,
+      "staffing": 10000,
+      "salary": 16,
+      "route": "4000"
+    },
+    {
+      "id": "4083",
+      "name": "山险大帅",
+      "level": 7,
+      "staffing": 10000,
+      "salary": 16,
+      "route": "4000"
+    },
+    {
+      "id": "4084",
+      "name": "种落大帅",
+      "level": 7,
+      "staffing": 10000,
+      "salary": 16,
+      "route": "4000"
+    },
+    {
+      "id": "4085",
+      "name": "劝课长史",
+      "level": 8,
+      "staffing": 9000,
+      "salary": 18,
+      "route": "4000"
+    },
+    {
+      "id": "4086",
+      "name": "通商长史",
+      "level": 8,
+      "staffing": 9000,
+      "salary": 18,
+      "route": "4000"
+    },
+    {
+      "id": "4087",
+      "name": "典农长史",
+      "level": 8,
+      "staffing": 9000,
+      "salary": 18,
+      "route": "4000"
+    },
+    {
+      "id": "4088",
+      "name": "平准长史",
+      "level": 8,
+      "staffing": 9000,
+      "salary": 18,
+      "route": "4000"
+    },
+    {
+      "id": "4089",
+      "name": "度支长史",
+      "level": 8,
+      "staffing": 9000,
+      "salary": 18,
+      "route": "4000"
+    },
+    {
+      "id": "4090",
+      "name": "将兵长史",
+      "level": 8,
+      "staffing": 9000,
+      "salary": 18,
+      "route": "4000"
+    },
+    {
+      "id": "4091",
+      "name": "破虏将军",
+      "level": 8,
+      "staffing": 11000,
+      "salary": 18,
+      "route": "4000"
+    },
+    {
+      "id": "4092",
+      "name": "义叟将军",
+      "level": 8,
+      "staffing": 11000,
+      "salary": 18,
+      "route": "4000"
+    },
+    {
+      "id": "4093",
+      "name": "安边将军",
+      "level": 8,
+      "staffing": 11000,
+      "salary": 18,
+      "route": "4000"
+    },
+    {
+      "id": "4094",
+      "name": "威边将军",
+      "level": 8,
+      "staffing": 11000,
+      "salary": 18,
+      "route": "4000"
+    },
+    {
+      "id": "4095",
+      "name": "白虎将军",
+      "level": 8,
+      "staffing": 11000,
+      "salary": 18,
+      "route": "4000"
+    },
+    {
+      "id": "4096",
+      "name": "赤旌将军",
+      "level": 8,
+      "staffing": 11000,
+      "salary": 18,
+      "route": "4000"
+    },
+    {
+      "id": "4097",
+      "name": "绥远尚书",
+      "level": 9,
+      "staffing": 12000,
+      "salary": 20,
+      "route": "4000"
+    },
+    {
+      "id": "4098",
+      "name": "明俗尚书",
+      "level": 9,
+      "staffing": 12000,
+      "salary": 20,
+      "route": "4000"
+    },
+    {
+      "id": "4099",
+      "name": "掌赋尚书",
+      "level": 9,
+      "staffing": 12000,
+      "salary": 20,
+      "route": "4000"
+    },
+    {
+      "id": "4100",
+      "name": "奉神尚书",
+      "level": 9,
+      "staffing": 12000,
+      "salary": 20,
+      "route": "4000"
+    },
+    {
+      "id": "4101",
+      "name": "镇南将军",
+      "level": 9,
+      "staffing": 12000,
+      "salary": 20,
+      "route": "4000"
+    },
+    {
+      "id": "4102",
+      "name": "讨叛将军",
+      "level": 9,
+      "staffing": 12000,
+      "salary": 20,
+      "route": "4000"
+    },
+    {
+      "id": "4103",
+      "name": "镇抚将军",
+      "level": 9,
+      "staffing": 12000,
+      "salary": 20,
+      "route": "4000"
+    },
+    {
+      "id": "4104",
+      "name": "义从将军",
+      "level": 9,
+      "staffing": 12000,
+      "salary": 20,
+      "route": "4000"
+    },
+    {
+      "id": "5001",
+      "name": "执卜巫祝",
+      "level": 1,
+      "staffing": 3000,
+      "salary": 4,
+      "route": "5000"
+    },
+    {
+      "id": "5002",
+      "name": "奉祀巫祝",
+      "level": 1,
+      "staffing": 3000,
+      "salary": 4,
+      "route": "5000"
+    },
+    {
+      "id": "5003",
+      "name": "击鼓巫祝",
+      "level": 1,
+      "staffing": 3000,
+      "salary": 4,
+      "route": "5000"
+    },
+    {
+      "id": "5004",
+      "name": "坐寨小帅",
+      "level": 1,
+      "staffing": 4000,
+      "salary": 4,
+      "route": "5000"
+    },
+    {
+      "id": "5005",
+      "name": "邀击小帅",
+      "level": 1,
+      "staffing": 4000,
+      "salary": 4,
+      "route": "5000"
+    },
+    {
+      "id": "5006",
+      "name": "望山小帅",
+      "level": 1,
+      "staffing": 4000,
+      "salary": 4,
+      "route": "5000"
+    },
+    {
+      "id": "5007",
+      "name": "守津小帅",
+      "level": 1,
+      "staffing": 4000,
+      "salary": 4,
+      "route": "5000"
+    },
+    {
+      "id": "5008",
+      "name": "明桩小帅",
+      "level": 1,
+      "staffing": 4000,
+      "salary": 4,
+      "route": "5000"
+    },
+    {
+      "id": "5009",
+      "name": "伏路小帅",
+      "level": 1,
+      "staffing": 4000,
+      "salary": 4,
+      "route": "5000"
+    },
+    {
+      "id": "5010",
+      "name": "守险小帅",
+      "level": 1,
+      "staffing": 4000,
+      "salary": 4,
+      "route": "5000"
+    },
+    {
+      "id": "5011",
+      "name": "当先小帅",
+      "level": 1,
+      "staffing": 4000,
+      "salary": 4,
+      "route": "5000"
+    },
+    {
+      "id": "5012",
+      "name": "把口小帅",
+      "level": 1,
+      "staffing": 4000,
+      "salary": 4,
+      "route": "5000"
+    },
+    {
+      "id": "5013",
+      "name": "解祟师巫",
+      "level": 2,
+      "staffing": 3000,
+      "salary": 6,
+      "route": "5000"
+    },
+    {
+      "id": "5014",
+      "name": "祓祭师巫",
+      "level": 2,
+      "staffing": 3000,
+      "salary": 6,
+      "route": "5000"
+    },
+    {
+      "id": "5015",
+      "name": "问卜师巫",
+      "level": 2,
+      "staffing": 3000,
+      "salary": 6,
+      "route": "5000"
+    },
+    {
+      "id": "5016",
+      "name": "通神师巫",
+      "level": 2,
+      "staffing": 3000,
+      "salary": 6,
+      "route": "5000"
+    },
+    {
+      "id": "5017",
+      "name": "跨涧豪帅",
+      "level": 2,
+      "staffing": 5000,
+      "salary": 6,
+      "route": "5000"
+    },
+    {
+      "id": "5018",
+      "name": "阻山豪帅",
+      "level": 2,
+      "staffing": 5000,
+      "salary": 6,
+      "route": "5000"
+    },
+    {
+      "id": "5019",
+      "name": "凭崖豪帅",
+      "level": 2,
+      "staffing": 5000,
+      "salary": 6,
+      "route": "5000"
+    },
+    {
+      "id": "5020",
+      "name": "依险豪帅",
+      "level": 2,
+      "staffing": 5000,
+      "salary": 6,
+      "route": "5000"
+    },
+    {
+      "id": "5021",
+      "name": "结寨豪帅",
+      "level": 2,
+      "staffing": 5000,
+      "salary": 6,
+      "route": "5000"
+    },
+    {
+      "id": "5022",
+      "name": "扼隘豪帅",
+      "level": 2,
+      "staffing": 5000,
+      "salary": 6,
+      "route": "5000"
+    },
+    {
+      "id": "5023",
+      "name": "镇岭豪帅",
+      "level": 2,
+      "staffing": 5000,
+      "salary": 6,
+      "route": "5000"
+    },
+    {
+      "id": "5024",
+      "name": "据坞豪帅",
+      "level": 2,
+      "staffing": 5000,
+      "salary": 6,
+      "route": "5000"
+    },
+    {
+      "id": "5025",
+      "name": "料事卜者",
+      "level": 3,
+      "staffing": 4000,
+      "salary": 8,
+      "route": "5000"
+    },
+    {
+      "id": "5026",
+      "name": "决疑卜者",
+      "level": 3,
+      "staffing": 4000,
+      "salary": 8,
+      "route": "5000"
+    },
+    {
+      "id": "5027",
+      "name": "占梦卜者",
+      "level": 3,
+      "staffing": 4000,
+      "salary": 8,
+      "route": "5000"
+    },
+    {
+      "id": "5028",
+      "name": "连营寨主",
+      "level": 3,
+      "staffing": 6000,
+      "salary": 8,
+      "route": "5000"
+    },
+    {
+      "id": "5029",
+      "name": "聚众寨主",
+      "level": 3,
+      "staffing": 6000,
+      "salary": 8,
+      "route": "5000"
+    },
+    {
+      "id": "5030",
+      "name": "断道寨主",
+      "level": 3,
+      "staffing": 6000,
+      "salary": 8,
+      "route": "5000"
+    },
+    {
+      "id": "5031",
+      "name": "结党寨主",
+      "level": 3,
+      "staffing": 6000,
+      "salary": 8,
+      "route": "5000"
+    },
+    {
+      "id": "5032",
+      "name": "守险寨主",
+      "level": 3,
+      "staffing": 6000,
+      "salary": 8,
+      "route": "5000"
+    },
+    {
+      "id": "5033",
+      "name": "啸聚寨主",
+      "level": 3,
+      "staffing": 6000,
+      "salary": 8,
+      "route": "5000"
+    },
+    {
+      "id": "5034",
+      "name": "雄长寨主",
+      "level": 3,
+      "staffing": 6000,
+      "salary": 8,
+      "route": "5000"
+    },
+    {
+      "id": "5035",
+      "name": "领众寨主",
+      "level": 3,
+      "staffing": 6000,
+      "salary": 8,
+      "route": "5000"
+    },
+    {
+      "id": "5036",
+      "name": "占山寨主",
+      "level": 3,
+      "staffing": 6000,
+      "salary": 8,
+      "route": "5000"
+    },
+    {
+      "id": "5037",
+      "name": "司约主簿",
+      "level": 4,
+      "staffing": 5000,
+      "salary": 10,
+      "route": "5000"
+    },
+    {
+      "id": "5038",
+      "name": "结盟主簿",
+      "level": 4,
+      "staffing": 5000,
+      "salary": 10,
+      "route": "5000"
+    },
+    {
+      "id": "5039",
+      "name": "主盟主簿",
+      "level": 4,
+      "staffing": 5000,
+      "salary": 10,
+      "route": "5000"
+    },
+    {
+      "id": "5040",
+      "name": "主祭主簿",
+      "level": 4,
+      "staffing": 5000,
+      "salary": 10,
+      "route": "5000"
+    },
+    {
+      "id": "5041",
+      "name": "坐帐军正",
+      "level": 4,
+      "staffing": 7000,
+      "salary": 10,
+      "route": "5000"
+    },
+    {
+      "id": "5042",
+      "name": "管寨军正",
+      "level": 4,
+      "staffing": 7000,
+      "salary": 10,
+      "route": "5000"
+    },
+    {
+      "id": "5043",
+      "name": "宣号军正",
+      "level": 4,
+      "staffing": 7000,
+      "salary": 10,
+      "route": "5000"
+    },
+    {
+      "id": "5044",
+      "name": "押寨军正",
+      "level": 4,
+      "staffing": 7000,
+      "salary": 10,
+      "route": "5000"
+    },
+    {
+      "id": "5045",
+      "name": "执旗军正",
+      "level": 4,
+      "staffing": 7000,
+      "salary": 10,
+      "route": "5000"
+    },
+    {
+      "id": "5046",
+      "name": "执律军正",
+      "level": 4,
+      "staffing": 7000,
+      "salary": 10,
+      "route": "5000"
+    },
+    {
+      "id": "5047",
+      "name": "断事军正",
+      "level": 4,
+      "staffing": 7000,
+      "salary": 10,
+      "route": "5000"
+    },
+    {
+      "id": "5048",
+      "name": "掌刀军正",
+      "level": 4,
+      "staffing": 7000,
+      "salary": 10,
+      "route": "5000"
+    },
+    {
+      "id": "5049",
+      "name": "司账仓曹",
+      "level": 5,
+      "staffing": 6000,
+      "salary": 12,
+      "route": "5000"
+    },
+    {
+      "id": "5050",
+      "name": "征粮仓曹",
+      "level": 5,
+      "staffing": 6000,
+      "salary": 12,
+      "route": "5000"
+    },
+    {
+      "id": "5051",
+      "name": "守械仓曹",
+      "level": 5,
+      "staffing": 6000,
+      "salary": 12,
+      "route": "5000"
+    },
+    {
+      "id": "5052",
+      "name": "管粮仓曹",
+      "level": 5,
+      "staffing": 6000,
+      "salary": 12,
+      "route": "5000"
+    },
+    {
+      "id": "5053",
+      "name": "后营仓曹",
+      "level": 5,
+      "staffing": 6000,
+      "salary": 12,
+      "route": "5000"
+    },
+    {
+      "id": "5054",
+      "name": "前营仓曹",
+      "level": 5,
+      "staffing": 6000,
+      "salary": 12,
+      "route": "5000"
+    },
+    {
+      "id": "5055",
+      "name": "居中渠首",
+      "level": 5,
+      "staffing": 8000,
+      "salary": 12,
+      "route": "5000"
+    },
+    {
+      "id": "5056",
+      "name": "巡寨渠首",
+      "level": 5,
+      "staffing": 8000,
+      "salary": 12,
+      "route": "5000"
+    },
+    {
+      "id": "5057",
+      "name": "总领渠首",
+      "level": 5,
+      "staffing": 8000,
+      "salary": 12,
+      "route": "5000"
+    },
+    {
+      "id": "5058",
+      "name": "镇山渠首",
+      "level": 5,
+      "staffing": 8000,
+      "salary": 12,
+      "route": "5000"
+    },
+    {
+      "id": "5059",
+      "name": "掌旗渠首",
+      "level": 5,
+      "staffing": 8000,
+      "salary": 12,
+      "route": "5000"
+    },
+    {
+      "id": "5060",
+      "name": "执号渠首",
+      "level": 5,
+      "staffing": 8000,
+      "salary": 12,
+      "route": "5000"
+    },
+    {
+      "id": "5061",
+      "name": "均输典仓",
+      "level": 6,
+      "staffing": 7000,
+      "salary": 14,
+      "route": "5000"
+    },
+    {
+      "id": "5062",
+      "name": "平粮典仓",
+      "level": 6,
+      "staffing": 7000,
+      "salary": 14,
+      "route": "5000"
+    },
+    {
+      "id": "5063",
+      "name": "理库典仓",
+      "level": 6,
+      "staffing": 7000,
+      "salary": 14,
+      "route": "5000"
+    },
+    {
+      "id": "5064",
+      "name": "掌金典仓",
+      "level": 6,
+      "staffing": 7000,
+      "salary": 14,
+      "route": "5000"
+    },
+    {
+      "id": "5065",
+      "name": "分赏典仓",
+      "level": 6,
+      "staffing": 7000,
+      "salary": 14,
+      "route": "5000"
+    },
+    {
+      "id": "5066",
+      "name": "守库典仓",
+      "level": 6,
+      "staffing": 7000,
+      "salary": 14,
+      "route": "5000"
+    },
+    {
+      "id": "5067",
+      "name": "镇寨督军",
+      "level": 6,
+      "staffing": 9000,
+      "salary": 14,
+      "route": "5000"
+    },
+    {
+      "id": "5068",
+      "name": "执牛督军",
+      "level": 6,
+      "staffing": 9000,
+      "salary": 14,
+      "route": "5000"
+    },
+    {
+      "id": "5069",
+      "name": "临寨督军",
+      "level": 6,
+      "staffing": 9000,
+      "salary": 14,
+      "route": "5000"
+    },
+    {
+      "id": "5070",
+      "name": "统众督军",
+      "level": 6,
+      "staffing": 9000,
+      "salary": 14,
+      "route": "5000"
+    },
+    {
+      "id": "5071",
+      "name": "右统督军",
+      "level": 6,
+      "staffing": 9000,
+      "salary": 14,
+      "route": "5000"
+    },
+    {
+      "id": "5072",
+      "name": "左统督军",
+      "level": 6,
+      "staffing": 9000,
+      "salary": 14,
+      "route": "5000"
+    },
+    {
+      "id": "5073",
+      "name": "向化君",
+      "level": 7,
+      "staffing": 8000,
+      "salary": 16,
+      "route": "5000"
+    },
+    {
+      "id": "5074",
+      "name": "守善君",
+      "level": 7,
+      "staffing": 8000,
+      "salary": 16,
+      "route": "5000"
+    },
+    {
+      "id": "5075",
+      "name": "归义君",
+      "level": 7,
+      "staffing": 8000,
+      "salary": 16,
+      "route": "5000"
+    },
+    {
+      "id": "5076",
+      "name": "率善君",
+      "level": 7,
+      "staffing": 8000,
+      "salary": 16,
+      "route": "5000"
+    },
+    {
+      "id": "5077",
+      "name": "奋威都尉",
+      "level": 7,
+      "staffing": 10000,
+      "salary": 16,
+      "route": "5000"
+    },
+    {
+      "id": "5078",
+      "name": "保塞都尉",
+      "level": 7,
+      "staffing": 10000,
+      "salary": 16,
+      "route": "5000"
+    },
+    {
+      "id": "5079",
+      "name": "怀义都尉",
+      "level": 7,
+      "staffing": 10000,
+      "salary": 16,
+      "route": "5000"
+    },
+    {
+      "id": "5080",
+      "name": "归义都尉",
+      "level": 7,
+      "staffing": 10000,
+      "salary": 16,
+      "route": "5000"
+    },
+    {
+      "id": "5081",
+      "name": "向化都尉",
+      "level": 7,
+      "staffing": 10000,
+      "salary": 16,
+      "route": "5000"
+    },
+    {
+      "id": "5082",
+      "name": "守善都尉",
+      "level": 7,
+      "staffing": 10000,
+      "salary": 16,
+      "route": "5000"
+    },
+    {
+      "id": "5083",
+      "name": "折冲都尉",
+      "level": 7,
+      "staffing": 10000,
+      "salary": 16,
+      "route": "5000"
+    },
+    {
+      "id": "5084",
+      "name": "率善都尉",
+      "level": 7,
+      "staffing": 10000,
+      "salary": 16,
+      "route": "5000"
+    },
+    {
+      "id": "5085",
+      "name": "保塞侯",
+      "level": 8,
+      "staffing": 9000,
+      "salary": 18,
+      "route": "5000"
+    },
+    {
+      "id": "5086",
+      "name": "怀汉侯",
+      "level": 8,
+      "staffing": 9000,
+      "salary": 18,
+      "route": "5000"
+    },
+    {
+      "id": "5087",
+      "name": "向化侯",
+      "level": 8,
+      "staffing": 9000,
+      "salary": 18,
+      "route": "5000"
+    },
+    {
+      "id": "5088",
+      "name": "守善侯",
+      "level": 8,
+      "staffing": 9000,
+      "salary": 18,
+      "route": "5000"
+    },
+    {
+      "id": "5089",
+      "name": "率善侯",
+      "level": 8,
+      "staffing": 9000,
+      "salary": 18,
+      "route": "5000"
+    },
+    {
+      "id": "5090",
+      "name": "归义侯",
+      "level": 8,
+      "staffing": 9000,
+      "salary": 18,
+      "route": "5000"
+    },
+    {
+      "id": "5091",
+      "name": "守善中郎将",
+      "level": 8,
+      "staffing": 11000,
+      "salary": 18,
+      "route": "5000"
+    },
+    {
+      "id": "5092",
+      "name": "奋威中郎将",
+      "level": 8,
+      "staffing": 11000,
+      "salary": 18,
+      "route": "5000"
+    },
+    {
+      "id": "5093",
+      "name": "怀义中郎将",
+      "level": 8,
+      "staffing": 11000,
+      "salary": 18,
+      "route": "5000"
+    },
+    {
+      "id": "5094",
+      "name": "建义中郎将",
+      "level": 8,
+      "staffing": 11000,
+      "salary": 18,
+      "route": "5000"
+    },
+    {
+      "id": "5095",
+      "name": "率善中郎将",
+      "level": 8,
+      "staffing": 11000,
+      "salary": 18,
+      "route": "5000"
+    },
+    {
+      "id": "5096",
+      "name": "归义中郎将",
+      "level": 8,
+      "staffing": 11000,
+      "salary": 18,
+      "route": "5000"
+    },
+    {
+      "id": "5097",
+      "name": "典辞尚书",
+      "level": 9,
+      "staffing": 12000,
+      "salary": 20,
+      "route": "5000"
+    },
+    {
+      "id": "5098",
+      "name": "仓曹尚书",
+      "level": 9,
+      "staffing": 12000,
+      "salary": 20,
+      "route": "5000"
+    },
+    {
+      "id": "5099",
+      "name": "奉法尚书",
+      "level": 9,
+      "staffing": 12000,
+      "salary": 20,
+      "route": "5000"
+    },
+    {
+      "id": "5100",
+      "name": "理讼尚书",
+      "level": 9,
+      "staffing": 12000,
+      "salary": 20,
+      "route": "5000"
+    },
+    {
+      "id": "5101",
+      "name": "保塞将军",
+      "level": 9,
+      "staffing": 12000,
+      "salary": 20,
+      "route": "5000"
+    },
+    {
+      "id": "5102",
+      "name": "振远将军",
+      "level": 9,
+      "staffing": 12000,
+      "salary": 20,
+      "route": "5000"
+    },
+    {
+      "id": "5103",
+      "name": "怀山将军",
+      "level": 9,
+      "staffing": 12000,
+      "salary": 20,
+      "route": "5000"
+    },
+    {
+      "id": "5104",
+      "name": "越骑将军",
+      "level": 9,
+      "staffing": 12000,
+      "salary": 20,
+      "route": "5000"
+    }
+  ]
+}

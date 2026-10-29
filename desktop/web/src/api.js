@@ -35,7 +35,12 @@ export async function api(path, body) {
   const data = await res.json()
   if (data.lines) appendLog(data.lines)
   if (!data.ok) {
-    const err = new Error(data.error || '操作失败')
+    let msg = data.error || '操作失败'
+    if (msg === '没有这个接口' && path.includes('/api/officials')) {
+      msg =
+        '后端缺少官职接口（8765 上多半是旧版 Python 服务）。请退出修改器、结束 python.exe 后重开，或运行 desktop\\重启后端.ps1。'
+    }
+    const err = new Error(msg)
     err.data = data
     throw err
   }

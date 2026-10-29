@@ -20,6 +20,7 @@ export const MENU = [
     ],
   },
   { label: '城市', key: 'cities' },
+  { label: '官职', key: 'officials' },
   {
     label: '编队',
     key: 'teamsRoot',

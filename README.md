@@ -1,6 +1,6 @@
 # SUTK 修改器（便携版）
 
-针对 **Seres Universalis: Three Kingdoms（Demo）** 的存档修改工具。只读写 `%LOCALAPPDATA%\ProjectA\Saved\Saves` 下的 `.sav`，**不修改游戏本体**。
+针对 **Seres Universalis: Three Kingdoms（Demo）** 的存档修改工具。只读写 `%LOCALAPPDATA%\ProjectA\Saved\Saves` 下的 `.sav`，**不修改 Steam 游戏安装目录**（路径说明见 [docs/游戏与路径.md](./docs/游戏与路径.md)）。
 
 本仓库提供两种使用方式：
 

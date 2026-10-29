@@ -15,7 +15,7 @@
 
 ```powershell
 $env:OO2PATH = "本目录绝对路径"
-..\..\python\python.exe build_troop_kinds.py "D:\Steam\...\pakchunk0-Windows.pak"
+..\..\python\python.exe build_troop_kinds.py "D:\Program Files (x86)\Steam\steamapps\common\Seres Universalis Three Kingdoms Demo\ProjectA\Content\Paks\pakchunk0-Windows.pak"
 ```
 
 成功后覆盖 `desktop\troop_kinds_zh.json`，再打包或复制到 dist 的 `desktop\`。

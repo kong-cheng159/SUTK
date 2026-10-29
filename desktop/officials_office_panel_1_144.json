@@ -1,0 +1,1012 @@
+{
+  "rows": [
+    {
+      "id": "144",
+      "name": "大将军",
+      "level": 9,
+      "staffing": 12000,
+      "salary": 20
+    },
+    {
+      "id": "143",
+      "name": "太尉",
+      "level": 9,
+      "staffing": 12000,
+      "salary": 20
+    },
+    {
+      "id": "142",
+      "name": "司徒",
+      "level": 9,
+      "staffing": 12000,
+      "salary": 20
+    },
+    {
+      "id": "141",
+      "name": "司空",
+      "level": 9,
+      "staffing": 12000,
+      "salary": 20
+    },
+    {
+      "id": "140",
+      "name": "骠骑将军",
+      "level": 9,
+      "staffing": 12000,
+      "salary": 20
+    },
+    {
+      "id": "139",
+      "name": "车骑将军",
+      "level": 9,
+      "staffing": 12000,
+      "salary": 20
+    },
+    {
+      "id": "138",
+      "name": "卫将军",
+      "level": 9,
+      "staffing": 12000,
+      "salary": 20
+    },
+    {
+      "id": "137",
+      "name": "前将军",
+      "level": 9,
+      "staffing": 12000,
+      "salary": 20
+    },
+    {
+      "id": "136",
+      "name": "后将军",
+      "level": 9,
+      "staffing": 12000,
+      "salary": 20
+    },
+    {
+      "id": "135",
+      "name": "左将军",
+      "level": 9,
+      "staffing": 12000,
+      "salary": 20
+    },
+    {
+      "id": "134",
+      "name": "右将军",
+      "level": 9,
+      "staffing": 12000,
+      "salary": 20
+    },
+    {
+      "id": "133",
+      "name": "太常",
+      "level": 9,
+      "staffing": 12000,
+      "salary": 20
+    },
+    {
+      "id": "132",
+      "name": "太仆",
+      "level": 9,
+      "staffing": 12000,
+      "salary": 20
+    },
+    {
+      "id": "131",
+      "name": "大鸿胪",
+      "level": 9,
+      "staffing": 12000,
+      "salary": 20
+    },
+    {
+      "id": "130",
+      "name": "宗正",
+      "level": 9,
+      "staffing": 12000,
+      "salary": 20
+    },
+    {
+      "id": "129",
+      "name": "征东将军",
+      "level": 8,
+      "staffing": 11000,
+      "salary": 18
+    },
+    {
+      "id": "128",
+      "name": "征西将军",
+      "level": 8,
+      "staffing": 11000,
+      "salary": 18
+    },
+    {
+      "id": "127",
+      "name": "征南将军",
+      "level": 8,
+      "staffing": 11000,
+      "salary": 18
+    },
+    {
+      "id": "126",
+      "name": "征北将军",
+      "level": 8,
+      "staffing": 11000,
+      "salary": 18
+    },
+    {
+      "id": "125",
+      "name": "镇东将军",
+      "level": 8,
+      "staffing": 11000,
+      "salary": 18
+    },
+    {
+      "id": "124",
+      "name": "镇西将军",
+      "level": 8,
+      "staffing": 11000,
+      "salary": 18
+    },
+    {
+      "id": "123",
+      "name": "镇南将军",
+      "level": 8,
+      "staffing": 11000,
+      "salary": 18
+    },
+    {
+      "id": "122",
+      "name": "镇北将军",
+      "level": 8,
+      "staffing": 11000,
+      "salary": 18
+    },
+    {
+      "id": "121",
+      "name": "强弩将军",
+      "level": 8,
+      "staffing": 11000,
+      "salary": 18
+    },
+    {
+      "id": "120",
+      "name": "光禄勋",
+      "level": 8,
+      "staffing": 16777251,
+      "salary": 18
+    },
+    {
+      "id": "119",
+      "name": "卫尉",
+      "level": 8,
+      "staffing": 16777251,
+      "salary": 18
+    },
+    {
+      "id": "118",
+      "name": "廷尉",
+      "level": 8,
+      "staffing": 16777251,
+      "salary": 18
+    },
+    {
+      "id": "117",
+      "name": "大司农",
+      "level": 8,
+      "staffing": 16777251,
+      "salary": 18
+    },
+    {
+      "id": "116",
+      "name": "光禄大夫",
+      "level": 8,
+      "staffing": 16777251,
+      "salary": 18
+    },
+    {
+      "id": "115",
+      "name": "太中大夫",
+      "level": 8,
+      "staffing": 16777251,
+      "salary": 18
+    },
+    {
+      "id": "114",
+      "name": "安东将军",
+      "level": 7,
+      "staffing": 10000,
+      "salary": 16
+    },
+    {
+      "id": "113",
+      "name": "安西将军",
+      "level": 7,
+      "staffing": 10000,
+      "salary": 16
+    },
+    {
+      "id": "112",
+      "name": "安南将军",
+      "level": 7,
+      "staffing": 10000,
+      "salary": 16
+    },
+    {
+      "id": "111",
+      "name": "安北将军",
+      "level": 7,
+      "staffing": 10000,
+      "salary": 16
+    },
+    {
+      "id": "110",
+      "name": "平东将军",
+      "level": 7,
+      "staffing": 10000,
+      "salary": 16
+    },
+    {
+      "id": "109",
+      "name": "平西将军",
+      "level": 7,
+      "staffing": 10000,
+      "salary": 16
+    },
+    {
+      "id": "108",
+      "name": "平南将军",
+      "level": 7,
+      "staffing": 10000,
+      "salary": 16
+    },
+    {
+      "id": "107",
+      "name": "平北将军",
+      "level": 7,
+      "staffing": 10000,
+      "salary": 16
+    },
+    {
+      "id": "106",
+      "name": "将作大匠",
+      "level": 7,
+      "staffing": 16777247,
+      "salary": 16
+    },
+    {
+      "id": "105",
+      "name": "尚书令",
+      "level": 7,
+      "staffing": 16777247,
+      "salary": 16
+    },
+    {
+      "id": "104",
+      "name": "御史中丞",
+      "level": 7,
+      "staffing": 16777247,
+      "salary": 16
+    },
+    {
+      "id": "103",
+      "name": "给事中",
+      "level": 7,
+      "staffing": 16777247,
+      "salary": 16
+    },
+    {
+      "id": "102",
+      "name": "治书侍御史",
+      "level": 7,
+      "staffing": 16777247,
+      "salary": 16
+    },
+    {
+      "id": "101",
+      "name": "太史令",
+      "level": 7,
+      "staffing": 16777247,
+      "salary": 16
+    },
+    {
+      "id": "100",
+      "name": "钩盾令",
+      "level": 7,
+      "staffing": 16777247,
+      "salary": 16
+    },
+    {
+      "id": "99",
+      "name": "骁骑将军",
+      "level": 6,
+      "staffing": 35,
+      "salary": 14
+    },
+    {
+      "id": "98",
+      "name": "游击将军",
+      "level": 6,
+      "staffing": 35,
+      "salary": 14
+    },
+    {
+      "id": "97",
+      "name": "虎牙将军",
+      "level": 6,
+      "staffing": 35,
+      "salary": 14
+    },
+    {
+      "id": "96",
+      "name": "折冲将军",
+      "level": 6,
+      "staffing": 35,
+      "salary": 14
+    },
+    {
+      "id": "95",
+      "name": "轻车将军",
+      "level": 6,
+      "staffing": 35,
+      "salary": 14
+    },
+    {
+      "id": "94",
+      "name": "荡寇将军",
+      "level": 6,
+      "staffing": 35,
+      "salary": 14
+    },
+    {
+      "id": "93",
+      "name": "偏将军",
+      "level": 6,
+      "staffing": 35,
+      "salary": 14
+    },
+    {
+      "id": "92",
+      "name": "裨将军",
+      "level": 6,
+      "staffing": 35,
+      "salary": 14
+    },
+    {
+      "id": "91",
+      "name": "少府卿",
+      "level": 6,
+      "staffing": 65536,
+      "salary": 14
+    },
+    {
+      "id": "90",
+      "name": "执金吾",
+      "level": 6,
+      "staffing": 65536,
+      "salary": 14
+    },
+    {
+      "id": "89",
+      "name": "大长秋",
+      "level": 6,
+      "staffing": 65536,
+      "salary": 14
+    },
+    {
+      "id": "88",
+      "name": "中书令",
+      "level": 6,
+      "staffing": 65536,
+      "salary": 14
+    },
+    {
+      "id": "87",
+      "name": "兰台令",
+      "level": 6,
+      "staffing": 65536,
+      "salary": 14
+    },
+    {
+      "id": "86",
+      "name": "侍御史",
+      "level": 6,
+      "staffing": 65536,
+      "salary": 14
+    },
+    {
+      "id": "85",
+      "name": "导官令",
+      "level": 6,
+      "staffing": 65536,
+      "salary": 14
+    },
+    {
+      "id": "84",
+      "name": "中郎将",
+      "level": 5,
+      "staffing": 31,
+      "salary": 12
+    },
+    {
+      "id": "83",
+      "name": "使匈奴郎将",
+      "level": 5,
+      "staffing": 31,
+      "salary": 12
+    },
+    {
+      "id": "82",
+      "name": "虎贲郎将",
+      "level": 5,
+      "staffing": 31,
+      "salary": 12
+    },
+    {
+      "id": "81",
+      "name": "羽林郎将",
+      "level": 5,
+      "staffing": 31,
+      "salary": 12
+    },
+    {
+      "id": "80",
+      "name": "宿卫郎将",
+      "level": 5,
+      "staffing": 31,
+      "salary": 12
+    },
+    {
+      "id": "79",
+      "name": "侍从郎将",
+      "level": 5,
+      "staffing": 31,
+      "salary": 12
+    },
+    {
+      "id": "78",
+      "name": "奉使郎将",
+      "level": 5,
+      "staffing": 31,
+      "salary": 12
+    },
+    {
+      "id": "77",
+      "name": "文学郎将",
+      "level": 5,
+      "staffing": 31,
+      "salary": 12
+    },
+    {
+      "id": "76",
+      "name": "仪曹郎将",
+      "level": 5,
+      "staffing": 31,
+      "salary": 12
+    },
+    {
+      "id": "75",
+      "name": "执金吾丞",
+      "level": 5,
+      "staffing": 65536,
+      "salary": 12
+    },
+    {
+      "id": "74",
+      "name": "留府长史",
+      "level": 5,
+      "staffing": 65536,
+      "salary": 12
+    },
+    {
+      "id": "73",
+      "name": "尚书仆射",
+      "level": 5,
+      "staffing": 65536,
+      "salary": 12
+    },
+    {
+      "id": "72",
+      "name": "给事黄门",
+      "level": 5,
+      "staffing": 65536,
+      "salary": 12
+    },
+    {
+      "id": "71",
+      "name": "太学博士",
+      "level": 5,
+      "staffing": 65536,
+      "salary": 12
+    },
+    {
+      "id": "70",
+      "name": "符节仆射",
+      "level": 5,
+      "staffing": 65536,
+      "salary": 12
+    },
+    {
+      "id": "69",
+      "name": "秘书令史",
+      "level": 5,
+      "staffing": 65536,
+      "salary": 12
+    },
+    {
+      "id": "68",
+      "name": "司隶校尉",
+      "level": 4,
+      "staffing": 27,
+      "salary": 10
+    },
+    {
+      "id": "67",
+      "name": "城门校尉",
+      "level": 4,
+      "staffing": 27,
+      "salary": 10
+    },
+    {
+      "id": "66",
+      "name": "屯骑校尉",
+      "level": 4,
+      "staffing": 27,
+      "salary": 10
+    },
+    {
+      "id": "65",
+      "name": "越骑校尉",
+      "level": 4,
+      "staffing": 27,
+      "salary": 10
+    },
+    {
+      "id": "64",
+      "name": "步兵校尉",
+      "level": 4,
+      "staffing": 27,
+      "salary": 10
+    },
+    {
+      "id": "63",
+      "name": "长水校尉",
+      "level": 4,
+      "staffing": 27,
+      "salary": 10
+    },
+    {
+      "id": "62",
+      "name": "射声校尉",
+      "level": 4,
+      "staffing": 27,
+      "salary": 10
+    },
+    {
+      "id": "61",
+      "name": "戊己校尉",
+      "level": 4,
+      "staffing": 27,
+      "salary": 10
+    },
+    {
+      "id": "60",
+      "name": "强弩都尉",
+      "level": 4,
+      "staffing": 65536,
+      "salary": 10
+    },
+    {
+      "id": "59",
+      "name": "河堤都尉",
+      "level": 4,
+      "staffing": 65536,
+      "salary": 10
+    },
+    {
+      "id": "58",
+      "name": "大鸿胪丞",
+      "level": 4,
+      "staffing": 65536,
+      "salary": 10
+    },
+    {
+      "id": "57",
+      "name": "谒者仆射",
+      "level": 4,
+      "staffing": 65536,
+      "salary": 10
+    },
+    {
+      "id": "56",
+      "name": "黄门侍郎",
+      "level": 4,
+      "staffing": 65536,
+      "salary": 10
+    },
+    {
+      "id": "55",
+      "name": "卫士仆射",
+      "level": 4,
+      "staffing": 65536,
+      "salary": 10
+    },
+    {
+      "id": "54",
+      "name": "掖庭令史",
+      "level": 4,
+      "staffing": 65536,
+      "salary": 10
+    },
+    {
+      "id": "53",
+      "name": "太史待诏",
+      "level": 4,
+      "staffing": 65536,
+      "salary": 10
+    },
+    {
+      "id": "52",
+      "name": "太医待诏",
+      "level": 4,
+      "staffing": 65536,
+      "salary": 10
+    },
+    {
+      "id": "51",
+      "name": "护军都尉",
+      "level": 3,
+      "staffing": 23,
+      "salary": 8
+    },
+    {
+      "id": "50",
+      "name": "部都尉",
+      "level": 3,
+      "staffing": 23,
+      "salary": 8
+    },
+    {
+      "id": "49",
+      "name": "关都尉",
+      "level": 3,
+      "staffing": 23,
+      "salary": 8
+    },
+    {
+      "id": "48",
+      "name": "骑都尉",
+      "level": 3,
+      "staffing": 23,
+      "salary": 8
+    },
+    {
+      "id": "47",
+      "name": "奉车都尉",
+      "level": 3,
+      "staffing": 23,
+      "salary": 8
+    },
+    {
+      "id": "46",
+      "name": "农都尉",
+      "level": 3,
+      "staffing": 23,
+      "salary": 8
+    },
+    {
+      "id": "45",
+      "name": "属国都尉",
+      "level": 3,
+      "staffing": 23,
+      "salary": 8
+    },
+    {
+      "id": "44",
+      "name": "丞相长史",
+      "level": 3,
+      "staffing": 65536,
+      "salary": 8
+    },
+    {
+      "id": "43",
+      "name": "从事中郎",
+      "level": 3,
+      "staffing": 65536,
+      "salary": 8
+    },
+    {
+      "id": "42",
+      "name": "护军司马",
+      "level": 3,
+      "staffing": 65536,
+      "salary": 8
+    },
+    {
+      "id": "41",
+      "name": "太常博士",
+      "level": 3,
+      "staffing": 65536,
+      "salary": 8
+    },
+    {
+      "id": "40",
+      "name": "尚书郎中",
+      "level": 3,
+      "staffing": 65536,
+      "salary": 8
+    },
+    {
+      "id": "39",
+      "name": "公车司马",
+      "level": 3,
+      "staffing": 65536,
+      "salary": 8
+    },
+    {
+      "id": "38",
+      "name": "兰台令史",
+      "level": 3,
+      "staffing": 65536,
+      "salary": 8
+    },
+    {
+      "id": "37",
+      "name": "符节令史",
+      "level": 3,
+      "staffing": 65536,
+      "salary": 8
+    },
+    {
+      "id": "36",
+      "name": "军司马",
+      "level": 2,
+      "staffing": 19,
+      "salary": 6
+    },
+    {
+      "id": "35",
+      "name": "别部司马",
+      "level": 2,
+      "staffing": 19,
+      "salary": 6
+    },
+    {
+      "id": "34",
+      "name": "中营司马",
+      "level": 2,
+      "staffing": 19,
+      "salary": 6
+    },
+    {
+      "id": "33",
+      "name": "骑司马",
+      "level": 2,
+      "staffing": 19,
+      "salary": 6
+    },
+    {
+      "id": "32",
+      "name": "步司马",
+      "level": 2,
+      "staffing": 19,
+      "salary": 6
+    },
+    {
+      "id": "31",
+      "name": "军假司马",
+      "level": 2,
+      "staffing": 19,
+      "salary": 6
+    },
+    {
+      "id": "30",
+      "name": "假司马",
+      "level": 2,
+      "staffing": 19,
+      "salary": 6
+    },
+    {
+      "id": "29",
+      "name": "太仓令",
+      "level": 2,
+      "staffing": 65536,
+      "salary": 6
+    },
+    {
+      "id": "28",
+      "name": "卫士令",
+      "level": 2,
+      "staffing": 65536,
+      "salary": 6
+    },
+    {
+      "id": "27",
+      "name": "武库令",
+      "level": 2,
+      "staffing": 65536,
+      "salary": 6
+    },
+    {
+      "id": "26",
+      "name": "太乐令",
+      "level": 2,
+      "staffing": 65536,
+      "salary": 6
+    },
+    {
+      "id": "25",
+      "name": "永巷令",
+      "level": 2,
+      "staffing": 65536,
+      "salary": 6
+    },
+    {
+      "id": "24",
+      "name": "太常丞",
+      "level": 2,
+      "staffing": 65536,
+      "salary": 6
+    },
+    {
+      "id": "23",
+      "name": "宗正丞",
+      "level": 2,
+      "staffing": 65536,
+      "salary": 6
+    },
+    {
+      "id": "22",
+      "name": "少府丞",
+      "level": 2,
+      "staffing": 65536,
+      "salary": 6
+    },
+    {
+      "id": "21",
+      "name": "军侯",
+      "level": 1,
+      "staffing": 15,
+      "salary": 4
+    },
+    {
+      "id": "20",
+      "name": "左军侯",
+      "level": 1,
+      "staffing": 15,
+      "salary": 4
+    },
+    {
+      "id": "19",
+      "name": "右军侯",
+      "level": 1,
+      "staffing": 15,
+      "salary": 4
+    },
+    {
+      "id": "18",
+      "name": "军假侯",
+      "level": 1,
+      "staffing": 15,
+      "salary": 4
+    },
+    {
+      "id": "17",
+      "name": "前屯长",
+      "level": 1,
+      "staffing": 15,
+      "salary": 4
+    },
+    {
+      "id": "16",
+      "name": "后屯长",
+      "level": 1,
+      "staffing": 15,
+      "salary": 4
+    },
+    {
+      "id": "15",
+      "name": "左屯长",
+      "level": 1,
+      "staffing": 15,
+      "salary": 4
+    },
+    {
+      "id": "14",
+      "name": "右屯长",
+      "level": 1,
+      "staffing": 15,
+      "salary": 4
+    },
+    {
+      "id": "13",
+      "name": "屯长",
+      "level": 1,
+      "staffing": 15,
+      "salary": 4
+    },
+    {
+      "id": "12",
+      "name": "左仆射",
+      "level": 1,
+      "staffing": 65536,
+      "salary": 4
+    },
+    {
+      "id": "11",
+      "name": "右仆射",
+      "level": 1,
+      "staffing": 65536,
+      "salary": 4
+    },
+    {
+      "id": "10",
+      "name": "谏大夫",
+      "level": 1,
+      "staffing": 65536,
+      "salary": 4
+    },
+    {
+      "id": "9",
+      "name": "大谒者",
+      "level": 1,
+      "staffing": 256,
+      "salary": 4
+    },
+    {
+      "id": "8",
+      "name": "太官令",
+      "level": 1,
+      "staffing": 256,
+      "salary": 4
+    },
+    {
+      "id": "7",
+      "name": "尚书郎",
+      "level": 1,
+      "staffing": 256,
+      "salary": 4
+    },
+    {
+      "id": "6",
+      "name": "左曹掾",
+      "level": 1,
+      "staffing": 256,
+      "salary": 4
+    },
+    {
+      "id": "5",
+      "name": "奏曹掾",
+      "level": 1,
+      "staffing": 256,
+      "salary": 4
+    },
+    {
+      "id": "4",
+      "name": "三署郎",
+      "level": 1,
+      "staffing": 256,
+      "salary": 4
+    },
+    {
+      "id": "3",
+      "name": "太仓丞",
+      "level": 1,
+      "staffing": 256,
+      "salary": 4
+    },
+    {
+      "id": "2",
+      "name": "太仆丞",
+      "level": 1,
+      "staffing": 256,
+      "salary": 4
+    },
+    {
+      "id": "1",
+      "name": "卫士丞",
+      "level": 1,
+      "staffing": 256,
+      "salary": 4
+    }
+  ]
+}

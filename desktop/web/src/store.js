@@ -16,6 +16,12 @@ export const store = reactive({
   cities: [],
   cityProblems: [],
   cityFactions: [],
+  officials: [],
+  officialsGenerals: [],
+  officialsHint: '',
+  officialsWarning: '',
+  officialsMeta: {},
+  officialsMod: {},
   diplo: [],
   diploHint: '',
   mem: null,
@@ -256,6 +262,22 @@ export async function loadCities() {
   if (!store.cityTarget && data.factions.length) store.cityTarget = data.factions[0].id
 }
 
+export async function loadOfficials() {
+  if (!store.current) return
+  const data = await api('/api/officials?name=' + encodeURIComponent(store.current))
+  store.officials = data.rows || []
+  store.officialsGenerals = data.generals || []
+  store.officialsHint = data.hint || ''
+  store.officialsWarning = data.warning || ''
+  store.officialsMeta = {
+    rank_id: data.rank_id,
+    rank_label: data.rank_label,
+    appointed_count: data.appointed_count ?? 0,
+    panel_count: data.panel_count ?? store.officials.length,
+  }
+  store.officialsMod = data.mod || {}
+}
+
 export async function loadDiplo() {
   if (!store.current) return
   const data = await api('/api/diplo?name=' + encodeURIComponent(store.current))
@@ -343,6 +365,7 @@ export async function refreshPage(key) {
   if (key === 'generals') await loadGenerals()
   if (key === 'customGenerals') await loadCustomGenerals()
   if (key === 'cities') await loadCities()
+  if (key === 'officials') await loadOfficials()
   if (key === 'teamPresets') await loadTeamPresetsPage()
   if (key === 'teamDeploy') await loadTeamDeployPage()
   if (key === 'teamTroops') await loadTeamTroopsPage()

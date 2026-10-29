@@ -3226,6 +3226,253 @@ def auto_assign_prefects(d, fid=None, city_keys=None, combat_threshold=None):
     return assigned, lines, summary
 
 
+HAN_OFFICIAL_ID_MAX = 144
+
+
+def _han_official_id_set():
+    return set(str(i) for i in range(1, HAN_OFFICIAL_ID_MAX + 1))
+
+
+def _collect_deputy_generals(d, fid):
+    """部队编制中的副将（generalId2/3），主将 generalId1 仍可任官职。"""
+    busy = set()
+    facs = d.get('factions') or {}
+    fk = None
+    for k in facs:
+        if str(k).lower() == str(fid).lower():
+            fk = k
+            break
+    if fk is None:
+        return busy
+    troops = (facs[fk].get('troops') or {})
+    items = troops.values() if isinstance(troops, dict) else troops
+    for t in items:
+        if not isinstance(t, dict):
+            continue
+        for g in ('generalId2', 'generalId3'):
+            gid = str(t.get(g) or 'None')
+            if gid != 'None':
+                busy.add(gid.lower())
+    return busy
+
+
+def _set_person_official_mod(inf, official_id):
+    val = 'None' if not official_id or str(official_id) == 'None' else str(official_id)
+    if 'official' in inf:
+        return _set(inf, 'official', val)
+    inf['official'] = val
+    return True
+
+
+def auto_assign_han_officials(d, fid=None, rows=None, only_vacant=True):
+    """面板官职自动任命：按星级分层，每层内统+武+敏高者优先占该星岗位（汉系/模组同一池）。
+
+    同星级内按 id 升序依次填岗：该星全库第 1 强→第 1 个岗，第 2 强→第 2 个岗……
+    低数值武将不会占九星，除非本国可用武将不足。不任命太守、副将、君主。
+    """
+
+    def _oid_int(oid):
+        try:
+            return int(oid)
+        except Exception:
+            return 999999999
+
+    if fid is None:
+        fid = _player_fid(d)
+    if fid is None:
+        return 0, [], ['找不到玩家势力']
+    if rows is None:
+        rows = [{'id': str(i), 'level': 0, 'name': ''} for i in range(HAN_OFFICIAL_ID_MAX, 0, -1)]
+        panel_ids = _han_official_id_set()
+    else:
+        rows = list(rows)
+        panel_ids = set()
+        for r in rows:
+            rid = str(r.get('id') or '')
+            if rid:
+                panel_ids.add(rid)
+        if not panel_ids:
+            panel_ids = _han_official_id_set()
+    han_ids = panel_ids
+
+    id_lv = {}
+    for r in rows:
+        rid = str(r.get('id') or '')
+        if not rid:
+            continue
+        try:
+            id_lv[rid] = int(r.get('level') or 0)
+        except Exception:
+            id_lv[rid] = 0
+
+    holders = {}
+    for pid, per in (d.get('personages') or {}).items():
+        inf = per.get('info') or {}
+        if str(inf.get('faction', '')).lower() != str(fid).lower():
+            continue
+        oid = str(inf.get('official') or 'None')
+        if oid in han_ids:
+            holders[oid] = pid
+
+    from collections import defaultdict
+
+    slots_by_lv = defaultdict(list)
+    for r in rows:
+        oid = str(r.get('id') or '')
+        if oid not in han_ids:
+            continue
+        lv = id_lv.get(oid, 0)
+        if lv < 1:
+            continue
+        slots_by_lv[lv].append(r)
+    for lv in slots_by_lv:
+        slots_by_lv[lv].sort(key=lambda r: _oid_int(r.get('id')))
+
+    busy_prefect = _collect_prefect_ids(d)
+    deputy_busy = _collect_deputy_generals(d, fid)
+    king_key = _player_king_person_key(d, fid)
+    king_low = set()
+    if king_key:
+        king_low.add(str(king_key).lower())
+        king_low.add(_person_id_camel(king_key).lower())
+
+    stat = {
+        'eligible': 0,
+        'skip_prefect': 0,
+        'skip_deputy': 0,
+        'skip_king': 0,
+        'skip_no_stats': 0,
+        'skip_official_block': 0,
+    }
+
+    def _pid_tokens(pid):
+        plow = str(pid).lower()
+        out = {plow}
+        if _looks_like_guid(pid):
+            out.add(str(pid).upper())
+        else:
+            out.add(_person_id_camel(pid).lower())
+        return out
+
+    def _base_ok(pid, per):
+        inf = per.get('info') or {}
+        if inf.get('tag1') in ('Death', 'Dead'):
+            return False
+        tokens = _pid_tokens(pid)
+        if tokens & king_low:
+            stat['skip_king'] += 1
+            return False
+        if tokens & busy_prefect:
+            stat['skip_prefect'] += 1
+            return False
+        if tokens & deputy_busy:
+            stat['skip_deputy'] += 1
+            return False
+        bi = per.get('baseInfo') or {}
+        if not bi:
+            stat['skip_no_stats'] += 1
+            return False
+        return True
+
+    def _build_roster(exclude_pids):
+        roster = []
+        for pid, per in (d.get('personages') or {}).items():
+            if pid in exclude_pids:
+                continue
+            inf = per.get('info') or {}
+            if str(inf.get('faction', '')).lower() != str(fid).lower():
+                continue
+            if not _base_ok(pid, per):
+                continue
+            bi = per.get('baseInfo') or {}
+            roster.append({
+                'pid': pid,
+                'show': _general_display_name(d, pid),
+                'combat': _combat_score(bi),
+                'command': _bi_stat(bi, 'command'),
+                'strength': _bi_stat(bi, 'strength'),
+                'agility': _bi_stat(bi, 'agility'),
+                'cur_off': str(inf.get('official') or 'None'),
+            })
+        roster.sort(key=lambda x: (-x['combat'], -x['command'], -x['strength'], -x['agility']))
+        return roster
+
+    total_slots = sum(len(v) for v in slots_by_lv.values())
+    fac_label = _faction_label(d, fid)
+    summary = [
+        '任命范围：玩家势力「%s」面板官职 %d 岗，按星级分层（9星→1星）'
+        % (fac_label, total_slots),
+        '规则：每一星级内，统+武+敏排名靠前者优先占该星岗位（汉系/模组同一队列）；'
+        '含自建武将（GUID）；不任命太守/驻守、部队副将、君主',
+    ]
+    lines = []
+    assigned = 0
+    assigned_pids = set()
+
+    for lv in range(9, 0, -1):
+        tier_slots = slots_by_lv.get(lv, [])
+        if not tier_slots:
+            continue
+        roster = _build_roster(assigned_pids)
+        ri = 0
+        for slot in tier_slots:
+            while ri < len(roster):
+                cand = roster[ri]
+                if cand['pid'] in assigned_pids:
+                    ri += 1
+                    continue
+                break
+            else:
+                lines.append('  %d星 — 可用武将已用尽' % lv)
+                break
+
+            oid = str(slot.get('id'))
+            name = str(slot.get('name') or oid)
+            inc_pid = holders.get(oid)
+            if only_vacant and inc_pid:
+                if inc_pid == cand['pid']:
+                    assigned_pids.add(inc_pid)
+                    ri += 1
+                    continue
+                inc_per = (d.get('personages') or {}).get(inc_pid)
+                inc_bi = (inc_per or {}).get('baseInfo') or {}
+                if inc_bi and _combat_score(inc_bi) >= cand['combat']:
+                    continue
+
+            stat['eligible'] += 1
+            old_off = cand['cur_off']
+            if old_off not in (None, 'None', '') and old_off in han_ids:
+                holders.pop(old_off, None)
+            for _pid, per in (d.get('personages') or {}).items():
+                inf = per.get('info') or {}
+                if str(inf.get('faction', '')).lower() != str(fid).lower():
+                    continue
+                if str(inf.get('official') or 'None') == oid:
+                    _set_person_official_mod(inf, 'None')
+                    holders.pop(oid, None)
+            per = (d.get('personages') or {}).get(cand['pid'])
+            if per is None:
+                ri += 1
+                continue
+            inf = per.get('info') or {}
+            _set_person_official_mod(inf, oid)
+            assigned += 1
+            assigned_pids.add(cand['pid'])
+            holders[oid] = cand['pid']
+            ri += 1
+            move = ''
+            if old_off not in (None, 'None', '') and old_off != oid:
+                move = ' (自 id %s 改任)' % old_off
+            lines.append(
+                '  %s %d星 ← %s (统%d/武%d/敏%d 合计%d)%s'
+                % (_pad(name, 8), lv, cand['show'],
+                   cand['command'], cand['strength'], cand['agility'], cand['combat'], move))
+
+    if not total_slots:
+        summary.append('没有可任命岗位')
+    return assigned, lines, summary
+
+
 # ----------------------------------------------------------------- 快速编队（一支部队 = 主将 + 2 副将，对应一条 troops）
 def _normalize_generals_triple(gens, sq=None):
     if not isinstance(gens, list):
