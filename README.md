@@ -6,22 +6,25 @@
 
 | 方式 | 适合谁 | 入口 | 说明文档 |
 |------|--------|------|----------|
-| **桌面版（推荐）** | 日常改档、城市/武将/编队 | `desktop-app\dist\SUTK修改器\SUTK修改器.exe` | [桌面版使用说明.md](./桌面版使用说明.md) |
-| **控制台版** | 热键呼出、命令行、老习惯 | `1 安装.bat` / `控制台.bat` | [安装教程.txt](./安装教程.txt)、[使用说明.md](./使用说明.md) |
+| **桌面版（推荐）** | 日常改档、城市/武将/编队 | `desktop-app\dist\SUTK修改器\SUTK修改器.exe` | [docs/桌面版使用说明.md](./docs/桌面版使用说明.md) |
+| **控制台版** | 热键呼出、命令行、老习惯 | `1 安装.bat` / `控制台.bat` | [docs/安装教程.txt](./docs/安装教程.txt)、[docs/使用说明.md](./docs/使用说明.md) |
+
+另有独立子项目 **[华夏风云控制台修改器](./contrib/hxfs-save-editor/)**（见 [contrib/README.md](./contrib/README.md)）。
 
 ---
 
 ## 文档索引
 
+完整列表见 **[docs/README.md](./docs/README.md)**。
+
 | 文档 | 内容 |
 |------|------|
-| [桌面版使用说明.md](./桌面版使用说明.md) | 图形界面：存档、模块、城市、编队、外交、检查、设置 |
-| [安装教程.txt](./安装教程.txt) | 控制台版：安装、热键、模块勾选、城市归属 |
-| [使用说明.md](./使用说明.md) | 控制台版功能参考、模块说明、审计与历史版本 |
-| [经验总结.md](./经验总结.md) | 踩坑与存档不变量（桌面版「说明」页也会加载） |
-| [desktop-app/打包说明.md](./desktop-app/打包说明.md) | 如何打出 `dist\SUTK修改器` 便携文件夹 |
-| [desktop-app/开发说明.md](./desktop-app/开发说明.md) | 前端 Vue + Python API + Tauri 本地调试 |
-| [desktop-app/发给别人.txt](./desktop-app/发给别人.txt) | 发给他人时的简短说明 |
+| [docs/桌面版使用说明.md](./docs/桌面版使用说明.md) | 图形界面：存档、模块、城市、编队、外交、检查、设置 |
+| [docs/安装教程.txt](./docs/安装教程.txt) | 控制台版：安装、热键、模块勾选 |
+| [docs/使用说明.md](./docs/使用说明.md) | 控制台版功能参考、模块说明 |
+| [docs/经验总结.md](./docs/经验总结.md) | 踩坑与存档不变量 |
+| [desktop-app/打包说明.md](./desktop-app/打包说明.md) | 打出 `dist\SUTK修改器` |
+| [desktop-app/开发说明.md](./desktop-app/开发说明.md) | Vue + Python API + Tauri |
 
 ---
 
@@ -40,22 +43,25 @@
 
 ```
 SUTK修改器_便携版/
-├── SUTKMod.pyw          # 存档读写与补丁核心
-├── MemScan.py           # 内存扫描（可选，需管理员）
-├── config.json          # 模块/上限/编队预设等（运行时可生成）
-├── python/              # 嵌入式 Python（控制台版与桌面版共用）
+├── README.md
+├── SUTKMod.pyw              # 存档读写与补丁核心
+├── MemScan.py               # 内存扫描（可选，需管理员）
+├── config.json
+├── 1 安装.bat / 控制台.bat   # 控制台版入口（须在根目录）
+├── python/                  # 嵌入式 Python
+├── docs/                    # 用户文档
+├── contrib/                 # 附属工具（如 hxfs-save-editor）
+├── tests/                   # 开发验证脚本
 ├── desktop/
-│   ├── server.py        # 本地 HTTP API（127.0.0.1）
-│   ├── names_zh.json    # 武将中文名表
-│   ├── cities_zh.json   # 城市中文名表
-│   ├── troop_kinds_zh.json  # 兵种 ID → 中文名
-│   ├── static/          # Vite 构建产物
-│   ├── web/             # Vue 3 源码
-│   └── tools/           # repak、兵种表生成脚本等
+│   ├── server.py            # 本地 HTTP API
+│   ├── data/                # 工具生成的映射表等
+│   ├── static/              # 前端构建产物
+│   ├── web/                 # Vue 3 源码
+│   └── tools/               # repak、兵种表、自建武将脚本
 └── desktop-app/
-    ├── src-tauri/       # Tauri 壳
+    ├── src-tauri/           # Tauri 壳
     ├── 打包.ps1
-    └── dist/SUTK修改器/ # 打包输出
+    └── dist/SUTK修改器/     # 打包输出
 ```
 
 ---
@@ -66,4 +72,4 @@ SUTK修改器_便携版/
 - **游戏正在运行**：多数写入会提示读档后生效；极端情况请先存盘并回主菜单再改。
 - **杀毒误报**：本地 Python + 自打包 exe 较常见；工具不联网改游戏文件。
 
-更细的 FAQ 见各使用说明文档。
+更细的 FAQ 见 [docs/](./docs/) 内各说明。

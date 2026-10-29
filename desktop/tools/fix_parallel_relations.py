@@ -10,7 +10,7 @@ sys.path.insert(0, ROOT)
 
 
 def main():
-    roster_path = os.path.join(ROOT, 'desktop', 'custom_roster_parallel.json')
+    roster_path = os.path.join(ROOT, 'desktop', 'data', 'custom_roster_parallel.json')
     if not os.path.isfile(roster_path):
         raise SystemExit('缺少映射表: %s' % roster_path)
     roster = json.load(open(roster_path, encoding='utf-8'))

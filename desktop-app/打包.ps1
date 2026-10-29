@@ -24,14 +24,21 @@ Copy-Item -LiteralPath $exeSrc -Destination (Join-Path $dest ($name + '.exe'))
 foreach ($fn in @('SUTKMod.pyw', 'MemScan.py')) {
     Copy-Item -LiteralPath (Join-Path $repo $fn) -Destination $dest
 }
-$guideName = -join @([char]0x7ECF, [char]0x9A8C, [char]0x603B, [char]0x7ED3) + '.md'
-$guide = Join-Path $repo $guideName
-if (-not (Test-Path -LiteralPath $guide)) { throw "missing $guide" }
-Copy-Item -LiteralPath $guide -Destination $dest
-foreach ($doc in @('桌面版使用说明.md', 'README.md', '使用说明.md')) {
-    $docPath = Join-Path $repo $doc
-    if (Test-Path -LiteralPath $docPath) { Copy-Item -LiteralPath $docPath -Destination $dest }
+function Copy-RepoDoc([string]$name) {
+    $candidates = @(
+        (Join-Path $repo (Join-Path 'docs' $name)),
+        (Join-Path $repo $name)
+    )
+    foreach ($docPath in $candidates) {
+        if (Test-Path -LiteralPath $docPath) {
+            Copy-Item -LiteralPath $docPath -Destination $dest
+            return
+        }
+    }
+    if ($name -ne 'README.md') { throw "missing doc: $name" }
 }
+Copy-RepoDoc '经验总结.md'
+foreach ($doc in @('桌面版使用说明.md', 'README.md', '使用说明.md')) { Copy-RepoDoc $doc }
 $desk = Join-Path $dest 'desktop'
 New-Item -ItemType Directory -Path $desk | Out-Null
 Copy-Item -LiteralPath (Join-Path $repo 'desktop\server.py') -Destination $desk

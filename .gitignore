@@ -11,3 +11,6 @@ memscan.json
 backup/
 history/
 .cursor/
+
+# 附属项目内嵌 Python（体积大，与根目录 python/ 相同策略时可整包分发）
+contrib/hxfs-save-editor/python/

@@ -45,7 +45,7 @@ def main():
     ap.add_argument('--dry-run', action='store_true')
     args = ap.parse_args()
 
-    roster_path = os.path.join(ROOT, 'desktop', 'custom_roster_parallel.json')
+    roster_path = os.path.join(ROOT, 'desktop', 'data', 'custom_roster_parallel.json')
     roster = json.load(open(roster_path, encoding='utf-8'))
     if len(roster) != 30:
         raise SystemExit('映射表条目不是 30：%d' % len(roster))

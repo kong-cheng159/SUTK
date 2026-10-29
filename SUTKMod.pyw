@@ -773,8 +773,15 @@ def install(quiet=False):
         if os.path.exists(sp) and os.path.abspath(sp) != os.path.abspath(os.path.join(APP_DIR, fn)):
             shutil.copy2(sp, os.path.join(APP_DIR, fn))
     # 文档 / 辅助脚本一并同步，避免安装版长期停留在旧版
+    def _sync_src(fn):
+        for rel in (os.path.join('docs', fn), fn):
+            p = os.path.join(src_dir, rel)
+            if os.path.isfile(p):
+                return p
+        return os.path.join(src_dir, fn)
+
     for fn in ('经验总结.md', '使用说明.md', '安装教程.txt', 'MemScan.py', '诊断.bat'):
-        sp = os.path.join(src_dir, fn)
+        sp = _sync_src(fn) if fn.endswith(('.md', '.txt')) else os.path.join(src_dir, fn)
         dp = os.path.join(APP_DIR, fn)
         if not os.path.exists(sp) or os.path.abspath(sp) == os.path.abspath(dp):
             continue

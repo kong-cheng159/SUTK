@@ -1,6 +1,7 @@
 # desktop/tools
 
-开发用工具，**默认不会**打进 `dist\SUTK修改器` 便携包。
+开发用工具，**默认不会**打进 `dist\SUTK修改器` 便携包。  
+批量自建武将映射输出到 **`../data/custom_roster_parallel.json`**。
 
 | 文件 | 说明 |
 |------|------|

@@ -124,7 +124,7 @@ def main():
         M._write_save_json(path, sav, data, snapshot=True)
         lines.append('已写入存档: %s' % path)
 
-    out_json = os.path.join(ROOT, 'desktop', 'custom_roster_parallel.json')
+    out_json = os.path.join(ROOT, 'desktop', 'data', 'custom_roster_parallel.json')
     with open(out_json, 'w', encoding='utf-8') as f:
         json.dump(
             [

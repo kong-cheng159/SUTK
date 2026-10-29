@@ -20,6 +20,15 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 HERE = os.path.dirname(os.path.abspath(__file__))
 PROJ = os.path.dirname(HERE)
 STATIC = os.path.join(HERE, 'static')
+
+
+def _proj_doc(name):
+    """用户文档优先 docs/，兼容旧版在仓库根目录。"""
+    for rel in (os.path.join('docs', name), name):
+        path = os.path.join(PROJ, rel)
+        if os.path.isfile(path):
+            return path
+    return os.path.join(PROJ, 'docs', name)
 NAMES_PATH = os.path.join(HERE, 'names_zh.json')
 CITIES_PATH = os.path.join(HERE, 'cities_zh.json')
 TROOP_KINDS_PATH = os.path.join(HERE, 'troop_kinds_zh.json')
@@ -1081,7 +1090,7 @@ def api_uninstall():
 def api_guide():
     """桌面「说明」页：优先用户向文档，否则经验总结。"""
     for name in ('桌面版使用说明.md', '经验总结.md'):
-        path = os.path.join(PROJ, name)
+        path = _proj_doc(name)
         if os.path.isfile(path):
             with open(path, encoding='utf-8') as f:
                 return {'text': f.read(), 'source': name}
