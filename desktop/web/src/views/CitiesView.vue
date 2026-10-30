@@ -34,7 +34,7 @@ const tableBodyRef = ref(null)
 const tableMaxHeight = useTableMaxHeight(tableBodyRef)
 const tableWrapWidth = ref(900)
 
-const playerFid = computed(() => String(store.status?.player ?? ''))
+const playerFid = computed(() => String(store.playerFid || ''))
 
 const filtered = computed(() => {
   let rows = store.cities

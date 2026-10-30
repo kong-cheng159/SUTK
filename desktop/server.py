@@ -381,8 +381,73 @@ def _load_json_map(path):
 
 
 _NAMES = _load_json_map(NAMES_PATH)
+_NAMES_LOWER = {str(k).lower(): v for k, v in _NAMES.items()}
+
+
+def _merge_fullnames_from_locres():
+    """names_zh 不全时，用 tools/Game.zh-CN.locres 的 FullName_* 补全。"""
+    global _NAMES, _NAMES_LOWER
+    path = os.path.join(HERE, 'tools', 'Game.zh-CN.locres')
+    helper = os.path.join(HERE, 'tools', 'build_officials.py')
+    if not os.path.isfile(path) or not os.path.isfile(helper):
+        return
+    try:
+        spec = importlib.util.spec_from_file_location('sutk_build_officials', helper)
+        mod = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(mod)
+        with open(path, 'rb') as f:
+            by_ns = mod.parse_locres_bytes(f.read())
+        table = by_ns.get('Game') or by_ns.get('game') or {}
+        for k, v in table.items():
+            ks = str(k)
+            if not ks.startswith('FullName_'):
+                continue
+            cn = str(v or '').strip()
+            if not cn:
+                continue
+            rid = ks[9:]
+            if rid.lower() in _NAMES_LOWER:
+                continue
+            _NAMES[rid] = cn
+            _NAMES_LOWER[rid.lower()] = cn
+    except Exception:
+        pass
+
+
+_merge_fullnames_from_locres()
 _CITIES = _load_json_map(CITIES_PATH)
 _TROOP_KINDS = _load_json_map(TROOP_KINDS_PATH)
+
+
+def _name_from_key(key):
+    """personages 键多为小驼峰，names_zh 为大驼峰；按 key 不区分大小写查中文名。"""
+    key = str(key or '').strip()
+    if not key or key == 'None':
+        return ''
+    if key in _NAMES:
+        return _NAMES[key]
+    hit = _NAMES_LOWER.get(key.lower())
+    if hit:
+        return hit
+    camel = key[:1].upper() + key[1:] if key else ''
+    if camel in _NAMES:
+        return _NAMES[camel]
+    return _NAMES_LOWER.get(camel.lower()) or ''
+
+
+def _name_node_text(node):
+    if not isinstance(node, dict):
+        return ''
+    k = str(node.get('key') or '').strip()
+    if not k:
+        return ''
+    if k.startswith('FullName_'):
+        k = k[9:]
+    if not k:
+        return ''
+    if any(ord(c) > 127 for c in k):
+        return k
+    return _name_from_key(k) or ''
 
 _PANEL_OFFICIAL_ROWS = None
 _PANEL_OFFICIAL_NAME = {}
@@ -564,13 +629,7 @@ def _troop_kind_cn(kind_id):
 
 
 def _lookup_cn(token):
-    token = str(token or '')
-    if not token or token == 'None':
-        return ''
-    if token in _NAMES:
-        return _NAMES[token]
-    camel = token[:1].upper() + token[1:]
-    return _NAMES.get(camel) or ''
+    return _name_from_key(token)
 
 
 def _label_cn(label):
@@ -605,15 +664,23 @@ def _prefect_cn(data, pid):
 
 
 def _person_cn(pid, bi):
-    """原版武将用游戏中文名表；自建武将的汉字直接写在存档里。"""
-    node = (bi or {}).get('fullName') or {}
-    full = str(node.get('key') or '') if isinstance(node, dict) else ''
-    if full and not full.startswith('FullName_'):
-        return full
-    key = full[9:] if full.startswith('FullName_') else ''
-    if not key and pid:
-        key = pid[:1].upper() + pid[1:]
-    return _NAMES.get(key) or ''
+    """原版武将用 names_zh；自建武将的汉字在 fullName/surname/name 的 key 里。"""
+    bi = bi or {}
+    hit = _name_node_text(bi.get('fullName'))
+    if hit:
+        return hit
+    sn = _name_node_text(bi.get('surname'))
+    nm = _name_node_text(bi.get('name'))
+    if sn or nm:
+        combo = sn + nm
+        if combo and any(ord(c) > 127 for c in combo):
+            return combo
+        merged = _name_from_key(combo) or _name_from_key(nm) or _name_from_key(sn)
+        if merged:
+            return merged
+        if combo:
+            return combo
+    return _name_from_key(pid) or ''
 
 
 def _open_save(name):
@@ -1164,8 +1231,109 @@ def api_troop_kinds_get():
     return {'kinds': _TROOP_KINDS}
 
 
-def api_team_presets_get():
-    return {'presets': M.seed_team_presets_if_empty()}
+_PARALLEL_GUID_LABELS = None
+
+
+def _parallel_guid_labels():
+    global _PARALLEL_GUID_LABELS
+    if _PARALLEL_GUID_LABELS is not None:
+        return _PARALLEL_GUID_LABELS
+    _PARALLEL_GUID_LABELS = {}
+    path = os.path.join(HERE, 'data', 'custom_roster_parallel.json')
+    try:
+        with open(path, encoding='utf-8') as f:
+            raw = json.load(f)
+        if isinstance(raw, list):
+            for r in raw:
+                if not isinstance(r, dict):
+                    continue
+                for gkey, nkey in (
+                    ('new_guid', 'new'),
+                    ('source_guid', 'old'),
+                ):
+                    g = str(r.get(gkey) or '').strip().upper()
+                    n = str(r.get(nkey) or '').strip()
+                    if g and n:
+                        _PARALLEL_GUID_LABELS[g] = n
+    except Exception:
+        pass
+    return _PARALLEL_GUID_LABELS
+
+
+def _build_guid_label_map(data=None, fid=None):
+    m = dict(_parallel_guid_labels())
+    if data is None:
+        return m
+    if fid is None:
+        fid = M._player_fid(data)
+    if not fid:
+        return m
+    for pid, per in (data.get('personages') or {}).items():
+        inf = per.get('info') or {}
+        if str(inf.get('faction', '')).lower() != str(fid).lower():
+            continue
+        if inf.get('tag1') in ('Death', 'Dead'):
+            continue
+        cn = _person_cn(pid, per.get('baseInfo') or {})
+        if cn:
+            m[str(pid).upper()] = cn
+    return m
+
+
+def _label_general_token(token, labels):
+    token = str(token or '').strip()
+    if not token or token in ('None', 'none'):
+        return ''
+    hit = labels.get(token.upper())
+    if hit:
+        return hit
+    if len(token) >= 32 and all(c in '0123456789abcdefABCDEF' for c in token):
+        return token[:8] + '…'
+    return _name_from_key(token) or token
+
+
+def _enrich_team_presets(presets, save_name=None):
+    data = None
+    if save_name:
+        try:
+            _path, _sav, data = _open_save(save_name)
+        except Exception:
+            data = None
+    labels = _build_guid_label_map(data)
+    out = []
+    for p in presets:
+        q = dict(p)
+        gens = list(q.get('generals') or [])
+        while len(gens) < 3:
+            gens.append('None')
+        q['generals_cn'] = [_label_general_token(g, labels) for g in gens[:3]]
+        kind = str(q.get('troopKindId') or '')
+        cap = M.troop_kind_max_teams(kind)
+        q['troopKindMaxTeams'] = cap if cap < 999 else None
+        q['troopKindUnique'] = cap == 1
+        if cap == 1:
+            q['troopKindLimitHint'] = '唯一兵种：本势力最多 1 支'
+        elif cap < 999:
+            q['troopKindLimitHint'] = '本势力最多 %d 支（同兵种系共享名额）' % cap
+        q['troopKindSpecial'] = M.is_special_troop_kind(kind)
+        pf = M._player_fid(data) if data else None
+        st = M.troop_staffing_for_preset(p, data, pf)
+        q['troopStaffing'] = st if st > 0 else None
+        if int(p.get('staffing') or 0) > 0:
+            q['troopStaffingHint'] = '预设指定编制'
+        elif st > 0:
+            q['troopStaffingHint'] = '创建时单队编制（自动）'
+        else:
+            q['troopStaffingHint'] = '随档内同兵种模板（未收录上限表）'
+        out.append(q)
+    return out, labels
+
+
+def api_team_presets_get(body=None):
+    body = body or {}
+    presets, labels = _enrich_team_presets(
+        M.seed_team_presets_if_empty(), body.get('name'))
+    return {'presets': presets, 'guid_labels': labels}
 
 
 def api_team_presets_save(body):
@@ -1173,7 +1341,75 @@ def api_team_presets_save(body):
     if presets is None:
         raise ValueError('缺少 presets')
     saved = M.save_team_presets(presets)
-    return {'presets': saved, 'lines': ['已保存 %d 个三人编队预设' % len(saved)]}
+    enriched, labels = _enrich_team_presets(saved, body.get('name'))
+    return {
+        'presets': enriched,
+        'guid_labels': labels,
+        'lines': ['已保存 %d 个三人编队预设' % len(enriched)],
+    }
+
+
+def api_team_presets_repair(body):
+    body = body or {}
+    fixed = M.ensure_team_presets()
+    enriched, labels = _enrich_team_presets(fixed, body.get('name'))
+    return {
+        'presets': enriched,
+        'guid_labels': labels,
+        'lines': ['已整理编队预设：共 %d 条（去重并补全内置 id）' % len(enriched)],
+    }
+
+
+def api_team_presets_reset_builtin(body):
+    body = body or {}
+    save_data = None
+    if body.get('name'):
+        try:
+            _path, _sav, save_data = _open_save(body.get('name'))
+        except Exception:
+            save_data = None
+    fixed = M.reset_team_presets_builtin(save_data)
+    enriched, labels = _enrich_team_presets(fixed, body.get('name'))
+    lines = ['已恢复内置 %d 支编队预设' % len(enriched)]
+    lines.extend(M.team_preset_grouping_lines(fixed))
+    return {
+        'presets': enriched,
+        'guid_labels': labels,
+        'lines': lines,
+    }
+
+
+def api_team_presets_apply_grouping(body):
+    body = body or {}
+    fixed = M.apply_team_presets_grouping_save()
+    enriched, labels = _enrich_team_presets(fixed, body.get('name'))
+    lines = ['已按内置规则写入编组号（gameTeamId）']
+    lines.extend(M.team_preset_grouping_lines(fixed))
+    return {
+        'presets': enriched,
+        'guid_labels': labels,
+        'lines': lines,
+    }
+
+
+def _resolve_general_cn(data, token):
+    token = str(token or '')
+    if not token or token == 'None':
+        return '—'
+    ps = data.get('personages') or {}
+    per = ps.get(token)
+    real = token
+    if per is None:
+        for k, v in ps.items():
+            if str(k).lower() == token.lower():
+                per = v
+                real = k
+                break
+    if per:
+        cn = _person_cn(real, per.get('baseInfo') or {})
+        if cn:
+            return cn
+    return _lookup_cn(token) or token
 
 
 def api_teams_list(body):
@@ -1184,6 +1420,13 @@ def api_teams_list(body):
         cn = _troop_kind_cn(t.get('troopKindId'))
         if cn:
             t['troopKindCn'] = cn
+        gens = t.get('generals') or []
+        cn_list = [_resolve_general_cn(data, g) for g in gens]
+        if cn_list:
+            t['generals_cn'] = cn_list
+            if cn_list[0] not in ('—', 'None'):
+                t['name'] = cn_list[0]
+            t['label'] = ' / '.join(cn_list)
     return {'teams': teams, 'name': os.path.basename(path)}
 
 
@@ -1231,7 +1474,7 @@ def api_teams_deploy(body):
         lines.append('一致性自检通过')
     if M.game_running() and n:
         lines.append('游戏正在运行：请回主菜单重新读档后生效。')
-    return {'lines': lines, 'team_id': tid, 'troops': n, 'problems': problems}
+    return {'lines': lines, 'team_id': gt, 'troops': n, 'problems': problems}
 
 
 def api_transfer(body):
@@ -1686,8 +1929,11 @@ ROUTES = {
     '/api/transfer': ('POST', api_transfer),
     '/api/cities/assign-prefects': ('POST', api_assign_prefects),
     '/api/troop-kinds': ('GET', lambda b: api_troop_kinds_get()),
-    '/api/team-presets': ('GET', lambda b: api_team_presets_get()),
+    '/api/team-presets': ('GET', lambda b: api_team_presets_get(b)),
     '/api/team-presets/save': ('POST', api_team_presets_save),
+    '/api/team-presets/repair': ('POST', lambda b: api_team_presets_repair(b)),
+    '/api/team-presets/reset-builtin': ('POST', lambda b: api_team_presets_reset_builtin(b)),
+    '/api/team-presets/apply-grouping': ('POST', lambda b: api_team_presets_apply_grouping(b)),
     '/api/teams': ('GET', lambda b: api_teams_list(b)),
     '/api/teams/deploy': ('POST', api_teams_deploy),
     '/api/health': ('GET', lambda b: api_health(b.get('name'))),

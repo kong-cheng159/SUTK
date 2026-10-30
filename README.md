@@ -60,7 +60,7 @@ SUTK修改器_便携版/
 │   └── tools/               # repak、兵种表、自建武将脚本
 └── desktop-app/
     ├── src-tauri/           # Tauri 壳
-    ├── 打包.ps1
+    ├── build.ps1
     └── dist/SUTK修改器/     # 打包输出
 ```
 

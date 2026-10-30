@@ -14,6 +14,8 @@ export const store = reactive({
   customGenerals: [],
   customGeneralsMeta: {},
   cities: [],
+  /** 当前存档玩家势力 id（来自 GET /api/cities） */
+  playerFid: '',
   cityProblems: [],
   cityFactions: [],
   officials: [],
@@ -51,6 +53,8 @@ export const store = reactive({
   savesDir: '',
   externPath: '',
   teamPresets: [],
+  /** GUID/模板 id → 中文名（编队预设、parallel 映射、当前存档） */
+  guidLabels: {},
   teamPresetId: '',
   /** 创建编队页勾选的预设 id */
   selectedTeamPresetIds: [],
@@ -116,8 +120,12 @@ export function applyStatusCfg() {
 /** 编队预设以 GET /api/team-presets 为准（会补全内置十支） */
 export async function loadTeamPresets() {
   try {
-    const data = await api('/api/team-presets')
+    const url = store.current
+      ? '/api/team-presets?name=' + encodeURIComponent(store.current)
+      : '/api/team-presets'
+    const data = await api(url)
     store.teamPresets = data.presets || []
+    store.guidLabels = data.guid_labels || {}
     if (!store.teamPresetId && store.teamPresets.length) {
       store.teamPresetId = store.teamPresets[0].id
     }
@@ -254,11 +262,18 @@ export async function loadCustomGenerals() {
 }
 
 export async function loadCities() {
-  if (!store.current) return
+  if (!store.current) {
+    store.cities = []
+    store.playerFid = ''
+    store.cityProblems = []
+    store.cityFactions = []
+    return
+  }
   const data = await api('/api/cities?name=' + encodeURIComponent(store.current))
-  store.cities = data.cities
+  store.cities = data.cities || []
+  store.playerFid = data.player ? String(data.player) : ''
   store.cityProblems = data.problems || []
-  store.cityFactions = data.factions
+  store.cityFactions = data.factions || []
   if (!store.cityTarget && data.factions.length) store.cityTarget = data.factions[0].id
 }
 

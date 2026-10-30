@@ -11,7 +11,7 @@ export function resetPaginationPage(pagination) {
   pagination.page = 1
 }
 
-export const PAGE_SIZE_OPTIONS = [20, 30, 50, 100, 200]
+export const PAGE_SIZE_OPTIONS = [10, 20, 30, 50, 100, 200]
 
 /** 前端分页切片 */
 export function usePagedRows(sourceRef, pagination) {

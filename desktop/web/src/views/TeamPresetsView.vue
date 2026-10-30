@@ -1,14 +1,31 @@
 <script setup>
-import { h, ref } from 'vue'
-import { NButton, NInput, useMessage } from 'naive-ui'
+import { computed, h, ref, watch } from 'vue'
+import { NButton, NInput, NText, NPagination, useMessage } from 'naive-ui'
 import { store } from '../store'
 import { api } from '../api'
 import { useGeneralLabel } from '../useGeneralLabel'
 import { useTroopKindLabel } from '../useTroopKindLabel'
+import { useTableMaxHeight } from '../useTableMaxHeight'
+import {
+  useTablePagination,
+  resetPaginationPage,
+  usePagedRows,
+  PAGE_SIZE_OPTIONS,
+} from '../useTablePagination'
 
 const message = useMessage()
-const { generalLabel } = useGeneralLabel()
+const { generalLabelAt } = useGeneralLabel()
 const { troopKindLabel, troopKindTitle } = useTroopKindLabel()
+
+const tableBodyRef = ref(null)
+const tableMaxHeight = useTableMaxHeight(tableBodyRef, 200)
+const pagination = useTablePagination(20)
+const paged = usePagedRows(computed(() => store.teamPresets), pagination)
+
+watch(
+  () => store.teamPresets.length,
+  () => resetPaginationPage(pagination),
+)
 
 const showEditModal = ref(false)
 const editingPreset = ref(null)
@@ -60,14 +77,46 @@ function addPreset() {
   })
 }
 
-function removePreset(index) {
-  store.teamPresets.splice(index, 1)
+function removePreset(row) {
+  const index = store.teamPresets.findIndex((p) => p.id === row.id)
+  if (index >= 0) store.teamPresets.splice(index, 1)
 }
 
 async function savePresets() {
-  const data = await api('/api/team-presets/save', { presets: store.teamPresets })
+  const data = await api('/api/team-presets/save', {
+    presets: store.teamPresets,
+    name: store.current || undefined,
+  })
   store.teamPresets = data.presets || []
+  store.guidLabels = data.guid_labels || {}
   message.success('三人编队预设已保存')
+}
+
+async function repairPresets() {
+  const data = await api('/api/team-presets/repair', { name: store.current || undefined })
+  store.teamPresets = data.presets || []
+  store.guidLabels = data.guid_labels || {}
+  store.selectedTeamPresetIds = store.selectedTeamPresetIds.filter((id) =>
+    store.teamPresets.some((p) => String(p.id) === String(id)),
+  )
+  message.success(data.lines?.[0] || `已整理为 ${store.teamPresets.length} 条`)
+}
+
+async function resetBuiltinPresets() {
+  const data = await api('/api/team-presets/reset-builtin', { name: store.current || undefined })
+  store.teamPresets = data.presets || []
+  store.guidLabels = data.guid_labels || {}
+  store.selectedTeamPresetIds = store.teamPresets.map((p) => String(p.id))
+  const tip = (data.lines || []).join('\n')
+  message.success(tip || '已恢复内置预设', { duration: tip.includes('\n') ? 8000 : 3000 })
+}
+
+async function applyGroupingPresets() {
+  const data = await api('/api/team-presets/apply-grouping', { name: store.current || undefined })
+  store.teamPresets = data.presets || []
+  store.guidLabels = data.guid_labels || {}
+  const tip = (data.lines || []).join('\n')
+  message.success(tip || '已应用编组规则', { duration: 8000 })
 }
 
 async function importFromSave() {
@@ -92,13 +141,13 @@ async function importFromSave() {
   message.success(`已导入 ${troops.length} 支三人编队（记得保存预设）`)
 }
 
-const presetScrollX = 96 + 88 + 88 + 88 + 96 + 72 + 64 + 88
+const presetScrollX = 108 + 96 * 3 + 100 + 72 + 64 + 88
 
 const presetColumns = [
   {
     title: '名称',
     key: 'name',
-    width: 96,
+    width: 108,
     ellipsis: { tooltip: true },
     render: (row) =>
       h(NInput, {
@@ -112,42 +161,61 @@ const presetColumns = [
   {
     title: '主将',
     key: 'g0',
-    width: 88,
+    width: 96,
     ellipsis: { tooltip: true },
-    render: (row) => generalLabel(row.generals?.[0]),
+    render: (row) => h('span', { class: 'cell-cn' }, generalLabelAt(row, 0)),
   },
   {
     title: '副将1',
     key: 'g1',
-    width: 88,
+    width: 96,
     ellipsis: { tooltip: true },
-    render: (row) => generalLabel(row.generals?.[1]),
+    render: (row) => h('span', { class: 'cell-cn' }, generalLabelAt(row, 1)),
   },
   {
     title: '副将2',
     key: 'g2',
-    width: 88,
+    width: 96,
     ellipsis: { tooltip: true },
-    render: (row) => generalLabel(row.generals?.[2]),
+    render: (row) => h('span', { class: 'cell-cn' }, generalLabelAt(row, 2)),
   },
   {
     title: '兵种',
     key: 'troopKindId',
-    width: 96,
+    width: 100,
     ellipsis: { tooltip: true },
-    render: (row) =>
-      h('span', { title: troopKindTitle(row.troopKindId) }, troopKindLabel(row.troopKindId)),
+    render: (row) => {
+      const label = troopKindLabel(row.troopKindId)
+      if (row.troopKindUnique) {
+        return h(
+          'span',
+          { class: 'cell-kind-unique', title: row.troopKindLimitHint || '唯一兵种' },
+          `${label} ·唯一`,
+        )
+      }
+      const maxTeams = row.troopKindMaxTeams
+      if (maxTeams != null && maxTeams > 1 && maxTeams < 999) {
+        return h(
+          'span',
+          { class: 'cell-kind-unique', title: row.troopKindLimitHint || `最多 ${maxTeams} 支` },
+          `${label} ·限${maxTeams}`,
+        )
+      }
+      return h('span', { title: troopKindTitle(row.troopKindId) }, label)
+    },
   },
   {
-    title: '游戏编组',
+    title: '编组',
     key: 'gameTeamId',
     width: 72,
+    align: 'center',
     render: (row) => (row.gameTeamId ? row.gameTeamId : '—'),
   },
   {
     title: '兵力',
     key: 'staffing',
     width: 64,
+    align: 'center',
     render: (row) => (row.staffing ? row.staffing : '自动'),
   },
   {
@@ -155,12 +223,11 @@ const presetColumns = [
     key: 'actions',
     width: 88,
     fixed: 'right',
-    render: (row) => {
-      const index = store.teamPresets.indexOf(row)
-      return h('div', { class: 'preset-actions' }, [
+    render: (row) =>
+      h('div', { class: 'preset-actions' }, [
         h(
           NButton,
-          { size: 'tiny', quaternary: true, onClick: () => openEditPreset(row) },
+          { size: 'tiny', quaternary: true, type: 'primary', onClick: () => openEditPreset(row) },
           { default: () => '编辑' },
         ),
         h(
@@ -169,43 +236,67 @@ const presetColumns = [
             size: 'tiny',
             quaternary: true,
             type: 'error',
-            onClick: () => removePreset(index),
+            onClick: () => removePreset(row),
           },
           { default: () => '删' },
         ),
-      ])
-    },
+      ]),
   },
 ]
 </script>
 
 <template>
   <div class="page-fill team-presets-page">
-    <p class="hint">
-      维护<strong>三人编队模板</strong>（主将 + 副将1 + 副将2）。内置十支：编组1 霍骠垒、卫骧城、江骏岳；编组2 韩澜靖、秦霆烈、段烬壁、沈岳川、赵朔川、周晟垒、卫霄城。
-      保存后请到侧栏<strong>创建编队</strong>勾选并写入存档。
+    <p class="hint team-presets-hint">
+      三人编队模板（主将 + 2 副将）。内置二十支均为<strong>特殊兵种</strong>优先（前 10 原版 30 将，后 10 支
+      <code>batch2_</code> 为另一批特殊兵）；完整列表见 <code>desktop/data/special_troop_kinds.json</code>。
+      保存后在「创建编队」勾选写入存档。编组规则：<strong>1/2 组</strong>各 3 枪 + 2 盾 + 2 弓，<strong>3 组</strong>为全部骑兵（见
+      <code>desktop/data/team_preset_group_rules.json</code>）。
     </p>
 
     <section class="panel-surface team-presets-panel">
+      <header class="team-presets-head">
+        <n-text depth="3">共 {{ store.teamPresets.length }} 条</n-text>
+        <div class="team-presets-actions">
+          <n-button size="small" quaternary @click="addPreset">新建</n-button>
+          <n-button size="small" quaternary @click="importFromSave">从存档导入</n-button>
+          <n-button size="small" secondary @click="repairPresets">去重</n-button>
+          <n-button size="small" secondary @click="resetBuiltinPresets">恢复内置</n-button>
+          <n-button size="small" secondary @click="applyGroupingPresets">按规则编组</n-button>
+          <n-button type="primary" size="small" @click="savePresets">保存</n-button>
+        </div>
+      </header>
+
       <p v-if="store.current && !store.generals.length" class="teams-table-note">
-        已选存档但未加载武将名录；主将列显示 GUID。打开「武将」页后可显示中文名。
+        已选存档但未加载武将名录；请先打开「武将」页以显示中文名。
       </p>
-      <n-data-table
-        v-if="store.teamPresets.length"
-        striped
-        size="small"
-        class="team-presets-table"
-        :scroll-x="presetScrollX"
-        :columns="presetColumns"
-        :data="store.teamPresets"
-        :row-key="(r) => String(r.id)"
-      />
-      <n-empty v-else size="small" description="暂无预设" />
-      <n-space wrap class="team-presets-toolbar">
-        <n-button size="small" @click="addPreset">新建预设</n-button>
-        <n-button size="small" @click="importFromSave">从存档导入每支部队</n-button>
-        <n-button type="primary" size="small" @click="savePresets">保存预设</n-button>
-      </n-space>
+
+      <div v-if="store.teamPresets.length" class="table-stack team-presets-table-wrap">
+        <div ref="tableBodyRef" class="table-stack-body">
+          <n-data-table
+            striped
+            size="small"
+            :bordered="false"
+            :scroll-x="presetScrollX"
+            :max-height="tableMaxHeight"
+            :columns="presetColumns"
+            :data="paged"
+            :row-key="(r) => String(r.id)"
+          />
+        </div>
+        <div class="table-stack-foot">
+          <n-text depth="3">共 {{ store.teamPresets.length }} 条</n-text>
+          <n-pagination
+            v-model:page="pagination.page"
+            v-model:page-size="pagination.pageSize"
+            :item-count="store.teamPresets.length"
+            :page-sizes="PAGE_SIZE_OPTIONS"
+            show-size-picker
+            size="small"
+          />
+        </div>
+      </div>
+      <n-empty v-else size="small" description="暂无预设，可点「恢复内置」" />
     </section>
 
     <n-modal
@@ -245,30 +336,65 @@ const presetColumns = [
 </template>
 
 <style scoped>
+.team-presets-page {
+  gap: 10px;
+}
+
+.team-presets-hint {
+  margin-bottom: 0;
+}
+
+.team-presets-hint code {
+  font-size: 12px;
+}
+
 .team-presets-panel {
-  padding: 12px;
+  padding: 10px 12px 12px;
   flex: 1 1 auto;
   display: flex;
   flex-direction: column;
   min-height: 0;
+  gap: 8px;
+}
+
+.team-presets-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 12px;
+}
+
+.team-presets-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  justify-content: flex-end;
 }
 
 .teams-table-note {
-  margin: 0 0 8px;
+  margin: 0;
   font-size: 12px;
   color: var(--n-text-color-3);
 }
 
-.team-presets-toolbar {
-  margin-top: 10px;
+.team-presets-table-wrap {
+  flex: 1 1 auto;
+  min-height: 0;
 }
 
-.team-presets-table :deep(.preset-actions) {
+.team-presets-table-wrap :deep(.cell-cn) {
+  font-size: 13px;
+}
+
+.team-presets-table-wrap :deep(.preset-actions) {
   display: flex;
   gap: 2px;
+  justify-content: flex-end;
 }
 
-.team-presets-table {
-  flex: 1 1 auto;
+.team-presets-table-wrap :deep(.cell-kind-unique) {
+  color: var(--app-accent-deep, #b45309);
+  font-weight: 600;
 }
 </style>

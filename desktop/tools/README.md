@@ -8,6 +8,7 @@
 | `repak.exe` | 从 UE pak 读取单个文件（需 Oodle） |
 | `oo2core_9_win64.dll` | Oodle 解压库，放在本目录并设 `OO2PATH` 指向此处 |
 | `build_troop_kinds.py` | 从 `Game.locres` 或 pak 生成 `../troop_kinds_zh.json` |
+| `build_troop_kind_team_limits.py` | 从 `DT_TroopKind` 生成 `../data/troop_kind_team_limits.json` |
 | `Game.zh-CN.locres` | 可选缓存（体积大，建议本地保留、勿提交 git） |
 | `u4pak.py` | 经典 pak 脚本，**不适用于**本游戏 V11+Oodle |
 

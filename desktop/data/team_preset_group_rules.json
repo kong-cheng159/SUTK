@@ -1,0 +1,25 @@
+{
+  "description": "内置二十支三人编队的游戏编组号（gameTeamId）分配规则。按当前预设兵种所属兵类归类，同列表顺序依次填入各组名额。",
+  "groups": [
+    {
+      "gameTeamId": 1,
+      "label": "编组 1",
+      "composition": { "枪兵": 3, "盾兵": 2, "弓兵": 2 },
+      "teams": 7
+    },
+    {
+      "gameTeamId": 2,
+      "label": "编组 2",
+      "composition": { "枪兵": 3, "盾兵": 2, "弓兵": 2 },
+      "teams": 7
+    },
+    {
+      "gameTeamId": 3,
+      "label": "编组 3",
+      "composition": { "骑兵": "全部剩余骑兵" },
+      "teams": 6
+    }
+  ],
+  "total_teams": 20,
+  "note": "恢复内置或点「按规则编组」会重写各预设的 gameTeamId；创建编队时若未指定统一编组，则按预设内 gameTeamId 写入 teamInfos。"
+}

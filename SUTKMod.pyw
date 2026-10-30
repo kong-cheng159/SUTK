@@ -316,6 +316,33 @@ def troop_cap(kind, cur):
     return max(cur, base)
 
 
+def troop_staffing_for_preset(preset, d=None, fid=None):
+    """创建编队时单队编制人数（healthyNum/staffing）。预设 staffing=0 时用兵种表或档内同兵种模板。"""
+    if not isinstance(preset, dict):
+        return 0
+    try:
+        st = int(preset.get('staffing') or 0)
+    except Exception:
+        st = 0
+    if st > 0:
+        return st
+    kind = str(preset.get('troopKindId') or '')
+    if not kind:
+        return 0
+    cap = troop_cap(kind, 0)
+    if cap > 0:
+        return cap
+    if d is not None and fid:
+        try:
+            tpl = _pick_troop_template(d, fid, kind)
+            ts = int(tpl.get('staffing') or 0)
+            if ts > 0:
+                return ts
+        except Exception:
+            pass
+    return 0
+
+
 def _target_factions(data, scope):
     """scope: player(默认) | all | ids:1,2,3"""
     facs = data.get('factions') or {}
@@ -900,8 +927,21 @@ def uninstall(quiet=False):
 CONFIG_PATH = os.path.join(APP_DIR, 'config.json')
 
 # 内置三人编队预设（主将名 = 预设名；来自典型自建将部队配置）
-# 内置十支三人编队（来自玩家 AutoSave 编组 1/2 主将部队）
-DEFAULT_TEAM_PRESETS = [
+# 第一批十支（编组字 骠骧骏…）；第二批十支由 parallel 映射表生成（编组字 铁锋虹…）
+# 主将 profession 五维：弓/枪/骑/盾/器械（与游戏 UI 兵种适性一致）
+_PROFESSION_CLASS = ('弓兵', '枪兵', '骑兵', '盾兵', '器械')
+# 同分时优先：骑 > 枪 > 盾 > 弓 > 器械
+_PROFESSION_TIE_RANK = (2, 1, 3, 0, 4)
+# 各适性下优先选用的特殊兵种（高阶变体靠前；创建上限见 troop_kind_team_limits.json）
+_TROOP_KINDS_BY_PROFESSION = {
+    0: ['42_3', '41_3', '41_2', '39_3', '52_3', '51_3', '30_3'],
+    1: ['45_3', '43_3', '43_2', '36_3', '37_3', '66_3', '35_3', '34_3', '54_3', '21_3', '22_3'],
+    2: ['49_2', '38_2', '59_2', '32_3', '47_3', '48_3', '40_3', '50_3', '31_3', '53_3', '38_3', '49_3'],
+    3: ['33_2', '33_3', '55_2', '55_3'],
+    4: ['61', '62', '60', '44'],
+}
+
+DEFAULT_TEAM_PRESETS_CORE = [
     {
         'id': 'huo_piao_lei',
         'name': '霍骠垒',
@@ -989,7 +1029,7 @@ DEFAULT_TEAM_PRESETS = [
     {
         'id': 'zhao_shuo_chuan',
         'name': '赵朔川',
-        'troopKindId': '41_2',
+        'troopKindId': '39_3',
         'generals': [
             'CA4DF5114B33F46B7397DA980518C509',
             'F7A0B9D94259190B605EDC82682D88A4',
@@ -1024,13 +1064,284 @@ DEFAULT_TEAM_PRESETS = [
     },
 ]
 
+
+def _parallel_builtin_presets():
+    """第二批 30 自建武将 → 10 支预设（兵种由主将适性在 _apply_profession_adapted_kinds 中分配）。"""
+    paths = [
+        os.path.join(os.path.dirname(SELF), 'desktop', 'data', 'custom_roster_parallel.json'),
+        os.path.join(APP_DIR, 'data', 'custom_roster_parallel.json'),
+    ]
+    rows = None
+    for path in paths:
+        if not os.path.isfile(path):
+            continue
+        try:
+            with open(path, encoding='utf-8') as f:
+                raw = json.load(f)
+            if isinstance(raw, list):
+                rows = [x for x in raw if isinstance(x, dict)]
+            break
+        except Exception:
+            pass
+    if not rows:
+        return []
+    teams = []
+    seen = set()
+    for r in rows:
+        mk = str(r.get('team_char_b') or '').strip()
+        if not mk or mk in seen:
+            continue
+        seen.add(mk)
+        teams.append(mk)
+    out = []
+    for i, mk in enumerate(teams):
+        if i >= len(DEFAULT_TEAM_PRESETS_CORE):
+            break
+        members = [r for r in rows if str(r.get('team_char_b') or '') == mk]
+        if len(members) < 3:
+            continue
+        tpl = DEFAULT_TEAM_PRESETS_CORE[i]
+        lead = str(members[0].get('new') or tpl.get('name') or mk)
+        guids = [str(m.get('new_guid') or '').strip() for m in members[:3]]
+        if not all(guids):
+            continue
+        out.append({
+            'id': 'batch2_%02d_%s' % (i + 1, mk),
+            'name': lead,
+            'troopKindId': tpl.get('troopKindId') or '55_2',
+            'generals': guids,
+            'staffing': 0,
+            'gameTeamId': int(tpl.get('gameTeamId') or 0),
+        })
+    return out
+
+
+_EXTERN_PROF_MAP = None
+
+
+def _extern_profession_map():
+    global _EXTERN_PROF_MAP
+    if _EXTERN_PROF_MAP is not None:
+        return _EXTERN_PROF_MAP
+    mp = {}
+    try:
+        d, _ = read_extern()
+        if d:
+            for bucket in ('newInfos', 'modifyInfos'):
+                for gid, v in (d.get(bucket) or {}).items():
+                    if not isinstance(v, dict):
+                        continue
+                    prof = v.get('profession')
+                    if isinstance(prof, list) and len(prof) >= 5:
+                        mp[str(gid).upper()] = prof
+    except Exception:
+        pass
+    _EXTERN_PROF_MAP = mp
+    return mp
+
+
+def _profession_for_general_token(token, save_data=None):
+    if not token or str(token) == 'None':
+        return None
+    key = str(token).upper()
+    prof = _extern_profession_map().get(key)
+    if prof:
+        return list(prof)
+    if save_data is not None:
+        try:
+            persons, plow = _person_index(save_data)
+            real = _find_person(persons, plow, token)
+            if real:
+                bi = (persons[real].get('baseInfo') or {})
+                p = bi.get('profession')
+                if isinstance(p, list) and len(p) >= 5:
+                    return list(p)
+        except Exception:
+            pass
+    return None
+
+
+def _best_profession_index(prof):
+    if not prof or len(prof) < 5:
+        return 2
+    try:
+        vals = [int(prof[i] or 0) for i in range(5)]
+    except Exception:
+        return 2
+    if max(vals) <= 0:
+        return 2
+    return max(range(5), key=lambda i: (vals[i], -_PROFESSION_TIE_RANK[i]))
+
+
+def _pick_troop_kind_for_profession_index(pidx, pending_base_counts):
+    try:
+        pidx = int(pidx)
+    except Exception:
+        pidx = 2
+    if pidx < 0 or pidx > 4:
+        pidx = 2
+    cands = _TROOP_KINDS_BY_PROFESSION.get(pidx) or _TROOP_KINDS_BY_PROFESSION[2]
+    for kind in cands:
+        base = _troop_kind_base(kind)
+        if not base:
+            continue
+        cap = _troop_kind_max_teams(kind)
+        used = int(pending_base_counts.get(base) or 0)
+        if cap >= _TROOP_KIND_DEFAULT_MAX or used < cap:
+            pending_base_counts[base] = used + 1
+            return str(kind)
+    kind = str(cands[0])
+    base = _troop_kind_base(kind)
+    if base:
+        pending_base_counts[base] = int(pending_base_counts.get(base) or 0) + 1
+    return kind
+
+
+def _apply_profession_adapted_kinds(presets, save_data=None):
+    """按各预设主将的最高兵种适性，分配特殊兵种（二十支共享创建上限计数）。"""
+    pending = {}
+    out = []
+    for p in presets:
+        ent = dict(p)
+        gens = ent.get('generals') or []
+        prof = _profession_for_general_token(gens[0] if gens else None, save_data)
+        if prof:
+            pidx = _best_profession_index(prof)
+            ent['troopKindId'] = _pick_troop_kind_for_profession_index(pidx, pending)
+        else:
+            base = _troop_kind_base(ent.get('troopKindId'))
+            if base:
+                pending[base] = int(pending.get(base) or 0) + 1
+        out.append(ent)
+    return out
+
+
+_KIND_TO_TROOP_CLASS = None
+
+# 编组 1/2：各 3 枪 + 2 盾 + 2 弓；编组 3：全部骑兵（见 desktop/data/team_preset_group_rules.json）
+_BUILTIN_TEAM_GROUP_PLAN = (
+    (1, '枪兵', 3),
+    (1, '盾兵', 2),
+    (1, '弓兵', 2),
+    (2, '枪兵', 3),
+    (2, '盾兵', 2),
+    (2, '弓兵', 2),
+)
+
+
+def _kind_to_troop_class_map():
+    global _KIND_TO_TROOP_CLASS
+    if _KIND_TO_TROOP_CLASS is not None:
+        return _KIND_TO_TROOP_CLASS
+    mp = {}
+    for pidx, kinds in _TROOP_KINDS_BY_PROFESSION.items():
+        cls = _PROFESSION_CLASS[pidx]
+        for k in kinds:
+            mp[str(k)] = cls
+            mp[str(k).split('_')[0]] = cls
+    _KIND_TO_TROOP_CLASS = mp
+    return mp
+
+
+def troop_class_for_kind(kind_id):
+    k = str(kind_id or '').strip()
+    if not k:
+        return ''
+    mp = _kind_to_troop_class_map()
+    if k in mp:
+        return mp[k]
+    return mp.get(_troop_kind_base(k), '')
+
+
+def _apply_builtin_team_grouping(presets):
+    """按兵类配额写入 gameTeamId：1/2 为步射混合组，3 为骑兵团。"""
+    by_class = {c: [] for c in _PROFESSION_CLASS}
+    for i, p in enumerate(presets or []):
+        cls = troop_class_for_kind(p.get('troopKindId'))
+        if cls not in by_class:
+            cls = ''
+        by_class.setdefault(cls, []).append(i)
+    assign = {}
+    used = {c: 0 for c in _PROFESSION_CLASS}
+    for gid, cls, n in _BUILTIN_TEAM_GROUP_PLAN:
+        pool = by_class.get(cls) or []
+        start = used[cls]
+        for j in range(start, min(start + n, len(pool))):
+            assign[pool[j]] = gid
+        used[cls] = start + n
+    for j in range(used.get('骑兵', 0), len(by_class.get('骑兵') or [])):
+        assign[by_class['骑兵'][j]] = 3
+    out = []
+    for i, p in enumerate(presets or []):
+        ent = dict(p)
+        ent['gameTeamId'] = int(assign.get(i) or ent.get('gameTeamId') or 0)
+        out.append(ent)
+    return out
+
+
+def team_preset_grouping_lines(presets):
+    """返回编组汇总文案（按 gameTeamId）。"""
+    buckets = {1: [], 2: [], 3: []}
+    for p in presets or []:
+        gid = int(p.get('gameTeamId') or 0)
+        if gid in buckets:
+            cls = troop_class_for_kind(p.get('troopKindId'))
+            buckets[gid].append('%s(%s)' % (p.get('name') or p.get('id'), cls or '?'))
+    lines = []
+    for gid in (1, 2, 3):
+        names = buckets[gid]
+        if not names:
+            continue
+        cnt = {}
+        for p in presets or []:
+            if int(p.get('gameTeamId') or 0) != gid:
+                continue
+            c = troop_class_for_kind(p.get('troopKindId')) or '?'
+            cnt[c] = cnt.get(c, 0) + 1
+        parts = ['%s×%d' % (k, cnt[k]) for k in _PROFESSION_CLASS if cnt.get(k)]
+        lines.append('编组 %d：%d 支（%s）' % (gid, len(names), ' '.join(parts)))
+    return lines
+
+
+def apply_team_presets_grouping(presets=None):
+    src = presets if presets is not None else get_team_presets()
+    return dedupe_team_presets(_apply_builtin_team_grouping(src))
+
+
+def apply_team_presets_grouping_save():
+    cfg = load_cfg()
+    grouped = apply_team_presets_grouping(cfg.get('team_presets') or None)
+    cfg['team_presets'] = grouped
+    save_cfg(cfg)
+    return grouped
+
+
+def _build_default_team_presets(save_data=None):
+    raw = copy.deepcopy(DEFAULT_TEAM_PRESETS_CORE) + _parallel_builtin_presets()
+    adapted = _apply_profession_adapted_kinds(raw, save_data)
+    return _apply_builtin_team_grouping(adapted)
+
+
+_BUILTIN_TEAM_PRESETS_CACHE = None
+
+
+def default_team_presets(save_data=None):
+    """内置二十支；兵种按主将 profession 最高适性分配（可读 ExternPersonage / 存档）。"""
+    global _BUILTIN_TEAM_PRESETS_CACHE
+    if save_data is not None:
+        return _build_default_team_presets(save_data)
+    if _BUILTIN_TEAM_PRESETS_CACHE is None:
+        _BUILTIN_TEAM_PRESETS_CACHE = _build_default_team_presets()
+    return _BUILTIN_TEAM_PRESETS_CACHE
+
+
 DEFAULT_CFG = {'scope': 'player', 'sections': 'all', 'hotkey': True,
                'ui': 'bat', 'target': 'all',
                'auto_apply': False,     # 游戏启动时自动改档（默认关）
                'snapshot_game': False,  # 游戏自己存档时本地留底（默认关）
                'saves_dir': '',         # 空=系统默认 ProjectA\Saved\Saves
                'extern_path': '',      # 空=存档目录上一级的 ExternPersonage.sav
-               'team_presets': []}     # 空则使用 DEFAULT_TEAM_PRESETS
+               'team_presets': []}     # 空则使用 default_team_presets()
 
 
 def default_saves_dir():
@@ -2925,6 +3236,98 @@ def _person_id_camel(pid_key):
     return s[0].upper() + s[1:]
 
 
+_NAMES_ZH_CACHE = None
+
+
+def _names_zh_table():
+    global _NAMES_ZH_CACHE
+    if _NAMES_ZH_CACHE is not None:
+        return _NAMES_ZH_CACHE
+    _NAMES_ZH_CACHE = {}
+    root = os.path.dirname(SELF)
+    for rel in (
+        os.path.join('desktop', 'names_zh.json'),
+        'names_zh.json',
+        os.path.join('data', 'names_zh.json'),
+    ):
+        path = os.path.join(root, rel)
+        if not os.path.isfile(path):
+            continue
+        try:
+            with open(path, encoding='utf-8') as f:
+                raw = json.load(f)
+            if isinstance(raw, dict):
+                _NAMES_ZH_CACHE = {str(k): str(v) for k, v in raw.items() if v}
+            break
+        except Exception:
+            pass
+    return _NAMES_ZH_CACHE
+
+
+def _name_key_to_cn(key):
+    """存档键 / FullName 后缀 -> 中文（大小写不敏感，兼容 ZhuGeLiang vs zhugeLiang）。"""
+    key = str(key or '').strip()
+    if not key or key == 'None':
+        return ''
+    if any(ord(c) > 127 for c in key):
+        return key
+    table = _names_zh_table()
+    if not table:
+        return ''
+    if key in table:
+        return table[key]
+    low = key.lower()
+    for k, v in table.items():
+        if str(k).lower() == low:
+            return v
+    camel = _person_id_camel(key)
+    if camel in table:
+        return table[camel]
+    for k, v in table.items():
+        if str(k).lower() == camel.lower():
+            return v
+    return ''
+
+
+def _display_name_from_baseinfo(bi):
+    bi = bi or {}
+    fn = bi.get('fullName')
+    if isinstance(fn, dict):
+        k = str(fn.get('key') or '').strip()
+        if k.startswith('FullName_'):
+            k = k[9:]
+        if k:
+            if any(ord(c) > 127 for c in k):
+                return k
+            hit = _name_key_to_cn(k)
+            if hit:
+                return hit
+    sn = nm = ''
+    for field in ('surname', 'name'):
+        node = bi.get(field)
+        if isinstance(node, dict):
+            k = str(node.get('key') or '').strip()
+            if not k:
+                continue
+            if any(ord(c) > 127 for c in k):
+                if field == 'surname':
+                    sn = k
+                else:
+                    nm = k
+            else:
+                hit = _name_key_to_cn(k)
+                if hit:
+                    if field == 'surname':
+                        sn = hit
+                    else:
+                        nm = hit
+    if sn or nm:
+        combo = sn + nm
+        if combo:
+            return combo
+    return ''
+
+
 def _city_arch_name(city_key):
     """武将 info.architecture 常见写法（luoYang -> LuoYang）"""
     return _person_id_camel(city_key)
@@ -3500,6 +3903,37 @@ def _flat_preset_entry(pid, name, kind, generals, staffing=0):
     }
 
 
+def _preset_fingerprint(p):
+    gens = p.get('generals') or []
+    g = tuple(str(x or 'None').strip().upper() for x in gens[:3])
+    while len(g) < 3:
+        g = g + ('NONE',)
+    return (
+        str(p.get('name') or '').strip(),
+        str(p.get('troopKindId') or '').strip(),
+        g,
+    )
+
+
+def dedupe_team_presets(raw):
+    """按 id、再按「名称+兵种+三人 GUID」去重，保留先出现的条目。"""
+    normed = normalize_team_presets(raw)
+    out = []
+    seen_id = set()
+    seen_fp = set()
+    for p in normed:
+        pid = p.get('id')
+        if pid in seen_id:
+            continue
+        fp = _preset_fingerprint(p)
+        if fp[0] and fp in seen_fp:
+            continue
+        seen_id.add(pid)
+        seen_fp.add(fp)
+        out.append(p)
+    return out
+
+
 def normalize_team_presets(raw):
     """校验 config 中的 team_presets。
     一条预设 = 游戏意义的一支「编队」（三人部队），不是 teamInfos 编组。"""
@@ -3522,7 +3956,7 @@ def normalize_team_presets(raw):
                 seq += 1
                 pid = base_id if len(squads) == 1 else '%s_%d' % (base_id, j + 1)
                 if pid in seen:
-                    pid = 'preset_%d' % seq
+                    continue
                 seen.add(pid)
                 nm = base_name if len(squads) == 1 else '%s·%s' % (
                     base_name, sq.get('label') or ('队%d' % (j + 1)))
@@ -3543,7 +3977,7 @@ def normalize_team_presets(raw):
         seq += 1
         pid = base_id or ('preset_%d' % seq)
         if pid in seen:
-            pid = 'preset_%d' % seq
+            continue
         seen.add(pid)
         st = int(p['staffing']) if str(p.get('staffing') or '').isdigit() else 0
         ent = _flat_preset_entry(pid, base_name, kind, p.get('generals'), st)
@@ -3559,42 +3993,50 @@ def normalize_team_presets(raw):
 def get_team_presets(cfg=None):
     cfg = cfg if cfg is not None else load_cfg()
     raw = cfg.get('team_presets')
-    normed = normalize_team_presets(raw) if raw else []
+    normed = dedupe_team_presets(raw) if raw else []
     if not normed:
-        return normalize_team_presets(DEFAULT_TEAM_PRESETS)
+        return dedupe_team_presets(default_team_presets())
     return normed
 
 
 def ensure_team_presets():
-    """保证 config 含全部内置预设：空则写入；缺 id 则按 DEFAULT 顺序补全并落盘。"""
+    """保证 config 含全部内置预设：空则写入；缺 id 则补全；合并时去掉重复项并落盘。"""
     cfg = load_cfg()
-    current = normalize_team_presets(cfg.get('team_presets') or [])
+    raw = cfg.get('team_presets') or []
+    current = dedupe_team_presets(raw)
     if not current:
-        presets = normalize_team_presets(DEFAULT_TEAM_PRESETS)
+        presets = dedupe_team_presets(default_team_presets())
         cfg['team_presets'] = presets
         save_cfg(cfg)
         return presets
+    default_ids = {str(d.get('id')) for d in default_team_presets()}
     by_id = {p['id']: p for p in current}
     merged = []
-    seen = set()
-    changed = False
-    for d in DEFAULT_TEAM_PRESETS:
+    seen_fp = set()
+    changed = len(current) != len(normalize_team_presets(raw))
+    for d in default_team_presets():
         did = d['id']
-        if did in by_id:
-            merged.append(by_id[did])
-        else:
-            merged.append(dict(d))
+        ent = by_id.get(did) or dict(d)
+        if did not in by_id:
             changed = True
-        seen.add(did)
+        merged.append(ent)
+        seen_fp.add(_preset_fingerprint(ent))
+    # 旧 config 只有十支时，第二批 batch2_* 在上面已注入
     for p in current:
         pid = p.get('id')
-        if pid and pid not in seen:
-            merged.append(p)
-            seen.add(pid)
-    if changed or len(merged) != len(current):
-        cfg['team_presets'] = normalize_team_presets(merged)
+        if pid in default_ids:
+            continue
+        fp = _preset_fingerprint(p)
+        if fp[0] and fp in seen_fp:
+            changed = True
+            continue
+        merged.append(p)
+        seen_fp.add(fp)
+    merged = dedupe_team_presets(merged)
+    if changed or len(merged) != len(raw):
+        cfg['team_presets'] = merged
         save_cfg(cfg)
-    return get_team_presets(cfg)
+    return merged
 
 
 def seed_team_presets_if_empty():
@@ -3602,9 +4044,21 @@ def seed_team_presets_if_empty():
     return ensure_team_presets()
 
 
+def reset_team_presets_builtin(save_data=None):
+    """只保留全部内置预设（二十支），兵种按主将适性重算；可选传入存档以覆盖 Extern 适性。"""
+    global _BUILTIN_TEAM_PRESETS_CACHE
+    cfg = load_cfg()
+    presets = dedupe_team_presets(_build_default_team_presets(save_data))
+    cfg['team_presets'] = presets
+    save_cfg(cfg)
+    if save_data is None:
+        _BUILTIN_TEAM_PRESETS_CACHE = copy.deepcopy(presets)
+    return presets
+
+
 def save_team_presets(presets):
     cfg = load_cfg()
-    cfg['team_presets'] = normalize_team_presets(presets)
+    cfg['team_presets'] = dedupe_team_presets(presets)
     save_cfg(cfg)
     return cfg['team_presets']
 
@@ -3672,6 +4126,178 @@ def _resolve_person_for_troop(d, token, fid):
     return real, per
 
 
+# 十支编队编组字（全名第 2 字相同 = 同一队三人）
+TEAM_MARKER_CHARS_A = ['骠', '骧', '骏', '澜', '霆', '烬', '岳', '朔', '晟', '霄']
+TEAM_MARKER_CHARS_B = ['铁', '锋', '虹', '崖', '磐', '焰', '鸿', '启', '耀', '云']
+
+_PARALLEL_ROSTER_LIST = None
+_PARALLEL_BY_SOURCE = None
+
+
+def _parallel_roster_paths():
+    root = os.path.dirname(SELF)
+    return [
+        os.path.join(root, 'desktop', 'data', 'custom_roster_parallel.json'),
+        os.path.join(APP_DIR, 'data', 'custom_roster_parallel.json'),
+    ]
+
+
+def _load_parallel_roster():
+    global _PARALLEL_ROSTER_LIST, _PARALLEL_BY_SOURCE
+    if _PARALLEL_ROSTER_LIST is not None:
+        return _PARALLEL_ROSTER_LIST
+    _PARALLEL_ROSTER_LIST = []
+    for path in _parallel_roster_paths():
+        if not os.path.isfile(path):
+            continue
+        try:
+            with open(path, encoding='utf-8') as f:
+                raw = json.load(f)
+            if isinstance(raw, list):
+                _PARALLEL_ROSTER_LIST = [x for x in raw if isinstance(x, dict)]
+            break
+        except Exception:
+            pass
+    _PARALLEL_BY_SOURCE = {
+        str(r.get('source_guid') or '').strip().upper(): r
+        for r in _PARALLEL_ROSTER_LIST
+        if r.get('source_guid')
+    }
+    return _PARALLEL_ROSTER_LIST
+
+
+def _parallel_row_for_source(token):
+    _load_parallel_roster()
+    return (_PARALLEL_BY_SOURCE or {}).get(str(token or '').strip().upper())
+
+
+def _find_person_by_display_cn(d, fid, cn):
+    cn = str(cn or '').strip()
+    if not cn:
+        return None
+    for pid, per in (d.get('personages') or {}).items():
+        inf = per.get('info') or {}
+        if str(inf.get('faction', '')).lower() != str(fid).lower():
+            continue
+        if inf.get('tag1') in ('Death', 'Dead'):
+            continue
+        if _general_display_name(d, pid) == cn:
+            return pid
+    return None
+
+
+def _try_resolve_deploy_token(d, fid, token):
+    """预设里的 GUID/键 -> 存档内真实 personages 键（含 parallel 映射）。"""
+    token = str(token or '').strip()
+    if not token or token in ('None', 'none'):
+        return None
+    persons, plow = _person_index(d)
+    real = _find_person(persons, plow, token)
+    if real:
+        return real
+    row = _parallel_row_for_source(token)
+    if row:
+        for key in ('new_guid', 'source_guid'):
+            g = str(row.get(key) or '').strip()
+            if not g:
+                continue
+            real = _find_person(persons, plow, g)
+            if real:
+                return real
+        new_cn = str(row.get('new') or '').strip()
+        if new_cn:
+            hit = _find_person_by_display_cn(d, fid, new_cn)
+            if hit:
+                return hit
+    return None
+
+
+def _generals_by_team_marker(d, fid, marker, skip_pids=None):
+    skip = skip_pids or set()
+    marker = str(marker or '')
+    if not marker:
+        return []
+    rows = []
+    for pid, per in (d.get('personages') or {}).items():
+        if pid in skip:
+            continue
+        inf = per.get('info') or {}
+        if str(inf.get('faction', '')).lower() != str(fid).lower():
+            continue
+        if inf.get('tag1') in ('Death', 'Dead'):
+            continue
+        cn = _general_display_name(d, pid)
+        if len(cn) >= 2 and cn[1] == marker:
+            rows.append((cn, pid))
+    rows.sort(key=lambda x: x[0])
+    return [p for _, p in rows]
+
+
+def _resolve_preset_general_ids(d, fid, preset, preset_index=0, skip_pids=None):
+    """把预设里模板 GUID 解析为当前存档武将；优先映射表，再按编组字凑齐三人。"""
+    skip = set(skip_pids or ())
+    tokens = list(preset.get('generals') or [])
+    while len(tokens) < 3:
+        tokens.append(None)
+    resolved = []
+    for tok in tokens[:3]:
+        if not tok or str(tok) in ('None', 'none', ''):
+            resolved.append(None)
+            continue
+        rid = _try_resolve_deploy_token(d, fid, tok)
+        if rid and rid not in skip:
+            resolved.append(rid)
+        else:
+            resolved.append(None)
+    if all(resolved):
+        return resolved
+
+    markers = []
+    for tok in tokens[:3]:
+        row = _parallel_row_for_source(tok)
+        if row:
+            for k in ('team_char_b', 'team_char_a'):
+                m = str(row.get(k) or '').strip()
+                if m:
+                    markers.append(m)
+    pname = str(preset.get('name') or '')
+    if len(pname) >= 2:
+        markers.append(pname[1])
+    team_i = preset_index % 10
+    if preset_index >= 10 and 0 <= team_i < len(TEAM_MARKER_CHARS_B):
+        markers.append(TEAM_MARKER_CHARS_B[team_i])
+    elif 0 <= team_i < len(TEAM_MARKER_CHARS_B):
+        markers.append(TEAM_MARKER_CHARS_B[team_i])
+    if 0 <= team_i < len(TEAM_MARKER_CHARS_A):
+        markers.append(TEAM_MARKER_CHARS_A[team_i])
+    seen_m = set()
+    ordered_markers = []
+    for m in markers:
+        if m and m not in seen_m:
+            seen_m.add(m)
+            ordered_markers.append(m)
+
+    for marker in ordered_markers:
+        pool = _generals_by_team_marker(d, fid, marker, skip)
+        if len(pool) >= 3:
+            return pool[:3]
+
+    pick = []
+    for tok in tokens[:3]:
+        if not tok:
+            continue
+        rid = _try_resolve_deploy_token(d, fid, tok)
+        if rid and rid not in skip and rid not in pick:
+            pick.append(rid)
+    if len(pick) >= 3:
+        return pick[:3]
+
+    miss = [str(t)[:8] + '…' for t in tokens[:3] if t and str(t) not in ('None', 'none')]
+    raise ValueError(
+        '无法为预设「%s」匹配三名武将（模板 GUID 不在档内？请确认 30 人已在玩家势力且空闲）。缺失: %s'
+        % (preset.get('name') or preset.get('id'), ', '.join(miss) or '—'))
+
+
 def _build_architecture_pos_index(d):
     arch = d.get('architectures') or {}
     key_by_lower = {}
@@ -3726,6 +4352,191 @@ def _resolve_city_deploy_pos(d, city_key, slot_index, pos_index=None):
     return {'x': base['x'] + dx, 'y': base['y'] + dy}
 
 
+def _troop_kind_base(kind_id):
+    k = str(kind_id or '').strip()
+    if not k:
+        return ''
+    return k.split('_')[0]
+
+
+_TROOP_KIND_TEAM_LIMITS = None
+_TROOP_KIND_CN = None
+_TROOP_KIND_DEFAULT_MAX = 999
+
+
+def _load_troop_kind_team_limits():
+    """base id → 单势力最多可创建几支（同 base 变体共享名额）。"""
+    global _TROOP_KIND_TEAM_LIMITS
+    if _TROOP_KIND_TEAM_LIMITS is not None:
+        return _TROOP_KIND_TEAM_LIMITS
+    caps = {}
+    default_max = _TROOP_KIND_DEFAULT_MAX
+    for rel in (
+        os.path.join('desktop', 'data', 'troop_kind_team_limits.json'),
+        os.path.join('data', 'troop_kind_team_limits.json'),
+    ):
+        path = os.path.join(os.path.dirname(SELF), rel)
+        if not os.path.isfile(path):
+            path = os.path.join(APP_DIR, 'data', 'troop_kind_team_limits.json')
+        if not os.path.isfile(path):
+            continue
+        try:
+            with open(path, encoding='utf-8') as f:
+                raw = json.load(f)
+            default_max = int(raw.get('default_max') or _TROOP_KIND_DEFAULT_MAX)
+            for b, n in (raw.get('by_base') or {}).items():
+                try:
+                    caps[str(b).strip()] = int(n)
+                except Exception:
+                    pass
+            for b, n in (raw.get('overrides') or {}).items():
+                try:
+                    caps[str(b).strip()] = int(n)
+                except Exception:
+                    pass
+            break
+        except Exception:
+            pass
+    if not caps:
+        for b in ('31', '36', '37', '45', '47', '49', '66'):
+            caps[b] = 1
+    _TROOP_KIND_TEAM_LIMITS = (caps, default_max)
+    return _TROOP_KIND_TEAM_LIMITS
+
+
+def _troop_kind_max_teams(kind_id):
+    base = _troop_kind_base(kind_id)
+    if not base:
+        return _TROOP_KIND_DEFAULT_MAX
+    caps, default_max = _load_troop_kind_team_limits()
+    return caps.get(base, default_max)
+
+
+def _load_unique_troop_bases():
+    caps, _default = _load_troop_kind_team_limits()
+    return frozenset(b for b, n in caps.items() if n == 1)
+
+
+def _load_troop_kind_cn():
+    global _TROOP_KIND_CN
+    if _TROOP_KIND_CN is not None:
+        return _TROOP_KIND_CN
+    _TROOP_KIND_CN = {}
+    for rel in (
+        os.path.join('desktop', 'troop_kinds_zh.json'),
+        'troop_kinds_zh.json',
+    ):
+        path = os.path.join(os.path.dirname(SELF), rel)
+        if not os.path.isfile(path):
+            continue
+        try:
+            with open(path, encoding='utf-8') as f:
+                raw = json.load(f)
+            if isinstance(raw, dict):
+                _TROOP_KIND_CN = {str(k): str(v) for k, v in raw.items() if v}
+            break
+        except Exception:
+            pass
+    return _TROOP_KIND_CN
+
+
+def _troop_kind_display(kind_id):
+    k = str(kind_id or '')
+    mp = _load_troop_kind_cn()
+    if k in mp:
+        return mp[k]
+    base = _troop_kind_base(k)
+    if base in mp:
+        return mp[base]
+    return k or '—'
+
+
+def is_unique_troop_kind(kind_id):
+    return _troop_kind_max_teams(kind_id) == 1
+
+
+def troop_kind_max_teams(kind_id):
+    return _troop_kind_max_teams(kind_id)
+
+
+_SPECIAL_TROOP_BASES = None
+
+
+def _load_special_troop_bases():
+    global _SPECIAL_TROOP_BASES
+    if _SPECIAL_TROOP_BASES is not None:
+        return _SPECIAL_TROOP_BASES
+    bases = set()
+    for rel in (
+        os.path.join('desktop', 'data', 'special_troop_kinds.json'),
+        os.path.join('data', 'special_troop_kinds.json'),
+    ):
+        path = os.path.join(os.path.dirname(SELF), rel)
+        if not os.path.isfile(path):
+            path = os.path.join(APP_DIR, 'data', 'special_troop_kinds.json')
+        if not os.path.isfile(path):
+            continue
+        try:
+            with open(path, encoding='utf-8') as f:
+                raw = json.load(f)
+            for row in raw.get('kinds') or []:
+                if isinstance(row, dict) and row.get('base'):
+                    bases.add(str(row['base']).strip())
+            for b in raw.get('city_feature_bases') or []:
+                bases.add(str(b).strip())
+            break
+        except Exception:
+            pass
+    if not bases:
+        bases = set(str(i) for i in range(30, 67))
+    _SPECIAL_TROOP_BASES = frozenset(bases)
+    return _SPECIAL_TROOP_BASES
+
+
+def is_special_troop_kind(kind_id):
+    base = _troop_kind_base(kind_id)
+    return bool(base) and base in _load_special_troop_bases()
+
+
+def _faction_troop_kind_base_counts(d, fid):
+    fk = _faction_key(d, fid)
+    if fk is None:
+        return {}
+    troops = (d['factions'][fk].get('troops') or {})
+    items = troops.values() if isinstance(troops, dict) else troops
+    counts = {}
+    for t in items:
+        if not isinstance(t, dict):
+            continue
+        if t.get('bDestroyed'):
+            continue
+        base = _troop_kind_base(t.get('troopKindId'))
+        if base:
+            counts[base] = counts.get(base, 0) + 1
+    return counts
+
+
+def _troop_kind_quota_exceeded(d, fid, kind_id, batch_pending=None):
+    """该兵种 base 是否已在档内或本批待创建中达到创建上限。"""
+    base = _troop_kind_base(kind_id)
+    if not base:
+        return False, '', 0
+    cap = _troop_kind_max_teams(kind_id)
+    if cap >= _TROOP_KIND_DEFAULT_MAX:
+        return False, '', cap
+    have = _faction_troop_kind_base_counts(d, fid).get(base, 0)
+    pending = (batch_pending or {}).get(base, 0)
+    if have + pending >= cap:
+        label = _troop_kind_display(kind_id)
+        return True, label, cap
+    return False, '', cap
+
+
+def _unique_troop_would_exceed(d, fid, kind_id, batch_pending=None):
+    skip, label, _cap = _troop_kind_quota_exceeded(d, fid, kind_id, batch_pending)
+    return skip, label
+
+
 def _pick_troop_template(d, fid, troop_kind_id):
     fk = _faction_key(d, fid)
     if fk is None:
@@ -3763,13 +4574,17 @@ def _general_display_name(d, token):
     persons, plow = _person_index(d)
     real = _find_person(persons, plow, token)
     if not real:
+        cn = _name_key_to_cn(token)
+        if cn:
+            return cn
         s = str(token)
         return s[:10] + '…' if len(s) > 12 else s
     bi = (persons[real].get('baseInfo') or {})
-    fn = bi.get('fullName')
-    if isinstance(fn, dict) and fn.get('key'):
-        return str(fn.get('key'))
-    return _person_id_camel(real)
+    hit = _display_name_from_baseinfo(bi)
+    if hit:
+        return hit
+    cn = _name_key_to_cn(real) or _name_key_to_cn(_person_id_camel(real))
+    return cn or _person_id_camel(real)
 
 
 def list_player_teams(d, fid=None):
@@ -3834,10 +4649,15 @@ def _append_troop_to_game_team(d, game_team_id, troop_id):
 
 
 def _create_one_troop_at_city(d, city_key, preset, fid, slot_index, busy_g, pos_index,
-                              arch_id, troops, fac, game_team_id=0):
+                              arch_id, troops, fac, game_team_id=0,
+                              preset_index=0, assigned_pids=None):
     kind = str(preset.get('troopKindId') or '')
     if not kind:
         raise ValueError('预设缺少兵种 troopKindId')
+    work = copy.deepcopy(preset)
+    skip = set(assigned_pids or ())
+    work['generals'] = _resolve_preset_general_ids(
+        d, fid, work, preset_index=preset_index, skip_pids=skip)
     t = _pick_troop_template(d, fid, kind)
     next_tid = _max_troop_id(d) + 1
     # 上面 max 在循环外应递增 — 调用方传 busy 并每次 +1 tid
@@ -3868,7 +4688,7 @@ def _create_one_troop_at_city(d, city_key, preset, fid, slot_index, busy_g, pos_
     slots = ('generalId1', 'generalId2', 'generalId3')
     gen_names = []
     for si, slot in enumerate(slots):
-        tok = (preset.get('generals') or [None, None, None])[si]
+        tok = (work.get('generals') or [None, None, None])[si]
         if tok in (None, 'None', 'none', ''):
             t[slot] = 'None'
             continue
@@ -3889,10 +4709,10 @@ def _create_one_troop_at_city(d, city_key, preset, fid, slot_index, busy_g, pos_
     gcn = (_general_display_name(d, t.get('generalId2')),
            _general_display_name(d, t.get('generalId3')))
     line = '  %s @ %s · %s  主:%s  副:%s / %s' % (
-        kind, cn, preset.get('name') or kind,
+        kind, cn, work.get('name') or kind,
         gen_names[0] if gen_names else '—', gcn[0], gcn[1],
     )
-    return next_tid, line
+    return next_tid, line, work.get('generals') or []
 
 
 def create_team_preset_at_city(d, city_key, preset, fid=None, team_id=None):
@@ -3927,8 +4747,15 @@ def create_team_preset_at_city(d, city_key, preset, fid=None, team_id=None):
     if team_id in (None, '', 'none'):
         team_id = preset.get('gameTeamId', 0)
     gt = 0 if team_id in (None, '', 'none') else team_id
-    tid, line = _create_one_troop_at_city(
-        d, city_key, preset, fid, 0, busy_g, pos_index, arch_id, troops, fac, gt)
+    kind = str(preset.get('troopKindId') or '')
+    skip, label, cap = _troop_kind_quota_exceeded(d, fid, kind, {})
+    if skip:
+        raise ValueError(
+            '兵种「%s」(%s) 在本势力最多 %d 支，档内已满或已达上限'
+            % (label, kind, cap))
+    tid, line, pids = _create_one_troop_at_city(
+        d, city_key, preset, fid, 0, busy_g, pos_index, arch_id, troops, fac, gt,
+        preset_index=0)
     return gt, 1, [line]
 
 
@@ -3954,15 +4781,37 @@ def deploy_team_presets_at_city(d, city_key, presets, fid=None, game_team_id=Non
     arch_id = _city_arch_id(city_key, d)
     gt = game_team_id
     lines = []
+    assigned = set()
+    batch_kind_pending = {}
+    created = 0
+    skipped = 0
     for i, preset in enumerate(presets):
+        kind = str(preset.get('troopKindId') or '')
+        skip, label, cap = _troop_kind_quota_exceeded(d, fid, kind, batch_kind_pending)
+        if skip:
+            skipped += 1
+            lines.append(
+                '  跳过「%s」：兵种 %s 本势力最多 %d 支（档内已有或本批已满）'
+                % (preset.get('name') or preset.get('id'), label, cap))
+            continue
+        base = _troop_kind_base(kind)
+        if cap < _TROOP_KIND_DEFAULT_MAX:
+            batch_kind_pending[base] = batch_kind_pending.get(base, 0) + 1
         before = _max_troop_id(d)
         pg = gt if gt not in (None, '', 0) else preset.get('gameTeamId', 0)
-        _tid, line = _create_one_troop_at_city(
-            d, city_key, preset, fid, i, busy_g, pos_index, arch_id, troops, fac, pg)
+        _tid, line, pids = _create_one_troop_at_city(
+            d, city_key, preset, fid, i, busy_g, pos_index, arch_id, troops, fac, pg,
+            preset_index=i, assigned_pids=assigned)
         if _max_troop_id(d) <= before:
             raise ValueError('创建部队失败')
+        created += 1
+        for p in pids:
+            if p:
+                assigned.add(p)
         lines.append(line)
-    return gt or 0, len(presets), lines
+    if skipped:
+        lines.insert(0, '兵种创建上限跳过 %d 支（见 desktop/data/troop_kind_team_limits.json）' % skipped)
+    return gt or 0, created, lines
 
 
 def _city_arch_id(city_key, d):

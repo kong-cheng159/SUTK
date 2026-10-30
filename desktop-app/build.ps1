@@ -1,4 +1,48 @@
-$ErrorActionPreference = 'Stop'
+﻿$ErrorActionPreference = 'Stop'
+
+function Stop-ProcessesUnder([string]$root) {
+    if (-not (Test-Path -LiteralPath $root)) { return }
+    try { $root = (Resolve-Path -LiteralPath $root).Path } catch { return }
+    Get-CimInstance Win32_Process -ErrorAction SilentlyContinue | ForEach-Object {
+        $exe = $_.ExecutablePath
+        if ($exe -and $exe.StartsWith($root, [StringComparison]::OrdinalIgnoreCase)) {
+            Stop-Process -Id $_.ProcessId -Force -ErrorAction SilentlyContinue
+        }
+    }
+}
+
+function Prepare-DistDirectory([string]$dest) {
+    if (-not (Test-Path -LiteralPath $dest)) {
+        New-Item -ItemType Directory -Path $dest -Force | Out-Null
+        return
+    }
+    Stop-ProcessesUnder $dest
+    Start-Sleep -Milliseconds 800
+    $removed = $false
+    foreach ($try in 1..3) {
+        try {
+            Remove-Item -LiteralPath $dest -Recurse -Force -ErrorAction Stop
+            $removed = $true
+            break
+        } catch {
+            if ($try -lt 3) { Start-Sleep -Milliseconds 700 }
+        }
+    }
+    if (-not $removed) {
+        $parent = Split-Path $dest -Parent
+        $leaf = Split-Path $dest -Leaf
+        $archName = $leaf + '._old_' + (Get-Date -Format 'yyyyMMdd_HHmmss')
+        $arch = Join-Path $parent $archName
+        try {
+            Rename-Item -LiteralPath $dest -NewName $archName -ErrorAction Stop
+            Write-Warning "Could not delete dist (files locked). Renamed to $archName — close SUTK modifier / python from that folder and delete manually."
+        } catch {
+            throw "dist is locked ($dest). Close SUTK修改器.exe and any python from dist, then run build.ps1 again."
+        }
+    }
+    New-Item -ItemType Directory -Path $dest -Force | Out-Null
+}
+
 $app = $PSScriptRoot
 $repo = Split-Path $app -Parent
 $web = Join-Path $repo 'desktop\web'
@@ -16,10 +60,7 @@ $exeSrc = Join-Path $app 'src-tauri\target\release\sutk-mod.exe'
 if (-not (Test-Path -LiteralPath $exeSrc)) {
     throw "missing exe: $exeSrc"
 }
-if (Test-Path -LiteralPath $dest) {
-    Remove-Item -LiteralPath $dest -Recurse -Force
-}
-New-Item -ItemType Directory -Path $dest | Out-Null
+Prepare-DistDirectory $dest
 Copy-Item -LiteralPath $exeSrc -Destination (Join-Path $dest ($name + '.exe'))
 foreach ($fn in @('SUTKMod.pyw', 'MemScan.py')) {
     Copy-Item -LiteralPath (Join-Path $repo $fn) -Destination $dest
